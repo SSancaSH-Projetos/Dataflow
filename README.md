@@ -86,3 +86,86 @@ Nosso projeto busca desenvolver uma ferramenta para automatizar a transferência
 
 ## Comunicação:
 - Ferramentas de Comunicação Online: Para facilitar a colaboração entre a equipe, como e-mails, mensagens instantâneas e videoconferências.
+  
+# 6. Custos
+
+## Pessoal:
+- Programador de Back-End: 1 programador trabalhando por 3 dias na semana.
+- Programador de Front-End: 2 programadores trabalhando por 3 dias na semana.
+- Programador de Banco de Dados: 1 programador trabalhando por 3 dias na semana.
+- Gerente de Projeto: 1 gerente de projeto.
+
+## Tecnologia:
+- Ambiente de Desenvolvimento Integrado (IDE):
+  - Custo total (considerando licenças): R$ 0
+
+- Sistemas de versionamento de código:
+  - Custo total (considerando licenças): R$ 0
+
+- API do CHAT GPT:
+  - Custo total (considerando licenças): R$ 0
+
+## Equipamentos:
+- A partir da versão 1.0, será necessária a aquisição de um Controlador de acesso com reconhecimento facial Intelbrás*
+  - Custo total: R$ 1500,00
+
+**Total Geral:**
+- Pessoal: R$ 0
+- Tecnologia: R$ 0
+- Equipamentos: R$ 1500,00
+
+**Custo Total do Projeto:** R$ 1500,00
+
+# 7. Documentação
+
+## Requisitos Funcionais
+
+- Como um professor, desejo de forma automatizada, inserir os dados de faltas e notas dos alunos no portal educacional do SENAI.
+  - **Critérios de Aceitação:** Deve ser possível flexibilizar a planilha conforme a necessidade do professor.
+
+- Como um professor, desejo reduzir o tempo de trabalho burocrático.
+  - **Critérios de Aceitação:** Deve transferir de modo automático as notas e faltas dos alunos para o portal.
+
+- Como um professor, eu quero ter um treinamento inicial no uso do aplicativo, para garantir que eu possa utilizá-lo eficientemente.
+  - **Critérios de Aceitação:** A equipe de treinamento deve fornecer sessões iniciais de treinamento que cubram todos os recursos e funcionalidades do aplicativo e a disponibilização de um tutorial permanente com instruções sobre o uso do aplicativo.
+
+- Como um supervisor, desejo aumentar a produtividade dos professores, otimizando o recurso de tempo para o desenvolvimento de atividades voltadas à docência.
+
+- Como um supervisor, desejo reduzir os erros de digitação ao realizar a inserção dos dados de notas e faltas no Portal Educacional do Senai.
+
+# 8. Avaliação do Projeto
+
+## Taxa de Adoção do Aplicativo:
+
+- **Objetivo:** Alcançar uma taxa de adoção de 80% entre os funcionários no uso regular da ferramenta.
+- **Métrica:** Número total de funcionários utilizando a ferramenta em comparação com o número total de funcionários.
+
+## Eficiência Operacional:
+
+- **Objetivo:** Reduzir o tempo médio gasto na conclusão das atividades de registro de notas e faltas no Portal Educacional do Senai em pelo menos 50% após a implementação do sistema.
+- **Métrica:** Comparação do tempo médio de conclusão de atividades de registro de notas e faltas antes e após a implementação.
+
+## Satisfação do Usuário:
+
+- **Objetivo:** Alcançar uma pontuação de satisfação do usuário de pelo menos 4,5 em 5, com base em pesquisas de satisfação.
+- **Métrica:** Resultados de pesquisas de satisfação realizadas com professores e diretores da instituição.
+
+## Integridade dos Dados:
+
+- **Objetivo:** Alcançar uma precisão de pelo menos 98% na integridade dos dados registrados pelo sistema.
+- **Métrica:** Comparação entre os dados registrados no sistema e planilha do Excel.
+
+## Disponibilidade do Sistema:
+
+- **Objetivo:** Garantir uma disponibilidade do sistema de pelo menos 99,5% ao longo do tempo.
+- **Métrica:** Tempo total de operação sem interrupções em comparação com o tempo total planejado.
+
+## Tempo de Implementação:
+
+- **Objetivo:** Cumprir o cronograma estabelecido, realizando a implementação e lançamento até a data prevista.
+- **Métrica:** Comparação entre a data de conclusão real e a data planejada.
+
+# 9. Melhorias Previstas para o Projeto:
+
+- Lançamento da versão 1.0: Implementação de um sistema de reconhecimento facial capaz de identificar os alunos na entrada da sala de aula, integrado a uma aplicação capaz de gerar relatórios diários com o nome dos alunos presentes/ausentes, bem como atrasos, eliminando a necessidade da realização da chamada durante a aula e gerando economia de recurso físico (material de escritório) e sustentabilidade ambiental.
+
