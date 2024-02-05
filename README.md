@@ -1,3 +1,4 @@
+![Logo01](https://github.com/Peixoto-gu/Dataflow/assets/158601468/57a1dada-71b1-4434-9340-ce437bc739f3)
 # Automatização do Trabalho de Transferência de Faltas e Notas para o Portal SENAI
 
 **Área:** Educação  
