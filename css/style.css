@@ -1,188 +1,269 @@
-body, html{
-    height:100%;
-    margin:0;
-    font-size:18px;
-    font-family:"Lato", sans-serif;
-    /* define a espessura caracteres pode ser em valor 
-    400 normal 700 bold  */
-    font-weight:normal;
-    /* espaçamento entre as linhas */
-    line-height: 0.8cm;
-    color:#666;
+body, html {
+  height: 100%;
+  margin: 0;
+  font-size: 18px;
+  font-family: "Lato", sans-serif;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #ffffff;
+  min-width: 100%;
 }
 
-/*menu nav ini*/
 .navbar {
-  width: 100%;
-  background-color:#3a3a3a;
-  opacity:0.7;
-  /* A propriedade overflow especifica se o conteúdo 
-  deve ser recortado ou adicionado barras de rolagem 
-  quando o conteúdo de um elemento for muito grande 
-  para caber na área especificada.
-  auto - Semelhante ao scroll, mas adiciona barras de 
-  rolagem somente quando necessário.
-  */
-  overflow: auto;
-  position: fixed;
-  z-index: 1;
-  /* overflow: hidden; */
+  background-color: #333; /* Change background color as needed */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 .navbar a {
-  float: left;
-  /*text-align: center;*/
-  padding: 12px;
-  color:#fff;
-  /*width: 23%;*/
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 1vw 1vh; /* Adjust padding as needed */
   text-decoration: none;
-  font-size: 17px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
 }
 
 .navbar a:hover {
-  background-color: #000;
-  border-bottom: .1px solid #fff;
+  background-color: #ddd; /* Change background color on hover */
+  color: black;
 }
 
 .navbar a.dividir {
-  float: right;
-  color:#fff;
+  float: none;
+  margin-left: auto;
 }
-/*menu nav fim*/
 
-.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem{
-  /* O elemento é posicionado em 
-  relação à sua posição norma */
-  position:relative;
-  /* opacity:0.70; */
-  background-position:center;
-  /* Especifique o tamanho de uma imagem de fundo
-  Redimensione a imagem de fundo para cobrir 
-  todo o contêiner, mesmo que seja necessário 
-  esticar a imagem */
-  background-size:cover;
+@media screen and (max-width: 600px) {
+  .navbar a {
+    padding: 10px 5px; /* Adjust padding for smaller screens */
+  }
+}
 
-  /*define se/como uma imagem de fundo será repetida.*/
-  background-repeat:no-repeat;
-  
-  /*
-    Define se uma imagem de plano de fundo rola com
-    o restante da página ou é fixa.
-      
-    fixed = parallax
-     scroll = normal
-  */
-  background-attachment:fixed;
+
+
+.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem {
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
-  
-.primeiraImagem{
-  background-image:url('../img/image1.jpg');
-  min-height:100%;
+
+.primeiraImagem {
+  background-image: url('../img/artigo_gestão_escolar_3.jpg');
+  min-height: 100vh;
 }
-  
-.segundaImagem{
-  background-image:url('../img/image2.jpg');
-  min-height:460px;
+
+.segundaImagem {
+  background-image: url('../img/artigo_gestão_escolar_2.jpg');
+  min-height: 100vh;
 }
-  
-.terceiraImagem{
-  background-image:url('../img/image3.jpg');
-  min-height:460px;
+
+.terceiraImagem {
+  background-image: url('../img/Ambiente-Escolar-1920x1024.jpg');
+  min-height: 100vh;
 }
-  
-.quartaImagem{
-  background-image:url('../img/image4.jpg');
-  min-height:460px;
+
+.quartaImagem {
+  background-image: url('../img/gestão-escolar.jpg.png');
+  min-height: 100vh;
 }
-  
-.secao{
-  padding:20px 200px;
+
+.secao {
+  padding: 20px;
   display: inline-block;
+  background-color: #51414F;
 }
-  
-.secaoClara{
-  background-color:#feffea24;
-  color:#666;
+
+.secaoClara {
+  background-color: #51414F;
+  color: #ddd;
 }
-  
-.secaoEscura{
-  background-color:#282e34;
-  color:#ddd;
+
+.secaoEscura {
+  background-color: #51414F;
+  color: #ddd;
 }
-  
-.texto{
-  /* position:absolute o elemento é posicionado 
-  em relação ao seu primeiro elemento 
-  ancestral posicionado*/
-  position:absolute;
-  top:50%;
-  width:100%;
-  text-align:center;
-  color:#000;
-  font-size:27px;
-  letter-spacing:8px;
-  text-transform:uppercase;
-  opacity:0.70;
+
+.texto, .texto3 {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  font-size: 4vw;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-radius: 15px;
 }
- 
-.rotulo{
-  background-color:#111;
-  color:#fff;
-  padding:20px;
+
+.texto2 {
+  position: relative;
+  top: 40vw;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  font-size: 2.5vw;
+  letter-spacing: 1px;
+  font-weight: bolder;
+  text-shadow: 1px 1px 1px #fff;
+  border-radius: 15px;
+}
+
+.rotulo {
+  background-color: #111;
+  color: #fff;
+  padding: 20px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  min-width: 100%;
+}
+
+.rotulo2 {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 5px;
+  font-size: 40px;
+  position: relative;
+  top: -8.5vw;
+  font-size: 3vw;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+
+.rotulo3 {
+  background-color: #3e3e3ebb;
+  color: rgb(255, 255, 255);
+  padding: 5px;
+  font-size: 40px;
+  position: relative;
+  top: -7vw;
+  font-size: 3vw;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
 }
 
 #irParaTopo {
-  /* text-decoration: none; */
-  /* font-size: 30px; */
-  padding: 10px;
-  /* font-family: sans-serif; */
-  /* color: #fff;  */
-  /* background: #000; */
   background: none;
   float: right;
-  border-radius: 10%; 
-  position: absolute; 
+  border-radius: 10%;
+  position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
-#imagemSeta{
-  width: 35px;
-  height: 35px;
+#imagemSeta {
+  width: 3.5vw;
+  height: 3.5vw;
 }
 
-@media(max-width:568px){
-  .primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem{
-    background-attachment:scroll;
-  }
-
-  .navbar a{
+@media (max-width: 768px) {
+  .navbar a {
     float: none;
     display: block;
   }
+
+  .texto, .texto3 {
+    font-size: 6vw;
 }
-.txt{
+
+.texto2 {
+    font-size: 4vw;
+}
+}
+
+.txt {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   max-width: 50%;
   border: red solid 1px;
 }
-.Esquerda{
-  text-align: left;
-  flex: 1;
+
+.card {
+  width: 100%;
+  object-fit: fill;
 }
 
-.Direita{
-  
-  float: right;
-  flex: 1;
-  border: red solid 1px;
-  text-align: right;
-  flex: 1;
-  max-width: 40%;
+.card-body {
+  background-color: #f0efef;
 }
 
 .card-img-top {
   width: 100%;
-  height: 36.7vw;
-  object-fit: cover;
+  height: 40vw;
+  object-fit: fill;
+  background-color: #f0efef;
+}
+
+.col-sm-6 {
+  align-items: center;
+}
+
+.centralizar-button {
+  position: absolute;
+  top: 93%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h3 {
+  font-family: sans-serif;
+  font-weight: 100;
+  text-align: center;
+}
+
+.texto-simples {
+  font-family: sans-serif;
+  font-size: 1.85vw;
+}
+
+.texto-maior {
+  font-family: sans-serif;
+  font-size: 2vw;
+}
+
+ul {
+  list-style: none;
+}
+
+ul li::before {
+  content: "✓";
+}
+
+#qrcode {
+  width: 150px;
+  height: 160px;
+  margin: 20px auto;
+  display: block;
+}
+
+footer {
+  background-color: #51414F;
+  color: #ffffff;
+  padding: 25px;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin-top: 2px;
+}
+
+.logo {
+  display: inline-block; /* Ensure the logo stays inline with navbar items */
+  margin-right: 20px; /* Adjust margin as needed */
+  font-size: 24px; /* Adjust font size as needed */
+  font-weight: bold; /* Adjust font weight as needed */
+  color: #fff; /* Adjust color as needed */
+}
+
+.logo img {
+  vertical-align: middle; /* Align the image vertically with text */
+  max-height: 10vh; /* Adjust maximum height as needed */
+  position: relative; left: 1vw;
 }
