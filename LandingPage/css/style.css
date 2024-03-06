@@ -5,36 +5,8 @@ body, html {
   font-family: "Lato", sans-serif;
   font-weight: normal;
   line-height: 1.6;
-  color: #e33d3d;
+  color: #ffffff00;
   min-width: 100%;
-}
-
-.navbar {
-  background-color: #333; /* Change background color as needed */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.navbar a {
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 1vw 1vh; /* Adjust padding as needed */
-  text-decoration: none;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
-}
-
-.navbar a:hover {
-  background-color: #ddd; /* Change background color on hover */
-  color: black;
-}
-
-.navbar a.dividir {
-  float: none;
-  margin-left: auto;
 }
 
 @media screen and (max-width: 600px) {
@@ -57,9 +29,8 @@ body, html {
   }
 }
 
-
-
-.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem, .imgMetodoSimples, .imgMSEP {
+/* IMAGENS NO BODY */
+.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem, .imgMetodoSimples {
   position: relative;
   background-position: center;
   background-size: cover;
@@ -84,19 +55,16 @@ body, html {
 
 .terceiraImagem {
   background-image: url('../img/1920x1080.png');
-  min-height: 80vh;
+  min-height: 100vh;
 }
 
 .quartaImagem {
-  background-image: url('../img/pexels-george-milton-7014337.jpg');
+  background-image: url('../img/imgProfessora04.jpg');
   min-height: 100vh;
 }
 
-.imgMSEP {
-  background-image: url('../img/gestão-escolar.jpg.png');
-  min-height: 100vh;
-}
 
+/* -------------------------------- */
 .secaoFinal {
   display: flex;
   flex-direction: column;
@@ -117,7 +85,10 @@ body, html {
 }
 
 .secaoProf {
- background-image: -moz-linear-gradient(red,black);/* Assuming the section background is white */
+ min-height: 100vh;
+ min-width: 90vw;
+ position: relative;
+ overflow-x: hidden;
 }
 
 .secaoEscura {
@@ -138,11 +109,9 @@ body, html {
   top: 50%;
   width: 100%;
   text-align: center;
-  color: #000;
   font-size: 4vw;
   letter-spacing: 3px;
   text-transform: uppercase;
-  border-radius: 15px;
 }
 
 .texto2 {
@@ -202,16 +171,11 @@ body, html {
 }
 
 .rotulo3 {
-  background-color: #3e3e3ebb;
   color: rgb(255, 255, 255);
   padding: 5px;
   position: relative;
   top: -7vw;
-  font-size: 3vw;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
-  
+  font-size: 3.1vw;
 }
 
 #irParaTopo {
@@ -326,20 +290,6 @@ footer {
   bottom: 0;
   width: 100%;
   margin-top: 2px;
-}
-
-.logo {
-  display: inline-block; /* Ensure the logo stays inline with navbar items */
-  margin-right: 20px; /* Adjust margin as needed */
-  font-size: 24px; /* Adjust font size as needed */
-  font-weight: bold; /* Adjust font weight as needed */
-  color: #fff; /* Adjust color as needed */
-}
-
-.logo img {
-  vertical-align: middle; /* Align the image vertically with text */
-  max-height: 10vh; /* Adjust maximum height as needed */
-  position: relative; left: 1vw;
 }
 
 .theBack{
