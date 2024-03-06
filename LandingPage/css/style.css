@@ -5,36 +5,8 @@ body, html {
   font-family: "Lato", sans-serif;
   font-weight: normal;
   line-height: 1.6;
-  color: #ffffff;
+  color: #ffffff00;
   min-width: 100%;
-}
-
-.navbar {
-  background-color: #333; /* Change background color as needed */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.navbar a {
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 1vw 1vh; /* Adjust padding as needed */
-  text-decoration: none;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
-}
-
-.navbar a:hover {
-  background-color: #ddd; /* Change background color on hover */
-  color: black;
-}
-
-.navbar a.dividir {
-  float: none;
-  margin-left: auto;
 }
 
 @media screen and (max-width: 600px) {
@@ -43,9 +15,22 @@ body, html {
   }
 }
 
+/* Larger screens */
+@media (min-width: 992px) {
+  body {
+    font-size: 32px;
+  }
+} 
 
+/* Smaller tablets and mobiles */
+@media (max-width: 768px) {
+  body {
+    font-size: 32px;
+  }
+}
 
-.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem {
+/* IMAGENS NO BODY */
+.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem, .imgMetodoSimples {
   position: relative;
   background-position: center;
   background-size: cover;
@@ -54,51 +39,79 @@ body, html {
 }
 
 .primeiraImagem {
-  background-image: url('../img/artigo_gestão_escolar_3.jpg');
+  background-image: url('../img/Masternote.png');
   min-height: 100vh;
 }
 
 .segundaImagem {
-  background-image: url('../img/artigo_gestão_escolar_2.jpg');
+  background-image: url('../img/beneficios.png');
+  min-height: 100vh;
+}
+
+.imgMetodoSimples {
+  background-image: url('../img/metodoSimples.png');
   min-height: 100vh;
 }
 
 .terceiraImagem {
-  background-image: url('../img/Ambiente-Escolar-1920x1024.jpg');
+  background-image: url('../img/1920x1080.png');
   min-height: 100vh;
 }
 
 .quartaImagem {
-  background-image: url('../img/gestão-escolar.jpg.png');
+  background-image: url('../img/imgProfessora04.jpg');
   min-height: 100vh;
 }
 
+
+/* -------------------------------- */
+.secaoFinal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Center align text horizontally */
+}
+
 .secao {
-  padding: 20px;
-  display: inline-block;
-  background-color: #51414F;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .secaoClara {
-  background-color: #51414F;
-  color: #ddd;
+  background-color: #d81515;
+  color: #e71515;
+}
+
+.secaoProf {
+ min-height: 100vh;
+ min-width: 90vw;
+ position: relative;
+ overflow-x: hidden;
 }
 
 .secaoEscura {
   background-color: #51414F;
   color: #ddd;
+  padding: 20px;
 }
+
+.secaoEscura2 {
+  background-color: #0000b389;
+  color: #ddd;
+  padding: 20px;
+}
+
 
 .texto, .texto3 {
   position: absolute;
   top: 50%;
   width: 100%;
   text-align: center;
-  color: #000;
   font-size: 4vw;
   letter-spacing: 3px;
   text-transform: uppercase;
-  border-radius: 15px;
 }
 
 .texto2 {
@@ -110,11 +123,24 @@ body, html {
   font-size: 2.5vw;
   letter-spacing: 1px;
   font-weight: bolder;
-  text-shadow: 1px 1px 1px #fff;
+  text-shadow: 2px 2px 4px #fff;
   border-radius: 15px;
 }
 
-.rotulo {
+.masterTXT {
+  position: absolute;
+  top:50%;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  font-size: 4vw;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-radius: 15px;
+  top: 16vw;
+}
+
+.masterRotulo {
   background-color: #111;
   color: #fff;
   padding: 20px;
@@ -124,30 +150,32 @@ body, html {
   min-width: 100%;
 }
 
-.rotulo2 {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-  padding: 5px;
-  font-size: 40px;
-  position: relative;
-  top: -8.5vw;
-  font-size: 3vw;
+.rotulo {
+  background-color: #111;
+  color: #cf0f0f;
+  padding: 20px;
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
   border-radius: 15px;
+  min-width: 100%;
+  top: -15vw;
+}
+
+.rotulo2 {
+  color: rgb(0, 0, 0);
+  padding: 5px;
+  position: relative;
+  top: -15vw;
+  font-size: 3.6vw;
+  text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
 }
 
 .rotulo3 {
-  background-color: #3e3e3ebb;
   color: rgb(255, 255, 255);
   padding: 5px;
-  font-size: 40px;
   position: relative;
   top: -7vw;
-  font-size: 3vw;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
+  font-size: 3.1vw;
 }
 
 #irParaTopo {
@@ -157,6 +185,11 @@ body, html {
   position: absolute;
   bottom: 10px;
   right: 10px;
+}
+
+.undertitle{
+  position: relative;
+  top: -14vw;
 }
 
 #imagemSeta {
@@ -182,6 +215,7 @@ body, html {
 .txt {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   max-width: 50%;
+  min-width: 50%;
   border: red solid 1px;
 }
 
@@ -191,7 +225,10 @@ body, html {
 }
 
 .card-body {
+  padding-top: 50vh;
   background-color: #f0efef;
+  min-width: 80vw;
+  min-height: 1vh;
 }
 
 .card-img-top {
@@ -237,10 +274,11 @@ ul li::before {
 }
 
 #qrcode {
-  width: 150px;
-  height: 160px;
-  margin: 20px auto;
-  display: block;
+  width: 250px;
+  height: 250px;
+  margin: 20px;
+  position: relative;
+  display: inline-flex;
 }
 
 footer {
@@ -254,16 +292,11 @@ footer {
   margin-top: 2px;
 }
 
-.logo {
-  display: inline-block; /* Ensure the logo stays inline with navbar items */
-  margin-right: 20px; /* Adjust margin as needed */
-  font-size: 24px; /* Adjust font size as needed */
-  font-weight: bold; /* Adjust font weight as needed */
-  color: #fff; /* Adjust color as needed */
-}
-
-.logo img {
-  vertical-align: middle; /* Align the image vertically with text */
-  max-height: 10vh; /* Adjust maximum height as needed */
-  position: relative; left: 1vw;
+.theBack{
+  position: relative;
+  top: -1vw;
+  padding-bottom: 1;
+  padding-left: 5vh;
+  padding-right: 5vh;
+  background-color: #FAFAFA;
 }

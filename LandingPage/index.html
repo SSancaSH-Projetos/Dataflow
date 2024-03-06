@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>LandingPage MasterNote</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <div class="primeiraImagem">
+      <!--
+      <div class="masterTXT">
+        <span class="masterRotulo">MasterNote</span>
+      </div>
+      <div class="texto2">
+        <span class="rotulo2">
+          Gerenciamento do processo avaliativo da MSEP
+        </span>
+        <span class="undertitle"><h5>Metodologia SENAI De Educação Profissional</h5></span>
+      </div> -->
+    </div>
+
+    <section class="secao secaoProf">
+      <div class="row">
+        <img src="./img/profMSEP.png" alt="imagem professor MSEP"/>
+      </div>
+    </section>
+
+    <div class="segundaImagem"></div>
+
+    <div class="texto"></div>
+
+    <div class="imgMetodoSimples"></div>
+
+    <div class="terceiraImagem">
+      <div class="texto3">
+        <span class="rotulo3">
+          Dê um passo à frente na avaliação educacional e reduza o tempo gasto com trabalho burocrático
+        </span>
+      </div>
+    </div>
+
+    <section class="secaoFinal secaoEscura">
+      <h2><strong>Nossa Missão</strong></h2>
+      <p class="texto-maior">
+        Nossa missão é simplificar e aprimorar o processo de avaliação dos
+        alunos, aumentando a produtividade dos professores ao otimizar o recurso
+        de tempo para o desenvolvimento de atividades voltadas exclusivamente à
+        docência.
+      </p>
+    </section>
+
+    <div class="quartaImagem">
+      <div class="texto"></div>
+      <a id="irParaTopo" href="#">
+        <img id="imagemSeta" src="img/top-arrow.png" alt="Vai para o topo" />
+      </a>
+    </div>
+
+    <footer>
+      <div id="qrcode"></div>
+      <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+      <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+          text: "https://ssancash-projetos.github.io/MasterNote/",
+          width: 150,
+          height: 150,
+        });
+      </script>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h4>Contato</h4>
+            <p>Email: contato@exemplo.com</p>
+            <p>Telefone: (123) 456-7890</p>
+          </div>
+          <div class="col-md-6">
+            <h4>Redes Sociais</h4>
+            <a href="#" target="_blank">Facebook</a>
+            <a href="#" target="_blank">Twitter</a>
+            <a href="#" target="_blank">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
