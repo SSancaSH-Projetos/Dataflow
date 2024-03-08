@@ -149,5 +149,3 @@ Nosso projeto busca desenvolver uma ferramenta para aperfeiçoar a aplicação e
 #### Tempo de Implementação:
 - Objetivo: Cumprir o cronograma estabelecido, realizando a implementação e lançamento até a data prevista.
 - Métrica: Comparação entre a data de conclusão real e a data planejada.
-
-
