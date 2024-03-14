@@ -30,7 +30,7 @@ body, html {
 }
 
 /* IMAGENS NO BODY */
-.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem, .imgMetodoSimples {
+.primeiraImagem, .segundaImagem, .terceiraImagem, .quartaImagem, .imgMetodoSimples , .imgSimples{
   position: relative;
   background-position: center;
   background-size: cover;
@@ -45,6 +45,11 @@ body, html {
 
 .segundaImagem {
   background-image: url('../img/beneficios.png');
+  min-height: 100vh;
+}
+
+.imgSimples{
+  background-image: url('../img/imgSimples.png');
   min-height: 100vh;
 }
 
