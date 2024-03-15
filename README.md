@@ -8,7 +8,7 @@
 
 ### 1. Escopo
 
-Nosso projeto busca desenvolver uma ferramenta para aperfeiçoar a aplicação e operacionalização da Metodologia SENAI de Ensino Profissional (MSEP). Isso inclui tanto o processo de planejamento, bem como, o gerenciamento do processo avaliativo contínuo proposto pelo MSEP. De maneira simples e eficiente, nossa solução visa tornar a gestão dos dados produzidos na aplicação da MSEP mais fácil, seguro e rápido. O objetivo principal é reduzir o tempo de trabalho burocrático realizado pelos professores, principalmente aqueles que realizam esses registros manualmente, assim, permitindo que o docente esteja focado nas atividades de ensino e no apoio aos alunos. 
+Nosso projeto busca desenvolver uma ferramenta para aperfeiçoar a aplicação e operacionalização da Metodologia SENAI de Ensino Profissional (MSEP). Isso inclui tanto o processo de planejamento, bem como, o gerenciamento do processo avaliativo contínuo proposto pelo MSEP. De maneira simples e eficiente, nossa solução visa tornar a gestão dos dados produzidos na aplicação da MSEP mais fácil, seguro e rápido. O objetivo principal é reduzir o tempo de trabalho burocrático realizado pelos professores, principalmente aqueles que realizam esses registros manualmente, assim, permitindo que o docente esteja focado nas atividades de ensino e no apoio a alunos. 
 
 ### 2. Objetivos do Projeto
 - Desenvolver uma solução tecnológica capaz de armazenar dados definidos pelo plano de ensino que são essenciais ao desenvolvimento do trabalho docente.
