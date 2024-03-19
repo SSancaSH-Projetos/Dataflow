@@ -8,35 +8,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "aluno")
-public class Aluno implements Serializable {
+@Table(name = "curso")
+public class Curso implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_curso")
     private Long id;
 
+    @Column(name = "nome_curso")
     private String nome;
 
-    @Column(name = "numero_chamada")
-    private Integer numeroChamada;
+    @Column(name = "carga_horaria")
+    private Float cargaHoraria;
 
-    @ManyToOne
-    @JoinColumn(name = "curso_id_curso")
-    private Curso curso;
-
-
-    @ManyToMany(mappedBy = "alunos")
-    private List<SA> sas;
+    @Column(name = "nivel")
+    private String nivel;
+    
+    @OneToMany(mappedBy = "curso")
+    private List<Aluno> alunos;
 
 
     // getters e setters
 }
+
