@@ -1,6 +1,5 @@
 package com.devloopers.masternote.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -15,8 +14,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "curso")
-public class Curso implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Curso {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_curso")
@@ -30,11 +29,9 @@ public class Curso implements Serializable {
 
     @Column(name = "nivel")
     private String nivel;
-    
+
     @OneToMany(mappedBy = "curso")
-    private List<Aluno> alunos;
+    private List<Turma> turmas;
 
-
-    // getters e setters
+    // Getters and Setters
 }
-

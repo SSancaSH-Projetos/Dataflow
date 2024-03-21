@@ -1,6 +1,5 @@
 package com.devloopers.masternote.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -17,26 +16,25 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "aluno")
-public class Aluno implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class Aluno {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "nome")
     private String nome;
 
     @Column(name = "numero_chamada")
     private Integer numeroChamada;
 
     @ManyToOne
-    @JoinColumn(name = "curso_id_curso")
-    private Curso curso;
-
-
+    @JoinColumn(name = "turma_id_turma")
+    private Turma turma;
+    
     @ManyToMany(mappedBy = "alunos")
     private List<SA> sas;
 
-
-    // getters e setters
+    // Getters and Setters
 }
