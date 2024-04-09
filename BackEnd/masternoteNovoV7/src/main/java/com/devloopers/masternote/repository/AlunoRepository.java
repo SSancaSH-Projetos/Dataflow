@@ -12,6 +12,7 @@ import com.devloopers.masternote.entity.Aluno;
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	List<Aluno> findByNome(String nome);
 	List<Aluno> findByNumeroChamada(Integer numeroChamada);
+	
 }
 
 

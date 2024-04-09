@@ -1,5 +1,4 @@
 package com.devloopers.masternote.entity;
-
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
@@ -12,15 +11,18 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+
 @Data
 @Entity
-@Table(name = "avaliacaoCriterioCritico")
-public class AvaliacaoCriterioCritico implements Serializable {
+@Table(name = "avaliacaoCriterioDesejavel")
+
+public class AvaliacaoCriterioDesejavel implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 	
 	 @Id
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "id_avaliacaoCriterioCritico")
+	 @Column(name = "id_avaliacaoCriterioDesejavel")
 	 private Long id;
 	
     
@@ -30,12 +32,21 @@ public class AvaliacaoCriterioCritico implements Serializable {
     
     
     @ManyToOne
-    @JoinColumn(name = "criterioCritico_id")
-    private CriterioCritico criterioCritico;
+    @JoinColumn(name = "criterioDesejavel_id")
+    private CriterioDesejavel criterioDesejavel;
     
+    
+    @ManyToOne
+    @JoinColumn(name = "sa_id")
+    private SA Sa;
     
     @Column(name = "resultado")
   	private boolean resultado;
-
+    
    
+
+  
 }
+
+	
+

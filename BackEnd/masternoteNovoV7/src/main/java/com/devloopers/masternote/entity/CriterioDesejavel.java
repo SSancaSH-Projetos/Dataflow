@@ -26,10 +26,8 @@ public class CriterioDesejavel implements Serializable {
 
     private String descricao;
 
-
     @ManyToOne
     @JoinColumn(name = "criterio_critico_id_criterio_critico")
     private CriterioCritico criterioCritico;
 
-    // getters e setters
 }

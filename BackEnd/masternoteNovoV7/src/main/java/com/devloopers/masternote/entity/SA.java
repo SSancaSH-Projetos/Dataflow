@@ -31,7 +31,7 @@ public class SA implements Serializable {
 
     private String tipo;
       
-    @JsonIgnore
+    
     @ManyToOne
     @JoinColumn(name = "uc_id_uc")
     private UC uc;

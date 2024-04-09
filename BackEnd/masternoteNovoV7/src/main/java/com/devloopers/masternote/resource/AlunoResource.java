@@ -13,6 +13,7 @@ import com.devloopers.masternote.entity.Aluno;
 import com.devloopers.masternote.repository.AlunoRepository;
 
 
+
 @RestController
 @RequestMapping("/aluno")
 
@@ -20,6 +21,7 @@ public class AlunoResource {
 	
 	@Autowired
 	private  AlunoRepository alunoRepository;
+
 	
 	@GetMapping
 	public Iterable<Aluno> findAll(){

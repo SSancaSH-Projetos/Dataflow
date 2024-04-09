@@ -2,9 +2,7 @@ package com.devloopers.masternote.entity;
 
 import java.io.Serializable;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +16,6 @@ import lombok.Data;
 
 
 @Data
-
 @Entity
 @Table(name = "capacidade")
 public class Capacidade implements Serializable {

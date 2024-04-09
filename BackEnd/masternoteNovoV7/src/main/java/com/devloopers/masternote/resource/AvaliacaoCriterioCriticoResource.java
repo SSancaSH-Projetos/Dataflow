@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.devloopers.masternote.entity.Aluno;
 import com.devloopers.masternote.entity.AvaliacaoCriterioCritico;
-import com.devloopers.masternote.entity.Capacidade;
+
 import com.devloopers.masternote.repository.AvaliacaoCriterioCriticoRepository;
 
 
@@ -25,6 +24,7 @@ public class AvaliacaoCriterioCriticoResource {
 	@Autowired
 	private  AvaliacaoCriterioCriticoRepository avaliacaoCriterioCriticoRepository;
 	
+	
 	@GetMapping
 	public Iterable<AvaliacaoCriterioCritico> findAll(){
 		return avaliacaoCriterioCriticoRepository.findAll();
@@ -36,16 +36,17 @@ public class AvaliacaoCriterioCriticoResource {
 	}
 	
 	@GetMapping("/pesquisaAluno/{idAluno}")
-	public Iterable<AvaliacaoCriterioCritico> findByAluno(@RequestBody Aluno aluno){
-		return avaliacaoCriterioCriticoRepository.findByAluno(aluno);
-	}
-	
-	
+	public Iterable<AvaliacaoCriterioCritico> findByAluno(@PathVariable Long idAluno){
+		Aluno aluno = new Aluno();
+	    aluno.setId(idAluno); // Configurando o ID do Aluno
+	    return avaliacaoCriterioCriticoRepository.findByAluno(aluno);
+		}
+		
+			
 	@PostMapping
 	public AvaliacaoCriterioCritico createAvaliacaoCriterioCritico(@RequestBody AvaliacaoCriterioCritico avaliacaoCriterioCritico) {
 		return avaliacaoCriterioCriticoRepository.save(avaliacaoCriterioCritico);
 	}
-	
 	
 	@PutMapping("/update/{id}")
 	public AvaliacaoCriterioCritico updateAvaliacaoCriterioCritico(@PathVariable Long id, @RequestBody AvaliacaoCriterioCritico avaliacaoCriterioCritico) {
