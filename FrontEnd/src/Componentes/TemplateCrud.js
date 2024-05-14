@@ -1,420 +1,99 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-  Modal,
-  TextInput,
-  Image,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { Table, Row } from "react-native-table-component";
-import axios from "axios";
+import React from "react";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { styled, useTheme } from "@mui/material/styles";
+import CustomDrawer from "./CustomDrawer";
 
-const GerenciamentoCursos = ({ navigation, route }) => {
-  const [visibilidadeMenu, setVisibilidadeMenu] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [nomeCurso, setNomeCurso] = useState("");
-  const [cargaHoraria, setCargaHoraria] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [cursos, setCursos] = useState([]);
-  const [cursoSelecionado, setCursoSelecionado] = useState(null);
+const drawerWidth = 240;
 
-  useEffect(() => {
-    fetchCursos();
-  }, []);
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  })
+);
 
-  async function fetchCursos() {
-    try {
-      const response = await axios.get("http://10.110.12.9:8080/curso");
-      setCursos(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar cursos:", error);
-    }
-  }
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(["margin", "width"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
 
-  const handleMenu = () => {
-    setVisibilidadeMenu(!visibilidadeMenu);
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-end",
+}));
+
+export default function TemplateCrud({ children }) {
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
-  const handleCursoSelecionado = (curso) => {
-    setCursoSelecionado(curso);
+  const handleDrawerClose = () => {
+    setOpen(false);
   };
-
-  const handleAdicionarCurso = () => {
-    setModalVisible(true);
-  };
-
-  const handleSalvarCurso = async () => {
-    if (!nomeCurso || !cargaHoraria || !nivel) {
-      console.error("Nome do curso, carga horária e nível são obrigatórios.");
-      return;
-    }
-
-    if (isNaN(cargaHoraria)) {
-      console.error("A carga horária deve ser um número válido.");
-      return;
-    }
-
-    try {
-      const response = await axios.post("http://10.110.12.9:8080/curso", {
-        nome: nomeCurso,
-        cargaHoraria: cargaHoraria,
-        nivel: nivel,
-        deleted: 0,
-      });
-      fetchCursos();
-      console.log(response.data);
-      // Navegar de volta para a tela de Gerenciamento de Cursos
-    } catch (error) {
-      console.error("Erro ao adicionar curso:", error);
-    }
-
-    setModalVisible(false);
-    setNomeCurso("");
-    setCargaHoraria("");
-    setNivel("");
-  };
-
-  // Exemplo de dados das turmas
-  const turmas = [
-    { sigla: "T1", operacao: "Operação 1" },
-    { sigla: "T2", operacao: "Operação 2" },
-    { sigla: "T3", operacao: "Operação 3" },
-  ];
-
-  // Cabeçalho da tabela
-  const tableHead = ["Sigla da Turma", "Operação"];
-
-  // Dados das turmas formatados para a tabela
-  const tableData = turmas.map((turma) => [turma.sigla, turma.operacao]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topo}>
-        <Pressable style={{ marginLeft: 20 }} onPress={handleMenu}>
-          <FontAwesome name="bars" size={30} />
-        </Pressable>
-        <Text style={{ color: "white", marginLeft: 400, fontSize: 30 }}>
-          Gerenciamento de Cursos
-        </Text>
-      </View>
-
-
-      {visibilidadeMenu && (
-        <View style={styles.menu}>
-          <View style={styles.cabecalhoMenu}>
-            <Text
-              style={{ fontSize: 40, color: "white", marginHorizontal: 60 }}
-            >
-              MasterNote
-            </Text>
-            <Pressable onPress={handleMenu}>
-              <FontAwesome name="bars" size={50} />
-            </Pressable>
-          </View>
-          <View
-            style={{
-              height: "82%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar position="fixed" open={open}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{ mr: 2, ...(open && { display: "none" }) }}
           >
-            <Pressable
-              style={{
-                ...styles.menuBotoes,
-                marginTop: 20,
-                backgroundColor: "gray",
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>Gerenciar</Text>
-              <Text>Curso</Text>
-            </Pressable>
-            <Pressable style={styles.menuBotoes}>
-              <Text
-                onPress={() => navigation.navigate("GerenciarTurmas")}
-                style={{ fontSize: 18 }}
-              >
-                Gerenciar
-              </Text>
-              <Text>Turma</Text>
-            </Pressable>
-            <Pressable style={styles.menuBotoes}>
-              <Text
-                onPress={() => navigation.navigate("GerenciarUC")}
-                style={{ fontSize: 18 }}
-              >
-                Gerenciar
-              </Text>
-              <Text>Unidade Curricular</Text>
-            </Pressable>
-            <Pressable style={styles.menuBotoes}>
-              <Text
-                onPress={() => navigation.navigate("GerenciarSA")}
-                style={{ fontSize: 18 }}
-              >
-                Gerenciar
-              </Text>
-              <Text>Situação de Aprendizagem</Text>
-            </Pressable>
-            <Pressable style={styles.menuBotoes}>
-              <Text
-                onPress={() => navigation.navigate("IniciarAvaliacao")}
-                style={{ fontSize: 18 }}
-              >
-                Gerenciar
-              </Text>
-              <Text>Avaliações</Text>
-            </Pressable>
-            <Pressable style={styles.menuBotoes}>
-              <Text
-                onPress={() => navigation.navigate("GerarRelatorio")}
-                style={{ fontSize: 18 }}
-              >
-                Relatório de
-              </Text>
-              <Text>Desempenho</Text>
-            </Pressable>
-          </View>
-        </View>
-      )}
-
-      {/* Modal de Cadastro de Curso */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Adicionar Curso</Text>
-              <Pressable onPress={() => setModalVisible(false)}>
-                <FontAwesome name="times" size={24} color="black" />
-              </Pressable>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Nome do Curso"
-              onChangeText={(text) => setNomeCurso(text)} // Update the 'nomeCurso' state with the text value
-              value={nomeCurso}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Nível"
-              onChangeText={(text) => setNivel(text)} // Update the 'nivel' state with the text value
-              value={nivel}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Carga Horária"
-              onChangeText={(text) => setCargaHoraria(text)} // Update the 'cargaHoraria' state with the text value
-              value={cargaHoraria}
-            />
-
-            <Pressable style={styles.modalButton} onPress={handleSalvarCurso}>
-              <Text style={styles.modalButtonText}>Salvar</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            MasterNote
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <CustomDrawer open={open} handleDrawerClose={handleDrawerClose} />
+      <Main open={open}>
+        <DrawerHeader />
+        {children}
+      </Main>
+    </Box>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  topo: {
-    height: "8%",
-    flexDirection: "row",
-    backgroundColor: "blue",
-    alignItems: "center",
-  },
-  viewMae: {
-    flexDirection: "row",
-    height: "92%",
-  },
-  quadroEsquerda: {
-    height: "80%",
-    width: "28%",
-  },
-  quadroDireita: {
-    width: "72%",
-    borderWidth: 2,
-  },
-  viewTopoSeparacao: {
-    height: "6%",
-    borderBottomWidth: 2,
-    justifyContent: "center",
-  },
-  txtTopoSeparacao: {
-    textAlign: "center",
-    color: "red",
-    fontSize: 20,
-    position: "absolute",
-  },
-  listaDeCursos: {
-    borderBottomWidth: 2,
-  },
-  viewAddCurso: {
-    height: "14%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnAddCurso: {
-    width: "95%",
-    backgroundColor: "yellow",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  viewInformacoes: {
-    height: "18%",
-    borderBottomWidth: 2,
-    justifyContent: "center",
-  },
-  txtInformacoes: {
-    fontSize: 18,
-    padding: 5,
-    borderTopWidth: 2,
-  },
-  viewListaTurmas: {
-    height: "9%",
-    borderBottomWidth: 2,
-    justifyContent: "center",
-  },
-  viewSiglaTopo: {
-    width: "70%",
-    justifyContent: "center",
-    borderBottomWidth: 2,
-    borderRightWidth: 2,
-  },
-  viewOperacaoTopo: {
-    width: "30%",
-    justifyContent: "center",
-    borderBottomWidth: 2,
-  },
-  txtMedioCentralizado: {
-    fontSize: 18,
-    textAlign: "center",
-  },
-  menu: {
-    position: "absolute",
-    width: "32%",
-    height: "100%",
-    backgroundColor: "white",
-    borderRightWidth: 2,
-  },
-  cabecalhoMenu: {
-    height: "18%",
-    backgroundColor: "blue",
-    borderBottomWidth: 2,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  menuBotoes: {
-    width: "80%",
-    borderWidth: 2,
-    borderRadius: 20,
-    padding: 10,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-
-  // Estilos da tabela
-  head: { height: 40, backgroundColor: "#f1f8ff" },
-  text: { margin: 6, textAlign: "center", textAlignVertical: "center" },
-  row: { flexDirection: "row", height: 50, backgroundColor: "white" },
-
-  // Estilos do Modal
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  modalButton: {
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  modalButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-
-  btnCurso: {
-    justifyContent: "center",
-    flexDirection: "row",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 2,
-    borderRadius: 20,
-    margin: 5,
-  },
-
-  btnCurso2: {
-    alignItems: "flex-end",
-  },
-  textoCurso: {
-    fontSize: 16,
-    position: "absolute",
-    alignSelf: "center",
-  },
-  dropdownMenu: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    backgroundColor: "#fff",
-    elevation: 4,
-    borderRadius: 4,
-    padding: 8,
-  },
-  dropdownItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  dropdownText: {
-    fontSize: 16,
-  },
-  listaDeCursosContainer: {
-    borderBottomWidth: 2,
-    borderBottomColor: "black",
-    marginBottom: 10, // Espaço extra abaixo da lista
-  },
-});
-
-export default GerenciamentoCursos;
+}

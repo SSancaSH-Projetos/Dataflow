@@ -1,0 +1,110 @@
+{
+    "sourceFile": "src/Componentes/CustomDrawer.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 23,
+            "patches": [
+                {
+                    "date": 1715716102615,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715716181823,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,8 +38,9 @@\n         <List>\r\n           {[\r\n             \"Cursos\",\r\n             \"Turmas\",\r\n+            \"Turmas\",\r\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n"
+                },
+                {
+                    "date": 1715716308861,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,9 +38,9 @@\n         <List>\r\n           {[\r\n             \"Cursos\",\r\n             \"Turmas\",\r\n-            \"Turmas\",\r\n+            \"fafafaf\",\r\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n"
+                },
+                {
+                    "date": 1715716545086,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,15 @@\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n   const theme = useTheme();\r\n+  const history = useHistory();\r\n \r\n+  const handleTurmasClick = () => {\r\n+    // Redirecionar para a tela de AdicionarTurmas2\r\n+    history.push('/AdicionarTurmas2');\r\n+  };\r\n+\r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n \r\n   return (\r\n     <Drawer\r\n"
+                },
+                {
+                    "date": 1715716603728,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n   const history = useHistory();\r\n \r\n   const handleTurmasClick = () => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n-    history.push('/AdicionarTurmas2');\r\n+    history.push(\"/AdicionarTurmas2\");\r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n \r\n@@ -49,9 +49,11 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <ListItemButton>\r\n+              <ListItemButton\r\n+                onClick={text === \"Turmas\" ? handleTurmasClick : undefined}\r\n+              >\r\n                 <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n                 <ListItemText primary={text} />\r\n               </ListItemButton>\r\n             </ListItem>\r\n"
+                },
+                {
+                    "date": 1715716903459,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,9 @@\n   const history = useHistory();\r\n \r\n   const handleTurmasClick = () => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n+    console.log(\"\")\r\n     history.push(\"/AdicionarTurmas2\");\r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n"
+                },
+                {
+                    "date": 1715716993311,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,6 @@\n import React from \"react\";\r\n+import { useHistory } from \"react-router-dom\"; // Importe o useHistory do react-router-dom\r\n import Drawer from \"@mui/material/Drawer\";\r\n import List from \"@mui/material/List\";\r\n import Divider from \"@mui/material/Divider\";\r\n import ListItem from \"@mui/material/ListItem\";\r\n@@ -14,14 +15,13 @@\n \r\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n-  const theme = useTheme();\r\n-  const history = useHistory();\r\n+  const history = useHistory(); // Use o useHistory aqui\r\n \r\n   const handleTurmasClick = () => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n-    console.log(\"\")\r\n+    console.log(\"teste turmas\");\r\n     history.push(\"/AdicionarTurmas2\");\r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n"
+                },
+                {
+                    "date": 1715717245021,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,9 +51,9 @@\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n               <ListItemButton\r\n-                onClick={text === \"Turmas\" ? handleTurmasClick : undefined}\r\n+                onClick={text === \"Turmas\" ?  : undefined}\r\n               >\r\n                 <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n                 <ListItemText primary={text} />\r\n               </ListItemButton>\r\n"
+                },
+                {
+                    "date": 1715717252891,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,9 +51,9 @@\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n               <ListItemButton\r\n-                onClick={text === \"Turmas\" ?  : undefined}\r\n+                onClick={handleTurmasClick}\r\n               >\r\n                 <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n                 <ListItemText primary={text} />\r\n               </ListItemButton>\r\n"
+                },
+                {
+                    "date": 1715717364242,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,12 +17,14 @@\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n   const history = useHistory(); // Use o useHistory aqui\r\n \r\n-  const handleTurmasClick = () => {\r\n+  const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n-    history.push(\"/AdicionarTurmas2\");\r\n+    if (index === 1) { // Aqui você pode verificar o índice clicado\r\n+      history.push(\"/AdicionarTurmas2\");\r\n+    }\r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n \r\n@@ -51,9 +53,9 @@\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n               <ListItemButton\r\n-                onClick={handleTurmasClick}\r\n+                onClick={() => handleTurmasClick(index)} // Passando o índice para a função\r\n               >\r\n                 <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n                 <ListItemText primary={text} />\r\n               </ListItemButton>\r\n"
+                },
+                {
+                    "date": 1715717480152,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,13 +52,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <ListItemButton\r\n-                onClick={() => handleTurmasClick(index)} // Passando o índice para a função\r\n-              >\r\n-                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n-                <ListItemText primary={text} />\r\n+              <\r\n               </ListItemButton>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n"
+                },
+                {
+                    "date": 1715717486363,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <\r\n+              <TouchableOpacity key={index}\r\n               </ListItemButton>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n"
+                },
+                {
+                    "date": 1715717491400,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <TouchableOpacity key={index}\r\n+              <TouchableOpacity key={index}>Teste</TouchableOpacity>\r\n               </ListItemButton>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n"
+                },
+                {
+                    "date": 1715717502477,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,13 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <TouchableOpacity key={index}>Teste</TouchableOpacity>\r\n+              <ListItemButton\r\n+                onClick={() => handleTurmasClick(index)} // Passando o índice para a função\r\n+              >\r\n+                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n+                <ListItemText primary={text} />\r\n               </ListItemButton>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n"
+                },
+                {
+                    "date": 1715717510086,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,14 +52,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <ListItemButton\r\n-                onClick={() => handleTurmasClick(index)} // Passando o índice para a função\r\n-              >\r\n-                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n-                <ListItemText primary={text} />\r\n-              </ListItemButton>\r\n+              \r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n         <Divider />\r\n"
+                },
+                {
+                    "date": 1715717515702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              \r\n+              <Touchable\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n         <Divider />\r\n"
+                },
+                {
+                    "date": 1715717521697,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n import GroupIcon from \"@mui/icons-material/Group\";\r\n import BookIcon from \"@mui/icons-material/MenuBook\";\r\n import WorkIcon from \"@mui/icons-material/Work\";\r\n import { useTheme } from \"@mui/material/styles\";\r\n+import { TouchableOpacity } from \"react-native-web\";\r\n \r\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n@@ -52,9 +53,9 @@\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <Touchable\r\n+              <TouchableOpacity>Teste</TouchableOpacity>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n         <Divider />\r\n"
+                },
+                {
+                    "date": 1715717553404,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -48,9 +48,9 @@\n         <List>\r\n           {[\r\n             \"Cursos\",\r\n             \"Turmas\",\r\n-            \"fafafaf\",\r\n+            \"ssss\",\r\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n"
+                },
+                {
+                    "date": 1715717571268,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,8 @@\n import GroupIcon from \"@mui/icons-material/Group\";\r\n import BookIcon from \"@mui/icons-material/MenuBook\";\r\n import WorkIcon from \"@mui/icons-material/Work\";\r\n import { useTheme } from \"@mui/material/styles\";\r\n-import { TouchableOpacity } from \"react-native-web\";\r\n \r\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n@@ -48,14 +47,19 @@\n         <List>\r\n           {[\r\n             \"Cursos\",\r\n             \"Turmas\",\r\n-            \"ssss\",\r\n+            \"fafafaf\",\r\n             \"Unidades Curriculares\",\r\n             \"Situações de Aprendizagem\",\r\n           ].map((text, index) => (\r\n             <ListItem key={text} disablePadding>\r\n-              <TouchableOpacity>Teste</TouchableOpacity>\r\n+              <ListItemButton\r\n+                onClick={() => handleTurmasClick(index)} // Passando o índice para a função\r\n+              >\r\n+                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n+                <ListItemText primary={text} />\r\n+              </ListItemButton>\r\n             </ListItem>\r\n           ))}\r\n         </List>\r\n         <Divider />\r\n"
+                },
+                {
+                    "date": 1715717712274,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,11 +20,9 @@\n \r\n   const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n-    if (index === 1) { // Aqui você pode verificar o índice clicado\r\n-      history.push(\"/AdicionarTurmas2\");\r\n-    }\r\n+   \r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n \r\n"
+                },
+                {
+                    "date": 1715717801134,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,12 +12,13 @@\n import BookIcon from \"@mui/icons-material/MenuBook\";\r\n import WorkIcon from \"@mui/icons-material/Work\";\r\n import { useTheme } from \"@mui/material/styles\";\r\n \r\n+import { useNavigation } from \"@react-navigation/native\";\r\n+\r\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n-  const history = useHistory(); // Use o useHistory aqui\r\n \r\n   const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n"
+                },
+                {
+                    "date": 1715717812079,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,8 +18,11 @@\n const drawerWidth = 240;\r\n \r\n function CustomDrawer({ open, handleDrawerClose }) {\r\n \r\n+  \r\n+  const navigation = useNavigation();\r\n+\r\n   const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n    \r\n"
+                },
+                {
+                    "date": 1715717821784,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,9 @@\n \r\n   const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n+    navigation.navigate(\"TelaHome\");\r\n    \r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n"
+                },
+                {
+                    "date": 1715717828434,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n \r\n   const handleTurmasClick = (index) => {\r\n     // Redirecionar para a tela de AdicionarTurmas2\r\n     console.log(\"teste turmas\");\r\n-    navigation.navigate(\"TelaHome\");\r\n+    navigation.navigate(\"AdicionarTurmas2\");\r\n    \r\n   };\r\n \r\n   const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n"
+                }
+            ],
+            "date": 1715716102615,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport Drawer from \"@mui/material/Drawer\";\r\nimport List from \"@mui/material/List\";\r\nimport Divider from \"@mui/material/Divider\";\r\nimport ListItem from \"@mui/material/ListItem\";\r\nimport ListItemButton from \"@mui/material/ListItemButton\";\r\nimport ListItemIcon from \"@mui/material/ListItemIcon\";\r\nimport ListItemText from \"@mui/material/ListItemText\";\r\nimport SchoolIcon from \"@mui/icons-material/School\";\r\nimport GroupIcon from \"@mui/icons-material/Group\";\r\nimport BookIcon from \"@mui/icons-material/MenuBook\";\r\nimport WorkIcon from \"@mui/icons-material/Work\";\r\nimport { useTheme } from \"@mui/material/styles\";\r\n\r\nconst drawerWidth = 240;\r\n\r\nfunction CustomDrawer({ open, handleDrawerClose }) {\r\n  const theme = useTheme();\r\n\r\n  const icons = [<SchoolIcon />, <GroupIcon />, <BookIcon />, <WorkIcon />];\r\n\r\n  return (\r\n    <Drawer\r\n      sx={{\r\n        width: drawerWidth,\r\n        flexShrink: 0,\r\n        \"& .MuiDrawer-paper\": {\r\n          width: drawerWidth,\r\n          boxSizing: \"border-box\",\r\n        },\r\n      }}\r\n      variant=\"persistent\"\r\n      anchor=\"left\"\r\n      open={open}\r\n    >\r\n      <div>\r\n        <Divider />\r\n        <List>\r\n          {[\r\n            \"Cursos\",\r\n            \"Turmas\",\r\n            \"Unidades Curriculares\",\r\n            \"Situações de Aprendizagem\",\r\n          ].map((text, index) => (\r\n            <ListItem key={text} disablePadding>\r\n              <ListItemButton>\r\n                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>\r\n                <ListItemText primary={text} />\r\n              </ListItemButton>\r\n            </ListItem>\r\n          ))}\r\n        </List>\r\n        <Divider />\r\n      </div>\r\n    </Drawer>\r\n  );\r\n}\r\n\r\nexport default CustomDrawer;\r\n"
+        }
+    ]
+}

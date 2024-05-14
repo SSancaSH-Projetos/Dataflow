@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/Telas/Navigation.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1715711189560,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1715711189560,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport { NavigationContainer } from \"@react-navigation/native\";\r\nimport { createStackNavigator } from \"@react-navigation/stack\";\r\nimport IniciarAvaliacao from \"./src/Telas/IniciarAvaliacao\";\r\nimport GerenciarTurmas from \"./src/Telas/GerenciarTurmas\";\r\nimport GerenciarSA from \"./src/Telas/GerenciarSA\";\r\nimport GerenciarUC from \"./src/Telas/GerenciarUC\";\r\nimport GerenciarCursos from \"./src/Telas/GerenciarCursos\";\r\nimport GerarRelatorio from \"./src/Telas/GerarRelatorio\";\r\nimport CadastroUC from \"./src/Telas/CadastroUC\";\r\nimport CadastroCapacidades from \"./src/Telas/CadastroCapacidades\";\r\nimport AdicionarSA from \"./src/Telas/AdicionarSA\";\r\nimport AdicionarTurma from \"./src/Telas/AdicionarTurma\";\r\nimport AdicionarCurso from \"./src/Telas/AdicionarCurso\";\r\nimport AdicionarCriterios from \"./src/Telas/AdicionarCriterios\";\r\nimport IniciarAvCapacidade from \"./src/Telas/IniciarAvCapacidade\";\r\nimport CadastroAlunos from \"./src/Telas/CadastroAlunos\";\r\nimport EditarSA from \"./src/Telas/EditarSA\";\r\nimport EditarUC from \"./src/Telas/EditarUC\";\r\nimport EditarCurso from \"./src/Telas/EditarCurso\";\r\nimport EditarTurma from \"./src/Telas/EditarTurma\";\r\n\r\nconst Stack = createStackNavigator();\r\n\r\n\r\nconst Navigation = () => {\r\n    return (\r\n      <NavigationContainer>\r\n        <Stack.Navigator screenOptions={{ headerShown: false }}>\r\n          <Stack.Screen\r\n            name=\"TelaInicialProjeto\"\r\n            component={TelaInicialProjeto}\r\n          />\r\n          <Stack.Screen name=\"GerenciarTurmas\" component={GerenciarTurmas} />\r\n          <Stack.Screen name=\"IniciarAvaliacao\" component={IniciarAvaliacao} />\r\n          <Stack.Screen name=\"GerenciarSA\" component={GerenciarSA} />\r\n          <Stack.Screen name=\"GerenciarUC\" component={GerenciarUC} />\r\n          <Stack.Screen name=\"GerarRelatorio\" component={GerarRelatorio} />\r\n          <Stack.Screen name=\"AdicionarSA\" component={AdicionarSA} />\r\n          <Stack.Screen name=\"CadastroUC\" component={CadastroUC} />\r\n          <Stack.Screen name=\"CadastroCapacidades\" component={CadastroCapacidades}/>\r\n          <Stack.Screen name=\"AdicionarTurma\" component={AdicionarTurma} />\r\n          <Stack.Screen name=\"GerenciarCursos\" component={GerenciarCursos} />\r\n          <Stack.Screen name=\" AdicionarCurso\" component={AdicionarCurso} />\r\n          <Stack.Screen name=\"AdicionarCriterios\" component={AdicionarCriterios}/>\r\n          <Stack.Screen name=\"IniciarAvCapacidade\" component={IniciarAvCapacidade}/>\r\n          <Stack.Screen name=\"CadastroAlunos\" component={CadastroAlunos} />\r\n          <Stack.Screen name=\"EditarSA\" component={EditarSA} />\r\n          <Stack.Screen name=\"EditarUC\" component={EditarUC} />\r\n          <Stack.Screen name=\"EditarCurso\" component={EditarCurso} />\r\n          <Stack.Screen name=\"AdicionarCurso\" component={AdicionarCurso} />\r\n          <Stack.Screen name=\"EditarTurma\" component={EditarTurma} />\r\n        </Stack.Navigator>\r\n      </NavigationContainer>\r\n    );\r\n  };\r\n\r\n  export default Navigation;"
+        }
+    ]
+}
