@@ -27,6 +27,7 @@ import EditarSA from "./src/Telas/EditarSA";
 import EditarUC from "./src/Telas/EditarUC";
 import EditarCurso from "./src/Telas/EditarCurso";
 import EditarTurma from "./src/Telas/EditarTurma";
+import GerenciamentoCursos from "./src/Telas/GerenciamentoCursos";
 const Stack = createStackNavigator();
 
 const TelaInicialProjeto = ({ navigation }) => {
@@ -74,7 +75,7 @@ const TelaInicialProjeto = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonMargin]}
-            onPress={() => navigation.navigate("GerenciarCursos")}
+            onPress={() => navigation.navigate("GerenciamentoCursos")}
           >
             <Text style={styles.buttonText}>Gerenciar Cursos</Text>
           </TouchableOpacity>
@@ -110,7 +111,7 @@ const App = () => {
           component={CadastroCapacidades}
         />
         <Stack.Screen name="AdicionarTurma" component={AdicionarTurma} />
-        <Stack.Screen name="GerenciarCursos" component={GerenciarCursos} />
+        <Stack.Screen name="GerenciamentoCursos" component={GerenciamentoCursos} />
         <Stack.Screen name=" AdicionarCurso" component={AdicionarCurso} />
         <Stack.Screen
           name="AdicionarCriterios"

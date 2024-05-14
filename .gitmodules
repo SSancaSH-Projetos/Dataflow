@@ -1,6 +1,0 @@
-[submodule "FrontEnd"]
-	path = FrontEnd
-	url = https://github.com/SSancaSH-Projetos/MasterNote.git
-[submodule "MasterNote"]
-	path = MasterNote
-	url = https://github.com/SSancaSH-Projetos/MasterNote.git
