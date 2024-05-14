@@ -1,0 +1,900 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "InsertsV1",
+    "dateExported": "2024-04-12T20:07:16.315Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "PostMetodos",
+            "containerId": "",
+            "created": "2024-04-09T17:57:36.206Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "Métodos Aluno",
+            "containerId": "",
+            "created": "2024-04-09T19:26:44.563Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "4f22e76f-4d5b-4486-a29b-3b38579f01ec",
+            "name": "MétodosAvaliacaoCC",
+            "containerId": "",
+            "created": "2024-04-09T19:27:28.323Z",
+            "sortNum": 50000
+        },
+        {
+            "_id": "8d68401a-98bb-4488-afe3-6d9de5688b44",
+            "name": "MétodosAvaliacaoCD",
+            "containerId": "",
+            "created": "2024-04-09T19:28:01.150Z",
+            "sortNum": 60000
+        },
+        {
+            "_id": "e9d917ae-58bd-4bc3-8c0f-59669f321c8a",
+            "name": "Métodos Curso",
+            "containerId": "",
+            "created": "2024-04-09T19:28:09.103Z",
+            "sortNum": 70000
+        },
+        {
+            "_id": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "Métodos SA",
+            "containerId": "",
+            "created": "2024-04-09T19:28:17.721Z",
+            "sortNum": 80000
+        },
+        {
+            "_id": "6758e214-1419-4514-9d96-e35e3cade66f",
+            "name": "Métodos Turma",
+            "containerId": "",
+            "created": "2024-04-09T19:28:26.219Z",
+            "sortNum": 90000
+        },
+        {
+            "_id": "8e9c3cbf-4e14-4cda-a8eb-4e748020cb03",
+            "name": "Métodos UC",
+            "containerId": "",
+            "created": "2024-04-09T19:28:32.353Z",
+            "sortNum": 100000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "6b705831-c2c4-4cd1-a4a1-ae0b2f3587e1",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "AlunoPost",
+            "url": "http://localhost:8080/aluno",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-04-09T17:58:56.089Z",
+            "modified": "2024-04-09T19:20:10.875Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nome\":\"Erick\",\n  \"numeroChamada\":\"10\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "56dfc5d4-e9a5-4949-bb62-174b6bf172e6",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "AlunoTurmaPost",
+            "url": "http://localhost:8080/aluno_turma",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2024-04-09T18:00:08.010Z",
+            "modified": "2024-04-09T18:14:57.770Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"aluno\":{\n    \"id\":1,\n    \"nome\":\"Rafael\",\n    \"numeroChamada\":30\n  },\n  \"turma\":{\n    \"id\":1,\n    \"sigla\":\"3TDS\",\n    \"curso\":\"DS\"\n  },\n  \"nota\": 10\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8ca7ea57-3b92-4bb9-aa2e-ac4ed4116c0b",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "AvaliacaoCCPost-Esperar",
+            "url": "http://localhost:8080/avaliacaoCriterioCritico",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2024-04-09T18:00:37.199Z",
+            "modified": "2024-04-12T19:59:52.375Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n \"aluno\":{\n   \"id\": 1\n },\n \"criterioCritico\":{\n   \"id\": 1,\n   \"capacidade\":{\n      \"id\": 1,\n      \"UC\":{\n        \"id\":1\n      }\n   }\n },\n \"sa\":{\n   \"id\":1,\n   \"UC\":{\n     \"id\":1\n   }\n },\n \"resultado\": true\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "988935d5-df60-40aa-a427-c531e9800b53",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "AvaliacaoCDPost-Esperar",
+            "url": "http://localhost:8080/avaliacaoCriterioDesejavel",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2024-04-09T18:04:18.973Z",
+            "modified": "2024-04-12T20:04:27.149Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \n \"aluno\":{\n   \"id\": 1\n },\n \"criterioDesejavel\":{\n   \"id\": 1,\n   \"CriterioCritico\":{\n      \"id\": 1,\n      \"Capacidade\":{\n        \"id\":1,\n        \"UC\":{\n          \"id\":1\n        }\n      }\n   }\n },\n \"sa\":{\n   \"id\":1,\n   \"UC\":{\n     \"id\":1\n   }\n },\n \"resultado\": true\n\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3bde234d-a371-4769-aaf8-3d98cc0e0585",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "CapacidadePost",
+            "url": "http://localhost:8080/capacidade",
+            "method": "POST",
+            "sortNum": 140000,
+            "created": "2024-04-09T18:04:38.526Z",
+            "modified": "2024-04-09T18:44:02.762Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"descicao\":\"alfabeto :D\",\n  \"tipo\":\"socioemocional\",\n    \"uc\":{\n      \"id\":1,\n      \"nomeUC\":\"Back-End\",\n      \"sigla\":\"PWBE\",\n      \"cargaHoraria\":200,\n      \"modulo\":\"Só o Basic\",\n      \"conhecimentos\":\"N/A\"\n    }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e0f1a9a7-17b0-4e82-9740-60fb765d1b28",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "CCPost",
+            "url": "http://localhost:8080/cc",
+            "method": "POST",
+            "sortNum": 150000,
+            "created": "2024-04-09T18:04:57.495Z",
+            "modified": "2024-04-09T19:12:29.356Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"descricao\":\"\",\n  \"capacidade\":{\n    \"id\":1,\n    \"descicao\":\"alfabeto :D\",\n    \"tipo\":\"socioemocional\",\n      \"uc\":{\n        \"id\":1,\n        \"nomeUC\":\"Back-End\",\n        \"sigla\":\"PWBE\",\n        \"cargaHoraria\":200,\n        \"modulo\":\"Só o Basic\",\n        \"conhecimentos\":\"N/A\"\n      }\n  },\n  \"CriterioDesejavel\":\"\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3e662f1e-8ab7-4723-9108-641188d5da14",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "CDPost",
+            "url": "http://localhost:8080/cd",
+            "method": "POST",
+            "sortNum": 160000,
+            "created": "2024-04-09T18:05:28.435Z",
+            "modified": "2024-04-09T19:13:43.508Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"descricao\":\"\",\n  \"criterioCritico\":{\n    \"id\":\"1\",\n    \"descricao\":\"\",\n    \"capacidade\":{\n         \"id\":1,\n         \"descicao\":\"alfabeto :D\",\n         \"tipo\":\"socioemocional\",\n            \"uc\":{\n              \"id\":1,\n              \"nomeUC\":\"Back-End\",\n              \"sigla\":\"PWBE\",\n              \"cargaHoraria\":200,\n              \"modulo\":\"Só o Basic\",\n              \"conhecimentos\":\"N/A\"\n      }\n    }\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "5478060d-9242-4725-a285-52073a5560fb",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "CursoPost",
+            "url": "http://localhost:8080/curso",
+            "method": "POST",
+            "sortNum": 170000,
+            "created": "2024-04-09T18:05:41.333Z",
+            "modified": "2024-04-09T20:14:10.150Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nome\":\"1MDS\",\n  \"cargaHoraria\":200,\n  \"nivel\":\"Intermediário\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "fba6e179-13f5-491a-93fc-445f0e0c63ea",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "SAPost",
+            "url": "http://localhost:8080/sa",
+            "method": "POST",
+            "sortNum": 180000,
+            "created": "2024-04-09T18:05:53.686Z",
+            "modified": "2024-04-09T19:16:35.930Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"titulo\":\"\",\n  \"descricao\":\"\",\n  \"tipo\":\"\",\n  \"uc\":{\n    \"id\":1,\n     \"nomeUC\":\"Back-End\",\n     \"sigla\":\"PWBE\",\n     \"cargaHoraria\":200,\n     \"modulo\":\"Só o Basic\",\n     \"conhecimentos\":\"N/A\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "7fac12e3-cc5a-4b24-a6f7-19b754a64da6",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "TurmaPost",
+            "url": "http://localhost:8080/turma",
+            "method": "POST",
+            "sortNum": 190000,
+            "created": "2024-04-09T18:06:05.092Z",
+            "modified": "2024-04-09T19:18:13.900Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"sigla\":\"TDS\",\n  \"curso\":{\n    \"id\":1,\n    \"nome\":\"3TDS\",\n    \"cargaHoraria\":200,\n    \"nivel\":\"Intermediário\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e6dcb482-0d46-4208-8204-a4895ec008cb",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "0038baa9-6b7d-419b-b60c-4d3db490ddc2",
+            "name": "UCPost",
+            "url": "http://localhost:8080/uc",
+            "method": "POST",
+            "sortNum": 200000,
+            "created": "2024-04-09T18:06:23.581Z",
+            "modified": "2024-04-09T19:18:51.065Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nomeUC\":\"Back-End\",\n  \"sigla\":\"PWBE\",\n  \"cargaHoraria\":200,\n  \"modulo\":\"Só o Basic\",\n  \"conhecimentos\":\"N/A\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3ccc9413-f699-4bb0-949e-67fbc00acb62",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "FindByNome",
+            "url": "http://localhost:8080/aluno/pesquisaNome/{Nome}",
+            "method": "GET",
+            "sortNum": 210000,
+            "created": "2024-04-09T19:30:06.117Z",
+            "modified": "2024-04-12T20:04:53.973Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "Nome",
+                    "value": "Erick",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "34b4a652-e218-4167-87d4-143d21f62382",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "FindById",
+            "url": "http://localhost:8080/aluno/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 220000,
+            "created": "2024-04-09T19:30:21.556Z",
+            "modified": "2024-04-09T19:33:05.838Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "2564fc62-9966-4f24-8a84-68d4b6d366a0",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "FindByNumeroChamada",
+            "url": "http://localhost:8080/aluno/pesquisaNumeroChamada/{numeroChamada}",
+            "method": "GET",
+            "sortNum": 230000,
+            "created": "2024-04-09T19:30:45.485Z",
+            "modified": "2024-04-09T19:33:54.077Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "numeroChamada",
+                    "value": "10",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "edc8dd78-264c-4f39-b71d-02f6dcaaba85",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "Update",
+            "url": "http://localhost:8080/aluno/update/{id}",
+            "method": "PUT",
+            "sortNum": 240000,
+            "created": "2024-04-09T19:31:03.214Z",
+            "modified": "2024-04-12T20:05:08.341Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nome\":\"Erick\",\n  \"numeroChamada\":\"10\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "384d8cd1-f0df-4ac3-b1fe-b972a36fc4af",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "330c8352-909d-463d-bfcc-cc02ad367ab1",
+            "name": "Delete",
+            "url": "http://localhost:8080/aluno/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 250000,
+            "created": "2024-04-09T19:31:11.813Z",
+            "modified": "2024-04-12T20:05:50.132Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "2",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "9df2bd15-077f-4042-bcc6-4d198e36cc2f",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "4f22e76f-4d5b-4486-a29b-3b38579f01ec",
+            "name": "FindById",
+            "url": "http://localhost:8080/avaliacaoCriterioCritico/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 270000,
+            "created": "2024-04-09T19:37:39.989Z",
+            "modified": "2024-04-12T20:06:37.223Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d15becd6-b832-489d-a57f-1de37996e3ac",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "4f22e76f-4d5b-4486-a29b-3b38579f01ec",
+            "name": "FindByAluno",
+            "url": "http://localhost:8080/avaliacaoCriterioCritico/pesquisaAluno/{idAluno}",
+            "method": "GET",
+            "sortNum": 280000,
+            "created": "2024-04-09T19:37:48.670Z",
+            "modified": "2024-04-12T20:06:49.317Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "idAluno",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "3eb7f9cc-5e54-4469-9f8a-d5368447ce69",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "4f22e76f-4d5b-4486-a29b-3b38579f01ec",
+            "name": "Update",
+            "url": "http://localhost:8080/avaliacaoCriterioCritico/update/{id}",
+            "method": "PUT",
+            "sortNum": 290000,
+            "created": "2024-04-09T19:38:00.123Z",
+            "modified": "2024-04-09T19:41:01.133Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "5c844463-ed8d-40c9-9328-084551eaf011",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "4f22e76f-4d5b-4486-a29b-3b38579f01ec",
+            "name": "Delete",
+            "url": "http://localhost:8080/avaliacaoCriterioCritico/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 300000,
+            "created": "2024-04-09T19:38:07.214Z",
+            "modified": "2024-04-09T19:41:21.363Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "9c0ea2aa-3d96-4a0a-84cd-da4d678bfc9a",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8d68401a-98bb-4488-afe3-6d9de5688b44",
+            "name": "FindById",
+            "url": "http://localhost:8080/avaliacaoCriterioDesejavel/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 320000,
+            "created": "2024-04-09T19:41:45.359Z",
+            "modified": "2024-04-09T19:42:44.187Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "b4770ac8-0ac2-49e8-9c3d-d48ac7af3217",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8d68401a-98bb-4488-afe3-6d9de5688b44",
+            "name": "FindByAluno",
+            "url": "http://localhost:8080/avaliacaoCriterioDesejavel/pesquisaAluno/{id}",
+            "method": "GET",
+            "sortNum": 340000,
+            "created": "2024-04-09T19:42:10.617Z",
+            "modified": "2024-04-09T19:45:24.301Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "d76abcce-5489-4a74-8e53-b7b9712fe037",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8d68401a-98bb-4488-afe3-6d9de5688b44",
+            "name": "Update",
+            "url": "http://localhost:8080/avaliacaoCriterioDesejavel/update/{id}",
+            "method": "PUT",
+            "sortNum": 350000,
+            "created": "2024-04-09T19:42:15.842Z",
+            "modified": "2024-04-09T19:45:52.273Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "9b652ac4-6e60-44f2-82ed-761f7931d30f",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8d68401a-98bb-4488-afe3-6d9de5688b44",
+            "name": "Delete",
+            "url": "http://localhost:8080/avaliacaoCriterioDesejavel/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 360000,
+            "created": "2024-04-09T19:42:19.748Z",
+            "modified": "2024-04-09T19:46:01.437Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "48cfe18f-2e47-451e-ab5d-ce81e0967a41",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "e9d917ae-58bd-4bc3-8c0f-59669f321c8a",
+            "name": "FindByNome",
+            "url": "http://localhost:8080/curso/pesquisaNome/{nome}",
+            "method": "GET",
+            "sortNum": 380000,
+            "created": "2024-04-09T19:48:04.722Z",
+            "modified": "2024-04-09T20:14:39.766Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "nome",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "268dfae2-f1d1-4b48-aa9f-9b92f4f87604",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "e9d917ae-58bd-4bc3-8c0f-59669f321c8a",
+            "name": "FindById",
+            "url": "http://localhost:8080/curso/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 390000,
+            "created": "2024-04-09T19:48:12.937Z",
+            "modified": "2024-04-09T19:49:35.778Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "2ad8e150-e4eb-4595-bafc-0193ca9c1384",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "e9d917ae-58bd-4bc3-8c0f-59669f321c8a",
+            "name": "Update",
+            "url": "http://localhost:8080/curso/update/{id}",
+            "method": "PUT",
+            "sortNum": 400000,
+            "created": "2024-04-09T19:48:19.300Z",
+            "modified": "2024-04-09T19:53:10.059Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nome\":\"3TDS\",\n  \"cargaHoraria\":200,\n  \"nivel\":\"Intermediário\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "03048b48-64a0-4078-8b15-d79816930654",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "e9d917ae-58bd-4bc3-8c0f-59669f321c8a",
+            "name": "Delete",
+            "url": "http://localhost:8080/curso/deletes/{id}",
+            "method": "DELETE",
+            "sortNum": 410000,
+            "created": "2024-04-09T19:48:31.768Z",
+            "modified": "2024-04-09T19:52:08.491Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "de5487f6-542c-479d-9d2d-8d2eebba9e3d",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "FindById",
+            "url": "http://localhost:8080/curso/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 420000,
+            "created": "2024-04-09T19:50:45.101Z",
+            "modified": "2024-04-09T19:52:02.748Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "9ef5748e-0969-4a52-b106-68fc31198ccc",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "FindByTitulo",
+            "url": "http://localhost:8080/curso/pesquisaTitulo/{titulo}",
+            "method": "GET",
+            "sortNum": 430000,
+            "created": "2024-04-09T19:50:56.419Z",
+            "modified": "2024-04-09T19:52:21.936Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "titulo",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "4d7d18b1-0a68-4c15-be9b-b6fb6695663f",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "FindByTipo",
+            "url": "http://localhost:8080/curso/pesquisaTipo/{tipo}",
+            "method": "GET",
+            "sortNum": 440000,
+            "created": "2024-04-09T19:51:06.388Z",
+            "modified": "2024-04-09T19:52:34.557Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "tipo",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "643b6fa1-15f2-40da-ac00-4cb00abaf293",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "Update",
+            "url": "http://localhost:8080/curso/update/{id}",
+            "method": "PUT",
+            "sortNum": 450000,
+            "created": "2024-04-09T19:51:15.451Z",
+            "modified": "2024-04-09T19:53:21.226Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "078b0bf5-3daa-43df-b5b1-8fdf25b26a8b",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "27957bc6-a48c-45a3-ab8c-bf058741a653",
+            "name": "Delete",
+            "url": "http://localhost:8080/curso/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 460000,
+            "created": "2024-04-09T19:51:21.587Z",
+            "modified": "2024-04-09T19:53:35.080Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "65cf4e8d-0449-4f1e-ad80-fa9e43992b93",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "6758e214-1419-4514-9d96-e35e3cade66f",
+            "name": "FindById",
+            "url": "http://localhost:8080/turma/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 480000,
+            "created": "2024-04-09T19:54:17.371Z",
+            "modified": "2024-04-09T19:55:01.827Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "5c98bbbb-ab44-40c5-b737-44cf35ad0555",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "6758e214-1419-4514-9d96-e35e3cade66f",
+            "name": "FindBySigla",
+            "url": "http://localhost:8080/turma/pesquisaSigla/{sigla}",
+            "method": "GET",
+            "sortNum": 490000,
+            "created": "2024-04-09T19:54:27.564Z",
+            "modified": "2024-04-09T19:55:19.470Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "sigla",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "8936eb5d-0c9f-4689-8e42-48c7e7e4e3af",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "6758e214-1419-4514-9d96-e35e3cade66f",
+            "name": "Update",
+            "url": "http://localhost:8080/turma/update/{id}",
+            "method": "PUT",
+            "sortNum": 500000,
+            "created": "2024-04-09T19:54:33.864Z",
+            "modified": "2024-04-09T19:55:48.180Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"sigla\":\"TDS\",\n  \"curso\":{\n    \"id\":1,\n    \"nome\":\"3TDS\",\n    \"cargaHoraria\":200,\n    \"nivel\":\"Intermediário\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "40ef6cc8-fddb-445b-85d4-8de980233a83",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "6758e214-1419-4514-9d96-e35e3cade66f",
+            "name": "Delete",
+            "url": "http://localhost:8080/turma/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 510000,
+            "created": "2024-04-09T19:54:38.943Z",
+            "modified": "2024-04-09T19:55:56.754Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "aa2bcdde-b6f5-49f3-95f3-57a2731f5e80",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8e9c3cbf-4e14-4cda-a8eb-4e748020cb03",
+            "name": "FindById",
+            "url": "http://localhost:8080/uc/pesquisaId/{id}",
+            "method": "GET",
+            "sortNum": 530000,
+            "created": "2024-04-09T19:56:19.628Z",
+            "modified": "2024-04-09T19:56:58.591Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "89027284-e45b-4cad-b62c-bf6fbe6c70e2",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8e9c3cbf-4e14-4cda-a8eb-4e748020cb03",
+            "name": "FindBySigla",
+            "url": "http://localhost:8080/uc/pesquisaSigla/{id}",
+            "method": "GET",
+            "sortNum": 540000,
+            "created": "2024-04-09T19:56:35.984Z",
+            "modified": "2024-04-09T19:57:06.593Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "14ea41fc-c8e4-4d23-8be6-3732edb5e65a",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8e9c3cbf-4e14-4cda-a8eb-4e748020cb03",
+            "name": "Update",
+            "url": "http://localhost:8080/uc/update/{id}",
+            "method": "PUT",
+            "sortNum": 550000,
+            "created": "2024-04-09T19:56:41.212Z",
+            "modified": "2024-04-09T19:57:31.775Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nomeUC\":\"Back-End\",\n  \"sigla\":\"PWBE\",\n  \"cargaHoraria\":200,\n  \"modulo\":\"Só o Basic\",\n  \"conhecimentos\":\"N/A\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "a58a2c9e-f83b-484c-8a22-e18515ea30d4",
+            "colId": "1a13bc55-d397-4cab-97aa-e9bb31418502",
+            "containerId": "8e9c3cbf-4e14-4cda-a8eb-4e748020cb03",
+            "name": "Delete",
+            "url": "http://localhost:8080/uc/delete/{id}",
+            "method": "DELETE",
+            "sortNum": 560000,
+            "created": "2024-04-09T19:56:46.096Z",
+            "modified": "2024-04-09T19:57:43.990Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        }
+    ]
+}
