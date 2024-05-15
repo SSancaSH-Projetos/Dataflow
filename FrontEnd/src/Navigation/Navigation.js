@@ -1,9 +1,8 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import GerenciarTurmas from "../Telas/GerenciarTurmas";
-import DashboardProfessor from "../Telas/DashboardProfessor";
-import AdicionarTurmas2 from "../Telas/AdicionarTurmas2";
+import DashboardProfessor from "../Screens/DashboardProfessor";
+import GerenciarTurmas from "../Screens/GerenciarTurmas";
 import GerenciarSA from "../Telas/GerenciarSA";
 import GerenciarUC from "../Telas/GerenciarUC";
 import GerenciarCursos from "../Telas/GerenciarCursos";
@@ -35,7 +34,6 @@ const Navigation = () => {
           component={DashboardProfessor}
         />
 
-        <Stack.Screen name="AdicionarTurmas2" component={AdicionarTurmas2} />
         <Stack.Screen name="GerenciarTurmas" component={GerenciarTurmas} />
         <Stack.Screen name="GerenciarSA" component={GerenciarSA} />
         <Stack.Screen name="GerenciarUC" component={GerenciarUC} />
