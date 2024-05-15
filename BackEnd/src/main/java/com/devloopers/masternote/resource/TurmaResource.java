@@ -3,7 +3,10 @@ package com.devloopers.masternote.resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.devloopers.masternote.entity.Curso;
+import com.devloopers.masternote.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,25 +30,23 @@ public class TurmaResource {
 	
 	@Autowired
 	private  TurmaRepository turmaRepository;
-	
+
+	@Autowired
+	private CursoRepository cursoRepository;
+
 	@GetMapping
-	public Iterable<TurmaDTO> findAll(){
-		Iterable<Turma> turmas = turmaRepository.findAll();
-		List<TurmaDTO> turmasDTO = new ArrayList<>();
-		for(Turma turma : turmas) {
-			TurmaDTO turmaDTO = new TurmaDTO(turma);
-			turmasDTO.add(turmaDTO);
-		}
-		
-		return turmasDTO;
+	public List<TurmaDTO> findAll() {
+		List<Turma> turmas = turmaRepository.findAll();
+		return turmas.stream()
+				.map(TurmaDTO::fromTurma) // Usando o método fromTurma para transformar Turma em TurmaDTO
+				.collect(Collectors.toList());
 	}
 	
 	
 	@GetMapping("/pesquisaId/{id}")
 	public TurmaDTO findById(@PathVariable Long id) {
 		Turma turma = turmaRepository.findById(id).get();
-		TurmaDTO turmaDTO = new TurmaDTO(turma);
-		return turmaDTO;
+        return TurmaDTO.fromTurma(turma);
 	}
 	
 	@GetMapping("/pesquisaSigla/{sigla}")
@@ -56,7 +57,9 @@ public class TurmaResource {
 	@PostMapping
 	public TurmaDTO createTurma(@RequestBody TurmaDTO turmaDTO) {
 		Turma turma = Turma.of(turmaDTO);
-		return new TurmaDTO(turmaRepository.save(turma));
+		Optional<Curso> cursoDaTurma = cursoRepository.findById(turmaDTO.getCurso());
+        cursoDaTurma.ifPresent(turma::setCurso);
+		return TurmaDTO.fromTurma(turmaRepository.save(turma));
 	}
 	
 	@PutMapping("/update/{id}")
@@ -67,7 +70,7 @@ public class TurmaResource {
 			Turma turma = turmaOptional.get();
 			turma.setSigla(turmaDTO.getSigla());
 			turmaRepository.save(turma);
-			return ResponseEntity.ok(new TurmaDTO(turma));
+			return ResponseEntity.ok(TurmaDTO.fromTurma(turma));
 		} else {
 			return ResponseEntity.notFound().build();
 		}

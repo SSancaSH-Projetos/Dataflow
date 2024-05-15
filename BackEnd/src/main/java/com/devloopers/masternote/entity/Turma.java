@@ -20,8 +20,8 @@ import org.hibernate.annotations.Where;
 @Data
 @Entity
 @Table(name = "turma")
-@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE turma SET isDeleted = true WHERE id=?")
+@Where(clause = "is_deleted=false")
 public class Turma {
 
     @Id
@@ -34,26 +34,21 @@ public class Turma {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "curso_id_curso")
+    @JoinColumn(name = "cursoId")
     private Curso curso;
 
-    @Column(name= "deletedT")
-    private boolean deletedT = Boolean.FALSE;
+    @Column(name= "isDeleted")
+    private Boolean isDeleted = Boolean.FALSE;
     
-//    @JsonIgnore
-//    @ManyToMany(mappedBy = "turmas")
-//    private List<Aluno> alunos;
 
-   //@OneToMany(mappedBy = "turma")
-    //private List<Aluno> alunos;
-
-    // Getters and Setters
     
     public static Turma of(TurmaDTO turmaDTO) {
     	Turma turma = new Turma();
     	turma.setId(turmaDTO.getId());
     	turma.setSigla(turmaDTO.getSigla());
-        turma.setDeletedT(turmaDTO.isDeletedT());
-    	return turma;
+        if (turmaDTO.getIsDeleted() != null){
+            turma.setIsDeleted(turmaDTO.getIsDeleted());
+        }
+        return turma;
     }
 }
