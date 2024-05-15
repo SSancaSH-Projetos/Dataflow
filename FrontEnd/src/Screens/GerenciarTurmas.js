@@ -1,53 +1,65 @@
 import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
 import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Picker,
-} from "react-native";
-import { TextField, Typography, Breadcrumbs, Link, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+  TextField,
+  Typography,
+  Breadcrumbs,
+  Link,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const GerenciarTurmas = ({ navigation }) => {
-  const [cursoNome, setCursoNome] = useState("");
+  const [cursoId, setCursoId] = useState(""); // Alterado para armazenar o ID do curso selecionado
   const [sigla, setSigla] = useState("");
   const [cursos, setCursos] = useState([]);
   const [turmas, setTurmas] = useState([]);
 
+  const fetchCursos = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/curso");
+      setCursos(response.data);
+    } catch (error) {
+      console.error("Erro ao obter cursos:", error);
+    }
+  };
+
+  const fetchTurmas = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/turma");
+      setTurmas(response.data);
+    } catch (error) {
+      console.error("Erro ao obter turmas:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCursos = async () => {
-      try {
-        const response = await axios.get("http://10.110.12.23:8080/curso");
-        setCursos(response.data);
-      } catch (error) {
-        console.error("Erro ao obter cursos:", error);
-      }
-    };
-
-    const fetchTurmas = async () => {
-      try {
-        const response = await axios.get("http://10.110.12.23:8080/turma");
-        setTurmas(response.data);
-      } catch (error) {
-        console.error("Erro ao obter turmas:", error);
-      }
-    };
-
     fetchCursos();
     fetchTurmas();
   }, []);
 
-  const adicionarTurma = async () => {
+  const handleAddTurma = async () => {
     try {
-      const response = await axios.post("http://10.110.12.23:8080/turma", {
-        nome: cursoNome,
+      const response = await axios.post("http://localhost:8080/turma", {
+        curso: cursoId,
         sigla: sigla,
       });
       console.log(response.data);
-      limparCampos();
-      navigation.goBack();
+
+      fetchTurmas();
     } catch (error) {
       console.error("Erro ao adicionar turma:", error);
     }
@@ -71,7 +83,11 @@ const GerenciarTurmas = ({ navigation }) => {
       <View style={styles.mainContainer}>
         <View style={styles.breadcrumbsContainer}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="#" onPress={() => console.log("Navigate to Dashboard")}>
+            <Link
+              color="inherit"
+              href="#"
+              onPress={() => console.log("Navigate to Dashboard")}
+            >
               Dashboard
             </Link>
             <Typography color="textPrimary">Adicionar Turmas</Typography>
@@ -79,23 +95,32 @@ const GerenciarTurmas = ({ navigation }) => {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.formContainer}>
-            <Typography variant="h6" noWrap component="div" style={styles.title}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              style={styles.title}
+            >
               Adicionar Turmas
             </Typography>
 
-            <TextField
-              label="Nome do Curso"
-              value={cursoNome}
-              onChange={(e) => setCursoNome(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-              select
+            <Select
+              labelId="curso-select-label"
+              id="curso-select"
+              value={cursoId}
+              onChange={(e) => setCursoId(e.target.value)}
+              sx={{ marginBottom: "20px" }}
+              displayEmpty // Isso permite que o Select tenha um valor vazio selecionável
             >
+              <MenuItem value="" disabled>
+                Selecionar Curso
+              </MenuItem>
               {cursos.map((curso) => (
-                <Picker.Item label={curso.nome} value={curso.nome} key={curso.id} />
+                <MenuItem key={curso.id} value={curso.id}>
+                  {curso.nome}
+                </MenuItem>
               ))}
-            </TextField>
+            </Select>
 
             <TextField
               label="Sigla"
@@ -106,7 +131,12 @@ const GerenciarTurmas = ({ navigation }) => {
               style={styles.input}
             />
 
-            <Button variant="contained" color="primary" onClick={adicionarTurma} style={styles.button}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddTurma}
+              style={styles.button}
+            >
               Adicionar Turma
             </Button>
           </View>
@@ -115,23 +145,26 @@ const GerenciarTurmas = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
                     <TableCell>Sigla</TableCell>
+                    <TableCell>Curso</TableCell>
                     <TableCell>Ação</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {turmas.map((turma) => (
                     <TableRow key={turma.id}>
-                      <TableCell>{turma.nome}</TableCell>
                       <TableCell>{turma.sigla}</TableCell>
+                      <TableCell>{turma.curso || "não atribuído"}</TableCell>
+
                       <TableCell>
-                        <Button color="primary" onClick={() => handleEditarTurma(turma.id)}>
-                          Editar
-                        </Button>
-                        <Button color="secondary" onClick={() => handleExcluirTurma(turma.id)}>
-                          Excluir
-                        </Button>
+                        <EditIcon
+                          color="primary"
+                          onClick={() => handleEditarTurma(turma.id)}
+                        />
+                        <DeleteIcon
+                          color="primary"
+                          onClick={() => handleExcluirTurma(turma.id)}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -159,11 +192,11 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    paddingRight: 10,
+    padding: 20,
   },
   tableContainer: {
     flex: 1,
-    paddingLeft: 10,
+    padding: 20,
   },
   title: {
     marginBottom: 20,
