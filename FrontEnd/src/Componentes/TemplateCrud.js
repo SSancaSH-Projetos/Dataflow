@@ -1,4 +1,5 @@
 import React from "react";
+import { ImageBackground, View, StyleSheet } from "react-native";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -6,8 +7,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { styled, useTheme } from "@mui/material/styles";
 import CustomDrawer from "./CustomDrawer";
 
@@ -16,7 +15,8 @@ const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: 0,
+    height: '100vh', // Remove o padding para eliminar as margens
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -35,6 +35,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
+  backgroundColor: "red", // Altera a cor de fundo para vermelho
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -70,6 +71,8 @@ export default function TemplateCrud({ children }) {
     setOpen(false);
   };
 
+
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -92,7 +95,7 @@ export default function TemplateCrud({ children }) {
       <CustomDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <Main open={open}>
         <DrawerHeader />
-        {children}
+          {children}
       </Main>
     </Box>
   );
