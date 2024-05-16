@@ -1,21 +1,14 @@
 package com.devloopers.masternote.entity;
 
-
-import com.devloopers.masternote.dto.TurmaDTO;
+import com.devloopers.masternote.dto.TurmaDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
 
 @Data
 @Entity
@@ -37,16 +30,17 @@ public class Turma {
     @JoinColumn(name = "cursoId")
     private Curso curso;
 
-    @Column(name= "isDeleted")
+    @Column(name = "isDeleted")
     private Boolean isDeleted = Boolean.FALSE;
-    
 
-    
-    public static Turma of(TurmaDTO turmaDTO) {
-    	Turma turma = new Turma();
-    	turma.setId(turmaDTO.getId());
-    	turma.setSigla(turmaDTO.getSigla());
-        if (turmaDTO.getIsDeleted() != null){
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Aluno> alunos;
+
+    public static Turma of(TurmaDTORequest turmaDTO) {
+        Turma turma = new Turma();
+        turma.setId(turmaDTO.getId());
+        turma.setSigla(turmaDTO.getSigla());
+        if (turmaDTO.getIsDeleted() != null) {
             turma.setIsDeleted(turmaDTO.getIsDeleted());
         }
         return turma;

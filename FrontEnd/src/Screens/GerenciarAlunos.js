@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import {
   TextField,
   Typography,
-  Breadcrumbs,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -12,73 +10,61 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
-  InputLabel,
-  MenuItem,
-  Select,
+  Button
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GerenciarCursos = ({ navigation }) => {
-  const [nome, setNome] = useState (""); 
-  const [cargaHoraria, setCargaHoraria] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [cursos, setCursos] =useState([]);
+const GerenciarAlunos = ({ navigation }) => {
+  const [nome, setNome] = useState("");
+  const [numeroChamada, setNumeroChamada] = useState("");
+  const [alunos, setAlunos] = useState([]);
 
-
-  const fetchCursos = async () => {
+  const fetchAluno = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/curso");
-      setCursos(response.data);
+      const response = await axios.get("http://localhost:8080/aluno");
+      setAlunos(response.data);
     } catch (error) {
       console.error("Erro ao obter cursos:", error);
     }
   };
 
   useEffect(() => {
-    fetchCursos();
+    fetchAluno();
   }, []);
 
-  const handleAddCurso = async () => {
+  const handleAddAluno = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/curso", {
+      const response = await axios.post("http://localhost:8080/aluno", {
         nome: nome,
-        cargaHoraria: cargaHoraria,
-        nivel: nivel
+        numeroChamada: numeroChamada,
       });
       console.log(response.data);
-
-      fetchCursos();
+      limparCampos();
+      fetchAluno();
     } catch (error) {
-      console.error("Erro ao adicionar curso:", error);
+      console.error("Erro ao adicionar aluno:", error);
     }
   };
 
   const limparCampos = () => {
-    setNome('');
-    setCargaHoraria('');
-    setNivel('');
+    setNome("");
+    setNumeroChamada("");
   };
-  
+
+  const handleEditarAluno = (id) => {
+    console.log("Editar aluno com ID:", id);
+  };
+
+  const handleExcluirAluno = (id) => {
+    console.log("Excluir aluno com ID:", id);
+  };
 
   return (
     <TemplateCrud>
       <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link
-              color="inherit"
-              href="#"
-              onPress={() => console.log("Navigate to Dashboard")}
-            >
-              Dashboard
-            </Link>
-            <Typography color="textPrimary">Adicionar Cursos</Typography>
-          </Breadcrumbs>
-        </View>
         <View style={styles.contentContainer}>
           <View style={styles.formContainer}>
             <Typography
@@ -87,9 +73,8 @@ const GerenciarCursos = ({ navigation }) => {
               component="div"
               style={styles.title}
             >
-              Adicionar Curso
+              Adicionar Alunos
             </Typography>
-
             <TextField
               label="Nome"
               value={nome}
@@ -99,29 +84,20 @@ const GerenciarCursos = ({ navigation }) => {
               style={styles.input}
             />
             <TextField
-              label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
+              label="Numero da Chamada"
+              value={numeroChamada}
+              onChange={(e) => setNumeroChamada(e.target.value)}
               variant="outlined"
               fullWidth
               style={styles.input}
             />
-            <TextField
-              label="Carga Horaria"
-              value={cargaHoraria}
-              onChange={(e) => setCargaHoraria(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-
             <Button
               variant="contained"
               color="primary"
-              onClick={handleAddCurso}
+              onClick={handleAddAluno}
               style={styles.button}
             >
-              Adicionar Curso
+              Adicionar Alunos
             </Button>
           </View>
           <View style={styles.tableContainer}>
@@ -130,29 +106,23 @@ const GerenciarCursos = ({ navigation }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Nome</TableCell>
-                    <TableCell>Nivel</TableCell>
-                    <TableCell>Carga Horaria</TableCell>
+                    <TableCell>N° Da Chamada</TableCell>
                     <TableCell>Ação</TableCell>
-                    
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {cursos.map((curso) => (
-                    <TableRow key={curso.id}>
-                      <TableCell>{curso.nome}</TableCell>
-                      <TableCell>{curso.nivel}</TableCell>
-                      <TableCell>{curso.cargaHoraria}</TableCell>
-                      
-                     
-                    
+                  {alunos.map((aluno) => (
+                    <TableRow key={aluno.id}>
+                      <TableCell>{aluno.nome}</TableCell>
+                      <TableCell>{aluno.numeroChamada}</TableCell>
                       <TableCell>
                         <EditIcon
                           color="primary"
-                          onClick={() => handleEditarCurso(curso.id)}
+                          onClick={() => handleEditarAluno(aluno.id)}
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleExcluirCurso(curso.id)}
+                          onClick={() => handleExcluirAluno(aluno.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -171,9 +141,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     padding: 10,
-  },
-  breadcrumbsContainer: {
-    marginBottom: 10,
   },
   contentContainer: {
     flex: 1,
@@ -198,6 +165,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-export default GerenciarCursos;
+export default GerenciarAlunos;

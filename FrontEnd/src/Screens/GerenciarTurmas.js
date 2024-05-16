@@ -1,10 +1,9 @@
+// GerenciarTurmas.js
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import {
   TextField,
   Typography,
-  Breadcrumbs,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +12,6 @@ import {
   TableRow,
   Paper,
   Button,
-  InputLabel,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -21,12 +19,16 @@ import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ListaDeTransferencia from "../Components/ListaDeTransferencia";
 
 const GerenciarTurmas = ({ navigation }) => {
-  const [cursoId, setCursoId] = useState(""); // Alterado para armazenar o ID do curso selecionado
+  const [cursoId, setCursoId] = useState("");
   const [sigla, setSigla] = useState("");
   const [cursos, setCursos] = useState([]);
   const [turmas, setTurmas] = useState([]);
+  const [alunos, setAlunos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [alunosSelecionados, setAlunosSelecionados] = useState([]);
 
   const fetchCursos = async () => {
     try {
@@ -46,9 +48,22 @@ const GerenciarTurmas = ({ navigation }) => {
     }
   };
 
+  const fetchAlunos = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/aluno");
+      setAlunos(response.data);
+    } catch (error) {
+      console.error("Erro ao obter Alunos:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchCursos();
-    fetchTurmas();
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchCursos(), fetchTurmas(), fetchAlunos()]);
+      setIsLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleAddTurma = async () => {
@@ -56,17 +71,22 @@ const GerenciarTurmas = ({ navigation }) => {
       const response = await axios.post("http://localhost:8080/turma", {
         curso: cursoId,
         sigla: sigla,
+        alunosNaTurma: alunosSelecionados.map(aluno => aluno.id), // Passar IDs dos alunos selecionados
       });
       console.log(response.data);
-
+      limparCampos();
       fetchTurmas();
     } catch (error) {
       console.error("Erro ao adicionar turma:", error);
     }
   };
 
+  const handleAlunosSelecionadosChange = (selectedAlunos) => {
+    setAlunosSelecionados(selectedAlunos); console.log(selectedAlunos)
+  };
+
   const limparCampos = () => {
-    setCursoNome("");
+    setCursoId("");
     setSigla("");
   };
 
@@ -75,23 +95,21 @@ const GerenciarTurmas = ({ navigation }) => {
   };
 
   const handleExcluirTurma = (id) => {
-    console.log("Excluir turma com ID:", id);
+    
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <TemplateCrud>
       <View style={styles.mainContainer}>
         <View style={styles.breadcrumbsContainer}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link
-              color="inherit"
-              href="#"
-              onPress={() => console.log("Navigate to Dashboard")}
-            >
-              Dashboard
-            </Link>
-            <Typography color="textPrimary">Adicionar Turmas</Typography>
-          </Breadcrumbs>
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.formContainer}>
@@ -110,7 +128,7 @@ const GerenciarTurmas = ({ navigation }) => {
               value={cursoId}
               onChange={(e) => setCursoId(e.target.value)}
               sx={{ marginBottom: "20px" }}
-              displayEmpty // Isso permite que o Select tenha um valor vazio selecionável
+              displayEmpty
             >
               <MenuItem value="" disabled>
                 Selecionar Curso
@@ -130,7 +148,7 @@ const GerenciarTurmas = ({ navigation }) => {
               fullWidth
               style={styles.input}
             />
-
+            <ListaDeTransferencia alunos={alunos} onSelectionChange={handleAlunosSelecionadosChange} />
             <Button
               variant="contained"
               color="primary"
@@ -155,7 +173,6 @@ const GerenciarTurmas = ({ navigation }) => {
                     <TableRow key={turma.id}>
                       <TableCell>{turma.sigla}</TableCell>
                       <TableCell>{turma.curso || "não atribuído"}</TableCell>
-
                       <TableCell>
                         <EditIcon
                           color="primary"
@@ -206,6 +223,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
