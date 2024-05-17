@@ -1,6 +1,5 @@
-// GerenciarTurmas.js
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator, ScrollView } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import {
   TextField,
   Typography,
@@ -21,73 +20,66 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListaDeTransferencia from "../Components/ListaDeTransferencia";
 
-const GerenciarTurmas = ({ navigation }) => {
-  const [cursoId, setCursoId] = useState("");
-  const [sigla, setSigla] = useState("");
-  const [cursos, setCursos] = useState([]);
-  const [turmas, setTurmas] = useState([]);
-  const [alunos, setAlunos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [alunosSelecionados, setAlunosSelecionados] = useState([]);
+const GerenciarSAs = ({ navigation }) => {
+  const [ucId, setUcId] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [ucs, setUcs] = useState([]);
+  const [sas, setSas] = useState([]);
 
-  const fetchCursos = async () => {
+  const fetchUc = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/curso");
-      setCursos(response.data);
+      const response = await axios.get("http://localhost:8080/uc");
+      setUcs(response.data);
     } catch (error) {
-      console.error("Erro ao obter cursos:", error);
+      console.error("Erro ao obter unidade curricular:", error);
     }
   };
 
-  const fetchTurmas = async () => {
+  const fetchSa = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/turma");
-      setTurmas(response.data);
+      const response = await axios.get("http://localhost:8080/sa");
+      setSas(response.data);
+      console.log(response.data);
     } catch (error) {
-      console.error("Erro ao obter turmas:", error);
+      console.error("Erro ao obter situação de aprendizagem:", error);
     }
   };
 
-  const fetchAlunos = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/aluno");
-      setAlunos(response.data);
-    } catch (error) {
-      console.error("Erro ao obter Alunos:", error);
-    }
-  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      await Promise.all([fetchCursos(), fetchTurmas(), fetchAlunos()]);
-      setIsLoading(false);
-    };
-    fetchData();
+    fetchSa();
+    fetchUc();
   }, []);
 
-  const handleAddTurma = async () => {
+  const handleAddSas = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/turma", {
-        curso: cursoId,
-        sigla: sigla,
-        alunosNaTurma: alunosSelecionados.map(aluno => aluno.id), // Passar IDs dos alunos selecionados
+      const response = await axios.post("http://localhost:8080/sa", {
+         // Passar IDs dos alunos selecionados
+         titulo: titulo,
+         descricao: descricao,
+         tipo: tipo,
+         ucId: ucId,
       });
       console.log(response.data);
-      limparCampos();
-      fetchTurmas();
+      
+      // Supondo que fetchSa() e limparCampos() estejam definidos e fazem sentido aqui
+       fetchSa();
+       limparCampos();
     } catch (error) {
-      console.error("Erro ao adicionar turma:", error);
+      console.error("Erro ao adicionar sa:", error);
     }
-  };
+};
 
-  const handleAlunosSelecionadosChange = (selectedAlunos) => {
-    setAlunosSelecionados(selectedAlunos); console.log(selectedAlunos)
-  };
+
+
 
   const limparCampos = () => {
-    setCursoId("");
-    setSigla("");
+    setUcId("");
+    setTitulo("");
+    setDescricao("");
+    setTipo("");
   };
 
   const handleEditarTurma = (id) => {
@@ -98,16 +90,8 @@ const GerenciarTurmas = ({ navigation }) => {
     
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
   return (
-    <ScrollView>
     <TemplateCrud>
       <View style={styles.mainContainer}>
         <View style={styles.breadcrumbsContainer}>
@@ -120,43 +104,60 @@ const GerenciarTurmas = ({ navigation }) => {
               component="div"
               style={styles.title}
             >
-              Adicionar Turmas
+              Adicionar Situação de Aprendizagem
             </Typography>
 
             <Select
-              labelId="curso-select-label"
-              id="curso-select"
-              value={cursoId}
-              onChange={(e) => setCursoId(e.target.value)}
+              labelId="uc-select-label"
+              id="uc-select"
+              value={ucId}
+              onChange={(e) => setUcId(e.target.value)}
               sx={{ marginBottom: "20px" }}
               displayEmpty
             >
               <MenuItem value="" disabled>
-                Selecionar Curso
+                Selecionar UC
               </MenuItem>
-              {cursos.map((curso) => (
-                <MenuItem key={curso.id} value={curso.id}>
-                  {curso.nome}
+              {ucs.map((uc) => (
+                <MenuItem key={uc.id} value={uc.id}>
+                  {uc.sigla}
                 </MenuItem>
               ))}
             </Select>
 
             <TextField
-              label="Sigla"
-              value={sigla}
-              onChange={(e) => setSigla(e.target.value)}
+              label="Título"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
               variant="outlined"
               fullWidth
               style={styles.input}
             />
-            <ListaDeTransferencia alunos={alunos} onSelectionChange={handleAlunosSelecionadosChange} />
+            <TextField
+              label="Descrição"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+
+            <TextField
+              label="Tipo da SA (Somativa ou Formativa)"
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value)}
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+
             <Button
               variant="contained"
               color="primary"
-              onClick={handleAddTurma}
+              onClick={handleAddSas}
               style={styles.button}
             >
-              Adicionar Turma
+              Adicionar Situação de Aprendizagem 
             </Button>
           </View>
           <View style={styles.tableContainer}>
@@ -164,16 +165,16 @@ const GerenciarTurmas = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Sigla</TableCell>
-                    <TableCell>Curso</TableCell>
+                    <TableCell>Titulo</TableCell>
+                    <TableCell>UC</TableCell>
                     <TableCell>Ação</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {turmas.map((turma) => (
-                    <TableRow key={turma.id}>
-                      <TableCell>{turma.sigla}</TableCell>
-                      <TableCell>{turma.curso || "não atribuído"}</TableCell>
+                  {sas.map((sa) => (
+                    <TableRow key={sa.id}>
+                      <TableCell>{sa.titulo}</TableCell>
+                      <TableCell>{sa.uc.nomeUC || "não atribuído"}</TableCell>
                       <TableCell>
                         <EditIcon
                           color="primary"
@@ -193,7 +194,6 @@ const GerenciarTurmas = ({ navigation }) => {
         </View>
       </View>
     </TemplateCrud>
-    </ScrollView>
   );
 };
 
@@ -233,4 +233,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GerenciarTurmas;
+export default GerenciarSAs;

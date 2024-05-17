@@ -20,7 +20,8 @@ import EditarCurso from "../Telas/EditarCurso";
 import EditarTurma from "../Telas/EditarTurma";
 import GerenciarCursos from "../Screens/GerenciarCursos";
 import GerenciarAlunos from "../Screens/GerenciarAlunos";
-
+import GerenciarUCs from "../Screens/GerenciarUCs";
+import GerenciarSAs from "../Screens/GerenciarSAs";
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -34,11 +35,11 @@ const Navigation = () => {
           name="DashboardProfessor"
           component={DashboardProfessor}
         />
-
+        <Stack.Screen name="GerenciarSAs" component={GerenciarSAs} />
+        <Stack.Screen name="GerenciarUCs" component={GerenciarUCs} />
         <Stack.Screen name="GerenciarAlunos" component={GerenciarAlunos} />
         <Stack.Screen name="GerenciarCursos" component={GerenciarCursos} />
         <Stack.Screen name="GerenciarTurmas" component={GerenciarTurmas} />
-        <Stack.Screen name="GerenciarSA" component={GerenciarSA} />
         <Stack.Screen name="GerenciarUC" component={GerenciarUC} />
         <Stack.Screen name="GerarRelatorio" component={GerarRelatorio} />
         <Stack.Screen name="AdicionarSA" component={AdicionarSA} />

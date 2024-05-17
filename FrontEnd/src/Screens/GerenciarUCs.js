@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
 import {
   TextField,
   Typography,
@@ -22,63 +22,63 @@ import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GerenciarCursos = ({ navigation }) => {
-  const [nome, setNome] = useState (""); 
+const GerenciarUCs = ({ navigation }) => {
+  const [nomeUC, setNomeUC] = useState (""); 
+  const [sigla, setSigla] = useState("");
   const [cargaHoraria, setCargaHoraria] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [cursos, setCursos] =useState([]);
+  const [modulo, setModulo] = useState("");
+  const [conhecimentos, setConhecimentos] = useState("");
+  const [capacidade, setCapacidade] =useState([]);
+  const [sa, setSa] = useState([]);
+  const [ucs, setUcs] = useState([]);
 
 
-  const fetchCursos = async () => {
+  const fetchUc = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/curso");
-      setCursos(response.data);
+      const response = await axios.get("http://localhost:8080/uc");
+      setUcs(response.data);
     } catch (error) {
-      console.error("Erro ao obter cursos:", error);
+      console.error("Erro ao obter unidade curricular:", error);
     }
   };
 
   useEffect(() => {
-    fetchCursos();
+    fetchUc();
   }, []);
 
-  const handleAddCurso = async () => {
+  const handleAddUc = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/curso", {
-        nome: nome,
+      const response = await axios.post("http://localhost:8080/uc", {
+        nomeUC: nomeUC,
+        sigla: sigla,
         cargaHoraria: cargaHoraria,
-        nivel: nivel
+        modulo: modulo,
+        conhecimentos: conhecimentos,
+
+        
       });
       console.log(response.data);
 
-      fetchCursos();
+      fetchUc();
+      limparCampos();
     } catch (error) {
-      console.error("Erro ao adicionar curso:", error);
+      console.error("Erro ao adicionar Unidade Curricular:", error);
     }
   };
 
   const limparCampos = () => {
-    setNome('');
+    setNomeUC('');
+    setSigla('');
     setCargaHoraria('');
-    setNivel('');
+    setModulo('');
+    setConhecimentos('')
   };
   
 
   return (
-    <ScrollView>
     <TemplateCrud>
       <View style={styles.mainContainer}>
         <View style={styles.breadcrumbsContainer}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link
-              color="inherit"
-              href="#"
-              onPress={() => console.log("Navigate to Dashboard")}
-            >
-              Dashboard
-            </Link>
-            <Typography color="textPrimary">Adicionar Cursos</Typography>
-          </Breadcrumbs>
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.formContainer}>
@@ -88,27 +88,27 @@ const GerenciarCursos = ({ navigation }) => {
               component="div"
               style={styles.title}
             >
-              Adicionar Curso
+              Adicionar Unidade Curricular
             </Typography>
 
             <TextField
-              label="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              label="Nome da Unidade Curricular"
+              value={nomeUC}
+              onChange={(e) => setNomeUC(e.target.value)}
               variant="outlined"
               fullWidth
               style={styles.input}
             />
             <TextField
-              label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
+              label="Sigla da Unidade Curricular"
+              value={sigla}
+              onChange={(e) => setSigla(e.target.value)}
               variant="outlined"
               fullWidth
               style={styles.input}
             />
             <TextField
-              label="Carga Horaria"
+              label="Carga Horária da UC"
               value={cargaHoraria}
               onChange={(e) => setCargaHoraria(e.target.value)}
               variant="outlined"
@@ -116,13 +116,30 @@ const GerenciarCursos = ({ navigation }) => {
               style={styles.input}
             />
 
+            <TextField
+              label="Módulo"
+              value={modulo}
+              onChange={(e) => setModulo(e.target.value)}
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+
+            <TextField
+              label="Conhecimentos"
+              value={conhecimentos}
+              onChange={(e) => setConhecimentos(e.target.value)}
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
             <Button
               variant="contained"
               color="primary"
-              onClick={handleAddCurso}
+              onClick={handleAddUc}
               style={styles.button}
             >
-              Adicionar Curso
+              Adicionar Unidade Curricular
             </Button>
           </View>
           <View style={styles.tableContainer}>
@@ -130,22 +147,16 @@ const GerenciarCursos = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Nivel</TableCell>
-                    <TableCell>Carga Horaria</TableCell>
+                    <TableCell>Sigla</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {cursos.map((curso) => (
-                    <TableRow key={curso.id}>
-                      <TableCell>{curso.nome}</TableCell>
-                      <TableCell>{curso.nivel}</TableCell>
-                      <TableCell>{curso.cargaHoraria}</TableCell>
-                      
-                     
-                    
+                  {ucs.map((uc) => (
+                    <TableRow key={uc.id}>
+                      <TableCell>{uc.sigla}</TableCell>
+              
                       <TableCell>
                         <EditIcon
                           color="primary"
@@ -165,7 +176,6 @@ const GerenciarCursos = ({ navigation }) => {
         </View>
       </View>
     </TemplateCrud>
-    </ScrollView>
   );
 };
 
@@ -202,4 +212,4 @@ const styles = StyleSheet.create({
 
 
 
-export default GerenciarCursos;
+export default GerenciarUCs;

@@ -2,7 +2,8 @@ package com.devloopers.masternote.entity;
 
 import java.io.Serializable;
 
-import com.devloopers.masternote.dto.SADTO;
+import com.devloopers.masternote.dto.SADTORequest;
+import com.devloopers.masternote.dto.SADTOResponse;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,8 @@ public class SA implements Serializable {
     @ManyToOne
     @JoinColumn(name = "uc_id_uc")
     private UC uc;
+
+
     
 //    @ManyToMany
 //    @JoinTable(name = "associativaCD",
@@ -50,13 +53,12 @@ public class SA implements Serializable {
 
     // getters e setters
     
-    public static SA of(SADTO saDTO) {
+    public static SA of(SADTORequest saDTO) {
     	SA sa = new SA();
     	sa.setId(saDTO.getId());
     	sa.setTitulo(saDTO.getTitulo());
     	sa.setDescricao(saDTO.getDescricao());
     	sa.setTipo(saDTO.getTipo());
-    	sa.setUc(saDTO.getUc());
     	return sa;
     }
     

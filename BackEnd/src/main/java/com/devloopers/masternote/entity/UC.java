@@ -3,7 +3,7 @@ package com.devloopers.masternote.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import com.devloopers.masternote.dto.UCDTO;
+import com.devloopers.masternote.dto.UCDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -50,10 +50,10 @@ public class UC implements Serializable {
     // getters e setters
     
     
-    public static UC of(UCDTO ucDTO) {
+    public static UC of(UCDTORequest ucDTO) {
     	UC uc = new UC();
     	uc.setId(ucDTO.getId());
-    	uc.setNomeUc(ucDTO.getNomeUc());
+    	uc.setNomeUc(ucDTO.getNomeUC());
     	uc.setSigla(ucDTO.getSigla());
     	uc.setCargaHoraria(ucDTO.getCargaHoraria());
     	uc.setModulo(ucDTO.getModulo());

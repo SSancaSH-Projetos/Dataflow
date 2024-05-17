@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text , ScrollView} from "react-native";
 import {
   TextField,
   Typography,
@@ -63,6 +63,7 @@ const GerenciarAlunos = ({ navigation }) => {
   };
 
   return (
+    <ScrollView>
     <TemplateCrud>
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
@@ -134,6 +135,7 @@ const GerenciarAlunos = ({ navigation }) => {
         </View>
       </View>
     </TemplateCrud>
+    </ScrollView>
   );
 };
 

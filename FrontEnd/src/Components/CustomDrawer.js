@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useHistory } from "react-router-dom"; 
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -24,20 +24,33 @@ const drawerWidth = 240;
 function CustomDrawer({ open, handleDrawerClose }) {
 
   
+  
   const navigation = useNavigation();
 
   const handleTurmasClick = (index) => {
     if (index == 0) navigation.navigate("GerenciarCursos");
     if (index == 1) navigation.navigate("GerenciarTurmas");
     if (index == 2) navigation.navigate("GerenciarAlunos");
-    if (index == 3) navigation.navigate("GerenciarUC");
-    if (index == 4) navigation.navigate("GerenciarSA");
+    if (index == 3) navigation.navigate("GerenciarUCs");
+    if (index == 4) navigation.navigate("GerenciarSAs");
     if (index == 5) navigation.navigate("GerenciarAvaliacao");
     if (index == 6) navigation.navigate("GerenciarRelatorios");
    
   };
 
+  useEffect(() => {
+    const handleClickForaMenu = (event) => {
+      const drawerElement = document.querySelector(".MuiDrawer-paper");
+      if (open && drawerElement && !drawerElement.contains(event.target)) {
+        handleDrawerClose();
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickForaMenu);
+    return () => {
+      document.removeEventListener("mousedown", handleClickForaMenu);
+    };
+  }, [open, handleDrawerClose]);
 
   const icons = [<SchoolIcon />, <GroupIcon />, <PersonIcon/>, <WorkIcon />,  <BookIcon />, <CreateIcon/>, <AssessmentIcon />]; // Adicionado o ícone de Avaliação
   const actions = [

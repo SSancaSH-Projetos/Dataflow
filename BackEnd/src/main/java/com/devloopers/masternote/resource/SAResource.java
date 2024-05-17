@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.devloopers.masternote.dto.SADTORequest;
+import com.devloopers.masternote.entity.UC;
+import com.devloopers.masternote.repository.UCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devloopers.masternote.dto.SADTO;
+import com.devloopers.masternote.dto.SADTOResponse;
 import com.devloopers.masternote.entity.SA;
 import com.devloopers.masternote.repository.SARepository;
 
@@ -24,13 +28,15 @@ import com.devloopers.masternote.repository.SARepository;
 public class SAResource {
 	@Autowired
 	private  SARepository saRepository;
+	@Autowired
+	private UCRepository ucRepository;
 	
 	@GetMapping
-	public Iterable<SADTO> findAll(){
+	public Iterable<SADTOResponse> findAll(){
 		Iterable<SA> sas = saRepository.findAll();
-		List<SADTO> sasDTO = new ArrayList<>();
+		List<SADTOResponse> sasDTO = new ArrayList<>();
 		for(SA sa : sas) {
-			SADTO saDTO = new SADTO(sa);
+			SADTOResponse saDTO =  SADTOResponse.fromSA(sa);
 			sasDTO.add(saDTO);
 		}
 		return  sasDTO;
@@ -38,9 +44,9 @@ public class SAResource {
 	
 	
 	@GetMapping("/pesquisaId/{id}")
-	public SADTO findById(@PathVariable Long id) {
+	public SADTOResponse findById(@PathVariable Long id) {
 		SA sa = saRepository.findById(id).get();
-		SADTO saDTO = new SADTO (sa);
+		SADTOResponse saDTO =  SADTOResponse.fromSA(sa);
 		return saDTO;
 	}
 	
@@ -53,15 +59,25 @@ public class SAResource {
 	public Iterable<SA> findByTipo(@PathVariable String tipo){
 		return saRepository.findByTipo(tipo);
 	}
-	
+
 	@PostMapping
-	public SADTO createSA(@RequestBody SADTO saDTO) {
+	public ResponseEntity<?> createSA(@RequestBody SADTORequest saDTO) {
 		SA sa = SA.of(saDTO);
-		return new SADTO(saRepository.save(sa));
+		Optional<UC> ucRecebido = ucRepository.findById(saDTO.getUcId());
+		if (ucRecebido.isPresent()) {
+			sa.setUc(ucRecebido.get());
+			saRepository.save(sa);
+			return ResponseEntity.ok(SADTOResponse.fromSA(sa));
+		} else {
+			// Crie uma mensagem de erro ou objeto de erro adequado
+			String errorMessage = "UC not found with id: " + saDTO.getUcId();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+		}
 	}
-	
+
+
 	@PutMapping("/update/{id}")
-	public ResponseEntity<SADTO> updateSA(@PathVariable Long id, @RequestBody SADTO saDTO) {
+	public ResponseEntity<SADTOResponse> updateSA(@PathVariable Long id, @RequestBody SADTOResponse saDTO) {
 		Optional<SA> saOptional = saRepository.findById(id);
 		
 		if(saOptional.isPresent()) {
@@ -70,7 +86,7 @@ public class SAResource {
 			sa.setTipo(saDTO.getTipo());
 			sa.setTitulo(saDTO.getTitulo());
 			saRepository.save(sa);
-			return ResponseEntity.ok(new SADTO(sa));
+			return ResponseEntity.ok(SADTOResponse.fromSA(sa));
 		} else {
 			return ResponseEntity.notFound().build();
 		}

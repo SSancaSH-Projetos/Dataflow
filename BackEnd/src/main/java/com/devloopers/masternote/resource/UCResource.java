@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.devloopers.masternote.dto.UCDTOResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devloopers.masternote.dto.UCDTO;
+import com.devloopers.masternote.dto.UCDTORequest;
 import com.devloopers.masternote.entity.UC;
 import com.devloopers.masternote.repository.UCRepository;
 
@@ -27,11 +28,11 @@ public class UCResource {
 	private  UCRepository ucRepository;
 	
 	@GetMapping
-	public Iterable<UCDTO> findAll(){
+	public Iterable<UCDTOResponse> findAll(){
 		Iterable<UC> ucs = ucRepository.findAll();
-		List<UCDTO> ucsDTO = new ArrayList<>();
+		List<UCDTOResponse> ucsDTO = new ArrayList<>();
 		for(UC uc: ucs) {
-			UCDTO ucDTO = new UCDTO(uc);
+			UCDTOResponse ucDTO = UCDTOResponse.fromUC(uc);
 			ucsDTO.add(ucDTO);
 		}
 		return ucsDTO;
@@ -39,9 +40,9 @@ public class UCResource {
 	
 	
 	@GetMapping("/pesquisaId/{id}")
-	public UCDTO findById(@PathVariable Long id) {
+	public UCDTOResponse findById(@PathVariable Long id) {
 		UC uc = ucRepository.findById(id).get();
-		UCDTO ucDTO = new UCDTO(uc);
+		UCDTOResponse ucDTO =  UCDTOResponse.fromUC(uc);
 		return ucDTO;
 	}
 	
@@ -51,24 +52,24 @@ public class UCResource {
 	}
 	
 	@PostMapping
-	public UCDTO createUC(@RequestBody UCDTO ucDTO) {
+	public UCDTOResponse createUC(@RequestBody UCDTORequest ucDTO) {
 		UC uc = UC.of(ucDTO);
-		return new UCDTO(ucRepository.save(uc));
+		return  UCDTOResponse.fromUC(ucRepository.save(uc));
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<UCDTO> updateUC(@PathVariable Long id, @RequestBody UCDTO ucDTO) {
+	public ResponseEntity<UCDTOResponse> updateUC(@PathVariable Long id, @RequestBody UCDTORequest ucDTO) {
 		Optional<UC> ucOptional = ucRepository.findById(id);
 		
 		if(ucOptional.isPresent()) {
 			UC uc = ucOptional.get();
-			uc.setNomeUc(ucDTO.getNomeUc());
+			uc.setNomeUc(ucDTO.getNomeUC());
 			uc.setSigla(ucDTO.getSigla());
 			uc.setCargaHoraria(ucDTO.getCargaHoraria());
 			uc.setModulo(ucDTO.getModulo());
 			uc.setConhecimentos(ucDTO.getConhecimentos());
 			ucRepository.save(uc);
-			return ResponseEntity.ok(new UCDTO(uc));
+			return ResponseEntity.ok(UCDTOResponse.fromUC(uc));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
