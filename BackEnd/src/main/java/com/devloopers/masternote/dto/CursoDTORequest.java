@@ -14,7 +14,5 @@ public class CursoDTORequest {
     private String nome;
     private Float cargaHoraria;
     private String nivel;
-	public boolean deleted;
-	
 
 }

@@ -16,7 +16,6 @@ public class TurmaDTORequest {
 	private Long id;
 	private String sigla;
 	private Long curso;
-	private Boolean isDeleted; // Modificado para Boolean
 	private List<Integer> alunosNaTurma;
 
 }

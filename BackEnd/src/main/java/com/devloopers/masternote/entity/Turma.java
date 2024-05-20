@@ -13,8 +13,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "turma")
-@SQLDelete(sql = "UPDATE turma SET isDeleted = true WHERE id=?")
-@Where(clause = "is_deleted=false")
 public class Turma {
 
     @Id
@@ -30,8 +28,6 @@ public class Turma {
     @JoinColumn(name = "cursoId")
     private Curso curso;
 
-    @Column(name = "isDeleted")
-    private Boolean isDeleted = Boolean.FALSE;
 
     @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aluno> alunos;
@@ -40,9 +36,6 @@ public class Turma {
         Turma turma = new Turma();
         turma.setId(turmaDTO.getId());
         turma.setSigla(turmaDTO.getSigla());
-        if (turmaDTO.getIsDeleted() != null) {
-            turma.setIsDeleted(turmaDTO.getIsDeleted());
-        }
         return turma;
     }
 }

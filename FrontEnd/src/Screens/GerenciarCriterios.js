@@ -22,54 +22,62 @@ import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GerenciarCursos = ({ navigation }) => {
-  const [nome, setNome] = useState (""); 
-  const [cargaHoraria, setCargaHoraria] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [cursos, setCursos] =useState([]);
+const GerenciarCriterios = ({ navigation }) => {
+  const [descricao, setDescricao] = useState (""); 
+  const [capacidade, setCapacidade] = useState([]);
+  const [tipo, setTipo] = useState("");
+  const [criterios, setCriterios] = useState([]);
 
 
-  const fetchCursos = async () => {
+  const fetchCriterios = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/curso");
-      setCursos(response.data);
+      const response = await axios.get("http://localhost:8080/criterio");
+      setCriterios(response.data);
     } catch (error) {
-      console.error("Erro ao obter cursos:", error);
+      console.error("Erro ao obter criterios:", error);
+    }
+  };
+
+  const fetchCapacidade = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/capacidade");
+      setCapacidade(response.data);
+    } catch (error) {
+      console.error("Erro ao obter capacidade", error);
     }
   };
 
   useEffect(() => {
-    fetchCursos();
+    fetchCriterios();
+    fetchCapacidade();
   }, []);
 
-  const handleAddCurso = async () => {
+  const handleAddCriterios = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/curso", {
-        nome: nome,
-        cargaHoraria: cargaHoraria,
-        nivel: nivel
+      const response = await axios.post("http://localhost:8080/criterio", {
+        descricao: descricao,
+        tipo: tipo,
       });
       console.log(response.data);
       limparCampos();
-      fetchCursos();
+      fetchCriterios();
     } catch (error) {
-      console.error("Erro ao adicionar curso:", error);
+      console.error("Erro ao adicionar criterios:", error);
     }
   };
 
-  const handleDeletarCurso = async (id) => {
+  const handleDeletarCriterio = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/curso/delete/${id}`);
-      fetchCursos(); // Corrected function name
+      await axios.delete(`http://localhost:8080/criterio/delete/${id}`);
+      fetchCriterios(); // Corrected function name
     } catch (error) {
-      console.error("Erro ao excluir curso:", error);
+      console.error("Erro ao excluir criterio:", error);
     }
  };
 
   const limparCampos = () => {
-    setNome('');
-    setCargaHoraria('');
-    setNivel('');
+    setTipo('');
+    setDescricao('');
   };
   
 
@@ -88,41 +96,43 @@ const GerenciarCursos = ({ navigation }) => {
               component="div"
               style={styles.title}
             >
-              Adicionar Curso
+              Adicionar Criterio
             </Typography>
 
             <TextField
-              label="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              label="Descrição"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
               variant="outlined"
               fullWidth
               style={styles.input}
             />
-            <TextField
-              label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
+             <Select
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value)}
               variant="outlined"
               fullWidth
+              displayEmpty
               style={styles.input}
-            />
-            <TextField
-              label="Carga Horaria"
-              value={cargaHoraria}
-              onChange={(e) => setCargaHoraria(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
+              renderValue={
+                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de Criterio</span>
+              }
+            >
+              <MenuItem value="" disabled>
+                Tipo de Criterio
+              </MenuItem>
+              <MenuItem value="Somativa">Critico</MenuItem>
+              <MenuItem value="Formativa">Desejável</MenuItem>
+            </Select>
+            
 
             <Button
               variant="contained"
               color="primary"
-              onClick={handleAddCurso}
+              onClick={handleAddCriterios}
               style={styles.button}
             >
-              Adicionar Curso
+              Adicionar Criterio
             </Button>
           </View>
           <View style={styles.tableContainer}>
@@ -130,19 +140,20 @@ const GerenciarCursos = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Nivel</TableCell>
-                    <TableCell>Carga Horaria</TableCell>
+                    <TableCell>Descrição</TableCell>
+                    <TableCell>Capacidade</TableCell>
+                    <TableCell>Tipo</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {cursos.map((curso) => (
-                    <TableRow key={curso.id}>
-                      <TableCell>{curso.nome}</TableCell>
-                      <TableCell>{curso.nivel}</TableCell>
-                      <TableCell>{curso.cargaHoraria}</TableCell>
+                  {criterios.map((criterio) => (
+                    <TableRow key={criterio.id}>
+                      <TableCell>{criterio.descricao}</TableCell>
+                      <TableCell>{criterio.tipo}</TableCell>
+                      <TableCell>{criterio.capacidade}</TableCell>
+                      
                       
                      
                     
@@ -153,7 +164,7 @@ const GerenciarCursos = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleDeletarCurso(curso.id)}
+                          onClick={() => handleDeletarCriterio(criterio.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -202,4 +213,4 @@ const styles = StyleSheet.create({
 
 
 
-export default GerenciarCursos;
+export default GerenciarCriterios;

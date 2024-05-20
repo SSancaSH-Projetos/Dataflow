@@ -22,6 +22,7 @@ import GerenciarCursos from "../Screens/GerenciarCursos";
 import GerenciarAlunos from "../Screens/GerenciarAlunos";
 import GerenciarUCs from "../Screens/GerenciarUCs";
 import GerenciarSAs from "../Screens/GerenciarSAs";
+import GerenciarCriterios from "../Screens/GerenciarCriterios";
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -35,6 +36,7 @@ const Navigation = () => {
           name="DashboardProfessor"
           component={DashboardProfessor}
         />
+        <Stack.Screen name="GerenciarCriterios" component={GerenciarCriterios} />
         <Stack.Screen name="GerenciarSAs" component={GerenciarSAs} />
         <Stack.Screen name="GerenciarUCs" component={GerenciarUCs} />
         <Stack.Screen name="GerenciarAlunos" component={GerenciarAlunos} />

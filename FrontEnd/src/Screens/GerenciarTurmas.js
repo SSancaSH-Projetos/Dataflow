@@ -57,6 +57,15 @@ const GerenciarTurmas = ({ navigation }) => {
     }
   };
 
+  const handleDeletarTurma = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/turma/delete/${id}`);
+      fetchTurmas(); // Corrected function name
+    } catch (error) {
+      console.error("Erro ao excluir capacidade:", error);
+    }
+ };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -181,7 +190,7 @@ const GerenciarTurmas = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleExcluirTurma(turma.id)}
+                          onClick={() => handleDeletarTurma(turma.id)}
                         />
                       </TableCell>
                     </TableRow>

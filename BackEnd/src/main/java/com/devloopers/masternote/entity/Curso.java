@@ -22,8 +22,7 @@ import org.hibernate.annotations.Where;
 @Data
 @Entity
 @Table(name = "curso")
-@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+
 public class Curso {
 
     @Id
@@ -40,8 +39,7 @@ public class Curso {
     @Column(name = "nivel")
     private String nivel;
 
-    @Column(name= "deleted")
-    private boolean deleted = Boolean.FALSE;
+
 
    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)
    private List<Turma> turmas;
@@ -52,7 +50,7 @@ public class Curso {
         curso.setNome(cursoDTO.getNome());
         curso.setCargaHoraria(cursoDTO.getCargaHoraria());
         curso.setNivel(cursoDTO.getNivel());
-        curso.setDeleted (cursoDTO.isDeleted());
+        
         return curso;
     }
 

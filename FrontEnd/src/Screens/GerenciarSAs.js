@@ -47,6 +47,15 @@ const GerenciarSAs = ({ navigation }) => {
     }
   };
 
+  const handleDeletarSA = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/sa/delete/${id}`);
+      fetchSa(); // Corrected function name
+    } catch (error) {
+      console.error("Erro ao excluir sa:", error);
+    }
+ };
+
 
   useEffect(() => {
     fetchSa();
@@ -142,14 +151,24 @@ const GerenciarSAs = ({ navigation }) => {
               style={styles.input}
             />
 
-            <TextField
-              label="Tipo da SA (Somativa ou Formativa)"
+              <Select
               value={tipo}
               onChange={(e) => setTipo(e.target.value)}
               variant="outlined"
               fullWidth
+              displayEmpty
               style={styles.input}
-            />
+              renderValue={
+                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de SA</span>
+              }
+            >
+              <MenuItem value="" disabled>
+                Tipo de SA
+              </MenuItem>
+              <MenuItem value="Somativa">Somativa</MenuItem>
+              <MenuItem value="Formativa">Formativa</MenuItem>
+              <MenuItem value="Formativa">Formativa e Somativa</MenuItem>
+            </Select>
 
             <Button
               variant="contained"
@@ -182,7 +201,7 @@ const GerenciarSAs = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleExcluirTurma(turma.id)}
+                          onClick={() => handleDeletarSA(sa.id)}
                         />
                       </TableCell>
                     </TableRow>

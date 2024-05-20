@@ -58,9 +58,14 @@ const GerenciarAlunos = ({ navigation }) => {
     console.log("Editar aluno com ID:", id);
   };
 
-  const handleExcluirAluno = (id) => {
-    console.log("Excluir aluno com ID:", id);
-  };
+  const handleDeletarAluno = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/aluno/delete/${id}`);
+      fetchAluno(); // Corrected function name
+    } catch (error) {
+      console.error("Erro ao excluir aluno:", error);
+    }
+ };
 
   return (
     <ScrollView>
@@ -123,7 +128,7 @@ const GerenciarAlunos = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleExcluirAluno(aluno.id)}
+                          onClick={() => handleDeletarAluno(aluno.id)}
                         />
                       </TableCell>
                     </TableRow>

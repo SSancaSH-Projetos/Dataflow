@@ -66,7 +66,6 @@ public class CursoResource {
             curso.setCargaHoraria(cursoDTO.getCargaHoraria());
             curso.setNivel(cursoDTO.getNivel());
             curso.setNome(cursoDTO.getNome());
-            curso.setDeleted(cursoDTO.isDeleted());
             cursoRepository.save(curso);
             return ResponseEntity.ok(CursoDTOResponse.fromCurso(curso));
         } else {

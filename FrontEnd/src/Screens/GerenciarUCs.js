@@ -66,6 +66,15 @@ const GerenciarUCs = ({ navigation }) => {
     }
   };
 
+  const handleDeletarUC = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/uc/delete/${id}`);
+      fetchUc(); // Corrected function name
+    } catch (error) {
+      console.error("Erro ao excluir UC:", error);
+    }
+ };
+
   const limparCampos = () => {
     setNomeUC('');
     setSigla('');
@@ -164,7 +173,7 @@ const GerenciarUCs = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleExcluirCurso(curso.id)}
+                          onClick={() => handleDeletarUC(uc.id)}
                         />
                       </TableCell>
                     </TableRow>

@@ -71,10 +71,6 @@ public class AlunoResource {
 	public AlunoDTOResponse createAluno(@RequestBody AlunoDTOResponse alunoDTO) {
 		Aluno aluno = Aluno.of(alunoDTO);
 		
-		turmaRepository.findById(aluno.getTurma().getId())
-						.ifPresentOrElse(aluno:: setTurma, () ->{
-							throw new EntityNotFoundException("Turma não encontrada com o ID: " + alunoDTO.getTurma());
-						});
 		Aluno savedAluno = alunoRepository.save(aluno);
 		
 		

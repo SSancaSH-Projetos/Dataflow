@@ -16,7 +16,6 @@ public class TurmaDTOResponse {
 	private Long id;
 	private String sigla;
 	private Long curso;
-	private Boolean isDeleted; // Modificado para Boolean
 	private List<Aluno> alunosNaTurma;
 
 	// Método para transformar Turma em TurmaDTO
