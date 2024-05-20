@@ -1,15 +1,21 @@
 package com.devloopers.masternote.entity;
 
 
-import com.devloopers.masternote.dto.CursoDTO;
+import com.devloopers.masternote.dto.CursoDTORequest;
+import com.devloopers.masternote.dto.CursoDTOResponse;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -37,10 +43,10 @@ public class Curso {
     @Column(name= "deleted")
     private boolean deleted = Boolean.FALSE;
 
-  // @OneToMany(mappedBy = "curso")
-  // private List<Turma> turmas;
+   @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)
+   private List<Turma> turmas;
 
-    public static Curso of(CursoDTO cursoDTO) {
+    public static Curso of(CursoDTORequest cursoDTO) {
         Curso curso = new Curso();
         curso.setId(cursoDTO.getId());
         curso.setNome(cursoDTO.getNome());

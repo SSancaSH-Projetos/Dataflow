@@ -1,6 +1,6 @@
 package com.devloopers.masternote.entity;
 
-import com.devloopers.masternote.dto.AlunoDTO;
+import com.devloopers.masternote.dto.AlunoDTOResponse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -34,7 +34,7 @@ public class Aluno {
     @Column(name = "deletedA")
     private boolean deletedA = Boolean.FALSE;
 
-    public static Aluno of(AlunoDTO alunoDTO) {
+    public static Aluno of(AlunoDTOResponse alunoDTO) {
         Aluno aluno = new Aluno();
         aluno.setId(alunoDTO.getId());
         aluno.setNome(alunoDTO.getNome());

@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devloopers.masternote.dto.CursoDTO;
+import com.devloopers.masternote.dto.CursoDTORequest;
+import com.devloopers.masternote.dto.CursoDTOResponse;
 import com.devloopers.masternote.entity.Curso;
 import com.devloopers.masternote.repository.CursoRepository;
 
@@ -28,11 +29,11 @@ public class CursoResource {
     private CursoRepository cursoRepository;
 
     @GetMapping
-    public Iterable<CursoDTO> findAll() {
+    public Iterable<CursoDTOResponse> findAll() {
         Iterable<Curso> cursos = cursoRepository.findAll();
-        List<CursoDTO> cursosDTO = new ArrayList<>();
+        List<CursoDTOResponse> cursosDTO = new ArrayList<>();
         for (Curso curso : cursos) {
-            CursoDTO cursoDTO = new CursoDTO(curso);
+            CursoDTOResponse cursoDTO = CursoDTOResponse.fromCurso(curso);
             cursosDTO.add(cursoDTO);
         }
         return cursosDTO;
@@ -44,19 +45,20 @@ public class CursoResource {
     }
 
     @GetMapping("/pesquisaId/{id}")
-    public CursoDTO findById(@PathVariable Long id) {
-        Curso curso = cursoRepository.findById(id).orElse(null);
-        return new CursoDTO(curso);
+    public CursoDTOResponse findById(@PathVariable Long id) {
+        Curso curso = cursoRepository.findById(id).get();
+        CursoDTOResponse cursoDTO =  CursoDTOResponse.fromCurso(curso);
+        return cursoDTO;
     }
 
     @PostMapping
-    public CursoDTO createCurso(@RequestBody CursoDTO cursoDTO) {
+    public CursoDTOResponse createCurso(@RequestBody CursoDTORequest cursoDTO) {
         Curso curso = Curso.of(cursoDTO);
-        return new CursoDTO(cursoRepository.save(curso));
+        return  CursoDTOResponse.fromCurso(cursoRepository.save(curso));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CursoDTO> updateCurso(@PathVariable Long id, @RequestBody CursoDTO cursoDTO) {
+    public ResponseEntity<CursoDTOResponse> updateCurso(@PathVariable Long id, @RequestBody CursoDTORequest cursoDTO) {
         Optional<Curso> cursoOptional = cursoRepository.findById(id);
 
         if (cursoOptional.isPresent()) {
@@ -64,8 +66,9 @@ public class CursoResource {
             curso.setCargaHoraria(cursoDTO.getCargaHoraria());
             curso.setNivel(cursoDTO.getNivel());
             curso.setNome(cursoDTO.getNome());
+            curso.setDeleted(cursoDTO.isDeleted());
             cursoRepository.save(curso);
-            return ResponseEntity.ok(new CursoDTO(curso));
+            return ResponseEntity.ok(CursoDTOResponse.fromCurso(curso));
         } else {
             return ResponseEntity.notFound().build();
         }

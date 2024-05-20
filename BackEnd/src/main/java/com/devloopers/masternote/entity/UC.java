@@ -6,6 +6,7 @@ import java.util.List;
 import com.devloopers.masternote.dto.UCDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,11 +41,11 @@ public class UC implements Serializable {
     private String conhecimentos;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "uc")
+    @OneToMany(mappedBy = "uc", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Capacidade> capacidades;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "uc")
+    @OneToMany(mappedBy = "uc", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<SA> sas;
 
     // getters e setters

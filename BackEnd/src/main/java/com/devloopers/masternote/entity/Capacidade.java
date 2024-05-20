@@ -3,8 +3,10 @@ package com.devloopers.masternote.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import com.devloopers.masternote.dto.CapacidadeDTO;
+import com.devloopers.masternote.dto.CapacidadeDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,12 +40,12 @@ public class Capacidade implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "uc_id_uc")
+    @JoinColumn(name = "uc_id")
     private UC uc;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "capacidade")
-    private List<CriterioCritico> criteriosCriticos;
+    @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Criterio> criterios;
 
     //@ManyToOne
     //@JoinColumn(name = "sa_id_sa")
@@ -51,7 +53,7 @@ public class Capacidade implements Serializable {
 
     // getters e setters
     
-    public static Capacidade of(CapacidadeDTO capacidadeDTO) {
+    public static Capacidade of(CapacidadeDTORequest capacidadeDTO) {
     	Capacidade capacidade = new Capacidade();
     	capacidade.setId(capacidadeDTO.getId());
     	capacidade.setDescricao(capacidadeDTO.getDescricao());

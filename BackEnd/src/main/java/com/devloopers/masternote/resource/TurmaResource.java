@@ -1,16 +1,9 @@
 package com.devloopers.masternote.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.devloopers.masternote.dto.TurmaDTOResponse;
-import com.devloopers.masternote.entity.Aluno;
-import com.devloopers.masternote.entity.Curso;
-import com.devloopers.masternote.repository.AlunoRepository;
-import com.devloopers.masternote.repository.CursoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devloopers.masternote.dto.TurmaDTORequest;
+import com.devloopers.masternote.dto.TurmaDTOResponse;
+import com.devloopers.masternote.entity.Aluno;
 import com.devloopers.masternote.entity.Turma;
+import com.devloopers.masternote.repository.AlunoRepository;
+import com.devloopers.masternote.repository.CursoRepository;
 import com.devloopers.masternote.repository.TurmaRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 
 

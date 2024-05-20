@@ -3,6 +3,7 @@ package com.devloopers.masternote.resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,27 +16,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devloopers.masternote.dto.CapacidadeDTO;
+import com.devloopers.masternote.dto.CapacidadeDTORequest;
+import com.devloopers.masternote.dto.CapacidadeDTOResponse;
 import com.devloopers.masternote.entity.Capacidade;
 import com.devloopers.masternote.repository.CapacidadeRepository;
+import com.devloopers.masternote.repository.UCRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/capacidade")
 
 public class CapacidadeResource {
 	
-	@Autowired
-	private  CapacidadeRepository capacidadeRepository;
+	 @Autowired
+	    private CapacidadeRepository capacidadeRepository;
+	    
+	    @Autowired
+	    private UCRepository ucRepository;
+	
 	
 	@GetMapping
-    public Iterable<CapacidadeDTO> findAll() {
-        Iterable<Capacidade> capacidades = capacidadeRepository.findAll();
-        List<CapacidadeDTO> capacidadesDTO = new ArrayList<>();
-        for (Capacidade capacidade : capacidades) {
-            CapacidadeDTO capacidadeDTO = new CapacidadeDTO(capacidade);
-            capacidadesDTO.add(capacidadeDTO);
-        }
-        return capacidadesDTO;
+    public List<CapacidadeDTOResponse> findAll() {
+        List<Capacidade> capacidade = capacidadeRepository.findAll();
+        return capacidade.stream()
+        		.map(CapacidadeDTOResponse::fromCapacidade)
+        		.collect(Collectors.toList());
+        
     }
 	
 	@GetMapping("/pesquisaTipo/{tipo}")
@@ -44,20 +51,29 @@ public class CapacidadeResource {
 	}
 	
 	@GetMapping("/pesquisaId/{id}")
-	public CapacidadeDTO findById(@PathVariable Long id) {
-		Capacidade capacidade = capacidadeRepository.findById(id).orElse(null);
-		CapacidadeDTO capacidadeDTO = new CapacidadeDTO (capacidade);
-		return capacidadeDTO;
+	public CapacidadeDTOResponse findById(@PathVariable Long id) {
+		Capacidade capacidade = capacidadeRepository.findById(id).get();
+		return CapacidadeDTOResponse.fromCapacidade(capacidade);
+		
 	}
 	
 	@PostMapping
-	public CapacidadeDTO createCapacidade(@RequestBody CapacidadeDTO capacidadeDTO) {
+	public CapacidadeDTOResponse createCapacidade(@RequestBody CapacidadeDTORequest capacidadeDTO) {
 		Capacidade capacidade = Capacidade.of(capacidadeDTO);
-		return new CapacidadeDTO(capacidadeRepository.save(capacidade));
+		
+		ucRepository.findById(capacidadeDTO.getUc().getId())
+					.ifPresentOrElse(capacidade::setUc, () ->{
+						throw new EntityNotFoundException("UC não encontada com o ID: " + capacidadeDTO.getUc());
+					});
+		
+		Capacidade savedCap = capacidadeRepository.save(capacidade);
+		
+		return CapacidadeDTOResponse.fromCapacidade(savedCap);
+		
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<CapacidadeDTO> updateCapacidade(@PathVariable Long id, @RequestBody CapacidadeDTO capacidadeDTO) {
+	public ResponseEntity<CapacidadeDTOResponse> updateCapacidade(@PathVariable Long id, @RequestBody CapacidadeDTORequest capacidadeDTO) {
 		Optional<Capacidade> capacidadeOptional = capacidadeRepository.findById(id);
 		
 		if (capacidadeOptional.isPresent()) {
@@ -65,7 +81,7 @@ public class CapacidadeResource {
 			capacidade.setDescricao(capacidadeDTO.getDescricao());
 			capacidade.setTipo(capacidadeDTO.getTipo());
 			capacidadeRepository.save(capacidade);
-			return ResponseEntity.ok(new CapacidadeDTO(capacidade));
+			return ResponseEntity.ok(CapacidadeDTOResponse.fromCapacidade(capacidade));
 		} else {
 			return ResponseEntity.notFound().build();
 			

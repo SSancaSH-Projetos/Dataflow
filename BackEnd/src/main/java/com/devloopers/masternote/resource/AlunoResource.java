@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devloopers.masternote.dto.AlunoDTO;
+import com.devloopers.masternote.dto.AlunoDTORequest;
+import com.devloopers.masternote.dto.AlunoDTOResponse;
 import com.devloopers.masternote.entity.Aluno;
 import com.devloopers.masternote.repository.AlunoRepository;
+import com.devloopers.masternote.repository.TurmaRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 
 
@@ -30,14 +34,16 @@ public class AlunoResource {
 	
 	@Autowired
 	private  AlunoRepository alunoRepository;
+	@Autowired
+	private TurmaRepository turmaRepository;
 
 	
 	@GetMapping
-	public Iterable<AlunoDTO> findAll(){
+	public Iterable<AlunoDTOResponse> findAll(){
 		Iterable<Aluno> alunos = alunoRepository.findAll();
-		List<AlunoDTO> alunosDTO = new ArrayList<>();
+		List<AlunoDTOResponse> alunosDTO = new ArrayList<>();
 		for(Aluno aluno : alunos) {
-			AlunoDTO alunoDTO = new AlunoDTO(aluno);
+			AlunoDTOResponse alunoDTO = AlunoDTOResponse.fromAluno(aluno);
 			alunosDTO.add(alunoDTO);
 		}
 		return alunosDTO;
@@ -49,9 +55,9 @@ public class AlunoResource {
 	}
 	
 	@GetMapping("/pesquisaId/{id}")
-	public AlunoDTO findById(@PathVariable Long id) {
+	public AlunoDTOResponse findById(@PathVariable Long id) {
 		Aluno aluno = alunoRepository.findById(id).get();
-		AlunoDTO alunoDTO = new AlunoDTO(aluno);
+		AlunoDTOResponse alunoDTO = AlunoDTOResponse.fromAluno(aluno);
 		return alunoDTO;
 		
 	}
@@ -62,13 +68,21 @@ public class AlunoResource {
 	}
 	
 	@PostMapping
-	public AlunoDTO createAluno(@RequestBody AlunoDTO alunoDTO) {
+	public AlunoDTOResponse createAluno(@RequestBody AlunoDTOResponse alunoDTO) {
 		Aluno aluno = Aluno.of(alunoDTO);
-		return new AlunoDTO(alunoRepository.save(aluno));
+		
+		turmaRepository.findById(aluno.getTurma().getId())
+						.ifPresentOrElse(aluno:: setTurma, () ->{
+							throw new EntityNotFoundException("Turma não encontrada com o ID: " + alunoDTO.getTurma());
+						});
+		Aluno savedAluno = alunoRepository.save(aluno);
+		
+		
+		return AlunoDTOResponse.fromAluno(aluno);
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<AlunoDTO> updateAluno(@PathVariable Long id, @RequestBody AlunoDTO alunoDTO) {
+	public ResponseEntity<AlunoDTOResponse> updateAluno(@PathVariable Long id, @RequestBody AlunoDTORequest alunoDTO) {
 	    Optional<Aluno> alunoOptional = alunoRepository.findById(id);
 	    
 	    if (alunoOptional.isPresent()) {
@@ -77,7 +91,7 @@ public class AlunoResource {
 	        aluno.setNome(alunoDTO.getNome());
 	        aluno.setTurma(alunoDTO.getTurma());
 	        alunoRepository.save(aluno);
-	        return ResponseEntity.ok(new AlunoDTO(aluno));
+	        return ResponseEntity.ok(AlunoDTOResponse.fromAluno(aluno));
 	    } else {
 	        return ResponseEntity.notFound().build();
 	    }
