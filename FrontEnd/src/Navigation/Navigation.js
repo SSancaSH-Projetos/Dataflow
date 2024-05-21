@@ -5,7 +5,6 @@ import DashboardProfessor from "../Screens/DashboardProfessor";
 import GerenciarTurmas from "../Screens/GerenciarTurmas";
 import GerenciarSA from "../Telas/GerenciarSA";
 import GerenciarUC from "../Telas/GerenciarUC";
-import GerarRelatorio from "../Telas/GerarRelatorio";
 import CadastroUC from "../Telas/CadastroUC";
 import CadastroCapacidades from "../Telas/CadastroCapacidades";
 import AdicionarSA from "../Telas/AdicionarSA";
@@ -23,7 +22,12 @@ import GerenciarAlunos from "../Screens/GerenciarAlunos";
 import GerenciarUCs from "../Screens/GerenciarUCs";
 import GerenciarSAs from "../Screens/GerenciarSAs";
 import GerenciarCriterios from "../Screens/GerenciarCriterios";
+<<<<<<< HEAD
 import GerenciarCapacidades from "../Screens/GerenciarCapacidades";
+=======
+import GerenciarAvaliacao from "../Screens/GerenciarAvaliacao";
+import GerenciarRelatorios from "../Screens/GerenciarRelatorios";
+>>>>>>> 036cc0448195ed576cfd0c2bcb002825ba4836b8
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -45,13 +49,10 @@ const Navigation = () => {
         <Stack.Screen name="GerenciarCursos" component={GerenciarCursos} />
         <Stack.Screen name="GerenciarTurmas" component={GerenciarTurmas} />
         <Stack.Screen name="GerenciarUC" component={GerenciarUC} />
-        <Stack.Screen name="GerarRelatorio" component={GerarRelatorio} />
         <Stack.Screen name="AdicionarSA" component={AdicionarSA} />
         <Stack.Screen name="CadastroUC" component={CadastroUC} />
-        <Stack.Screen
-          name="CadastroCapacidades"
-          component={CadastroCapacidades}
-        />
+        <Stack.Screen name="GerenciarRelatorios" component={GerenciarRelatorios} />
+        <Stack.Screen name="CadastroCapacidades" component={CadastroCapacidades}/>
         <Stack.Screen name="AdicionarTurma" component={AdicionarTurma} />
         <Stack.Screen name=" AdicionarCurso" component={AdicionarCurso} />
         <Stack.Screen
@@ -68,6 +69,7 @@ const Navigation = () => {
         <Stack.Screen name="EditarCurso" component={EditarCurso} />
         <Stack.Screen name="AdicionarCurso" component={AdicionarCurso} />
         <Stack.Screen name="EditarTurma" component={EditarTurma} />
+        <Stack.Screen name="GerenciarAvaliacao" component={GerenciarAvaliacao} />
       </Stack.Navigator>
     </NavigationContainer>
   );
