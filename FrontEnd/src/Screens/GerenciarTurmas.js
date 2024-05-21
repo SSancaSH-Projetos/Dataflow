@@ -173,7 +173,7 @@ const GerenciarTurmas = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Sigla</TableCell>
+                    <TableCell>Turma</TableCell>
                     <TableCell>Curso</TableCell>
                     <TableCell>Ação</TableCell>
                   </TableRow>

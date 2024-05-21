@@ -32,21 +32,23 @@ public class Criterio implements Serializable {
     
     
     private String descricao;
-    
+
+    @Column (name="tipo")
+    private String tipo;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "capacidade_id_capacidade")
     private Capacidade capacidade;
     
-    @Column (name="tipo")
-    private String tipo;
+
     // getters e setters
     
     public static Criterio of(CriterioDTORequest ccDTO) {
     	Criterio cc = new Criterio();
     	cc.setId(ccDTO.getId());
-    	cc.setCapacidade(ccDTO.getCapacidade());
     	cc.setDescricao(ccDTO.getDescricao());
+        cc.setTipo(ccDTO.getTipo());
     	return cc;
     }
 }

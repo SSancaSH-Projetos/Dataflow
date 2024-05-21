@@ -156,7 +156,7 @@ const GerenciarUCs = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Sigla</TableCell>
+                    <TableCell>Unidade Curricular</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>

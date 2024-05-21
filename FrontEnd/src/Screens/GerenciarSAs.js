@@ -184,7 +184,7 @@ const GerenciarSAs = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Titulo</TableCell>
+                    <TableCell>Situação de Aprendizagem</TableCell>
                     <TableCell>UC</TableCell>
                     <TableCell>Ação</TableCell>
                   </TableRow>

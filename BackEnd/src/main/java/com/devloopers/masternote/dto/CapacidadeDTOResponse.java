@@ -16,14 +16,14 @@ public class CapacidadeDTOResponse {
 	private Long id;
 	private String descricao;
 	private String tipo;
-	private UC uc;
+	private UCDTOResponse uc;
 
 	public static CapacidadeDTOResponse fromCapacidade(Capacidade cap) {
 		CapacidadeDTOResponse capDTO = new CapacidadeDTOResponse();
 		capDTO.setId(cap.getId());
 		capDTO.setDescricao(cap.getDescricao());
 		capDTO.setTipo(cap.getTipo());
-		capDTO.setUc(cap.getUc());
+		capDTO.setUc(UCDTOResponse.fromUC(cap.getUc()));
 		return capDTO;
 	}
 

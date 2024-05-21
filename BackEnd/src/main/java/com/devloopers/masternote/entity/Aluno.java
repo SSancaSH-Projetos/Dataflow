@@ -11,8 +11,6 @@ import org.hibernate.annotations.Where;
 @Data
 @Entity
 @Table(name = "aluno")
-@SQLDelete(sql = "UPDATE aluno SET deletedA = true WHERE id=?")
-@Where(clause = "deletedA=false")
 public class Aluno {
 
     @Id
@@ -31,8 +29,6 @@ public class Aluno {
     @JoinColumn(name = "turma_id_turma")
     private Turma turma;
 
-    @Column(name = "deletedA")
-    private boolean deletedA = Boolean.FALSE;
 
     public static Aluno of(AlunoDTOResponse alunoDTO) {
         Aluno aluno = new Aluno();
@@ -40,7 +36,7 @@ public class Aluno {
         aluno.setNome(alunoDTO.getNome());
         aluno.setNumeroChamada(alunoDTO.getNumeroChamada());
         aluno.setTurma(alunoDTO.getTurma());
-        aluno.setDeletedA(alunoDTO.isDeletedA());
+
         return aluno;
     }
 }

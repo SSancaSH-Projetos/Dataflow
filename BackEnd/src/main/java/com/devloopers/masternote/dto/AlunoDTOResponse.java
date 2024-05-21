@@ -18,7 +18,6 @@ public class AlunoDTOResponse {
     private String nome;
     private Integer numeroChamada;
     private Turma turma;
-	private boolean deletedA;
     
 	public static AlunoDTOResponse fromAluno(Aluno al) {
 		AlunoDTOResponse alDTO = new AlunoDTOResponse();
@@ -26,7 +25,6 @@ public class AlunoDTOResponse {
 		alDTO.setNome(al.getNome());
 		alDTO.setNumeroChamada(al.getNumeroChamada());
 		alDTO.setTurma(al.getTurma());
-		alDTO.setDeletedA(al.isDeletedA());
 		return alDTO;
 	}
         

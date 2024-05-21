@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.devloopers.masternote.dto.SADTOResponse;
+import com.devloopers.masternote.entity.SA;
+import com.devloopers.masternote.entity.UC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,18 +62,18 @@ public class CapacidadeResource {
 	}
 	
 	@PostMapping
-	public CapacidadeDTOResponse createCapacidade(@RequestBody CapacidadeDTORequest capacidadeDTO) {
-		Capacidade capacidade = Capacidade.of(capacidadeDTO);
-		
-		ucRepository.findById(capacidadeDTO.getUc().getId())
-					.ifPresentOrElse(capacidade::setUc, () ->{
-						throw new EntityNotFoundException("UC não encontada com o ID: " + capacidadeDTO.getUc());
-					});
-		
-		Capacidade savedCap = capacidadeRepository.save(capacidade);
-		
-		return CapacidadeDTOResponse.fromCapacidade(savedCap);
-		
+	public ResponseEntity<?> createCapacidade(@RequestBody CapacidadeDTORequest capacidadeDTO) {
+		Capacidade cap = Capacidade.of(capacidadeDTO);
+		Optional<UC> ucRecebido = ucRepository.findById(capacidadeDTO.getUcId());
+		if (ucRecebido.isPresent()) {
+			cap.setUc(ucRecebido.get());
+			capacidadeRepository.save(cap);
+			return ResponseEntity.ok(CapacidadeDTOResponse.fromCapacidade(cap));
+		} else {
+			// Crie uma mensagem de erro ou objeto de erro adequado
+			String errorMessage = "UC not found with id: " + capacidadeDTO.getUcId();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+		}
 	}
 	
 	@PutMapping("/update/{id}")

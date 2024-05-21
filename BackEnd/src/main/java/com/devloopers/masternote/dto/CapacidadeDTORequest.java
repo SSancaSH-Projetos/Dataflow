@@ -16,7 +16,7 @@ public class CapacidadeDTORequest {
 	private Long id;
     private String descricao;
     private String tipo;
-    private UC uc;
+    private Long  ucId;
     
     
  

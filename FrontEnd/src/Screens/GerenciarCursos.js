@@ -130,9 +130,9 @@ const GerenciarCursos = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Nivel</TableCell>
-                    <TableCell>Carga Horaria</TableCell>
+                    <TableCell>Curso</TableCell>
+                    <TableCell>Nível</TableCell>
+                    <TableCell>Carga Horária</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>

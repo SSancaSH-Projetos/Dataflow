@@ -1,6 +1,11 @@
 package com.devloopers.masternote.resource;
 
+import com.devloopers.masternote.dto.CapacidadeDTOResponse;
+import com.devloopers.masternote.entity.Capacidade;
+import com.devloopers.masternote.entity.UC;
+import com.devloopers.masternote.repository.CapacidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +25,8 @@ public class CriterioResource {
     
     @Autowired
     private CriterioRepository criterioRepository;
-
+    @Autowired
+    private CapacidadeRepository capacidadeRepository;
     // Não injetar DTOs como beans
     // @Autowired
     // private CriterioDTORequest criterioDTORequest;
@@ -33,22 +39,27 @@ public class CriterioResource {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CriterioDTOResponse> findById(@PathVariable Long id) {
-        Optional<Criterio> criterio = criterioRepository.findById(id);
-        if (criterio.isPresent()) {
-            return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(criterio.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/pesquisaId/{id}")
+    public CriterioDTOResponse findById(@PathVariable Long id) {
+        Criterio criterio = criterioRepository.findById(id).get();
+        return CriterioDTOResponse.fromCriterio(criterio);
     }
 
     @PostMapping
-    public ResponseEntity<CriterioDTOResponse> create(@RequestBody CriterioDTORequest criterioDTORequest) {
-        Criterio criterio = new Criterio();
-        criterio.setDescricao(criterioDTORequest.getDescricao());
-        Criterio savedCriterio = criterioRepository.save(criterio);
-        return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(savedCriterio));
+    public ResponseEntity<?> createCriterio(@RequestBody CriterioDTORequest criterioDTO) {
+
+        Criterio c = Criterio.of(criterioDTO);
+
+        Optional<Capacidade> capRecebido = capacidadeRepository.findById(criterioDTO.getCapId());
+        if (capRecebido.isPresent()) {
+            c.setCapacidade(capRecebido.get());
+            criterioRepository.save(c);
+            return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(c));
+        } else {
+            // Crie uma mensagem de erro ou objeto de erro adequado
+            String errorMessage = "Capacidade not found with id: " + criterioDTO.getCapId();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
     }
 
     @PutMapping("/{id}")
@@ -64,7 +75,7 @@ public class CriterioResource {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (criterioRepository.existsById(id)) {
             criterioRepository.deleteById(id);

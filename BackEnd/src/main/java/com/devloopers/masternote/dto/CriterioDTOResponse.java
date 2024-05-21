@@ -14,7 +14,7 @@ public class CriterioDTOResponse {
 	
 	private Long id;
     private String descricao;
-    private Capacidade capacidade;
+    private CapacidadeDTOResponse capacidade;
     private String tipo;
     
     public static CriterioDTOResponse fromCriterio(Criterio criterio) {
@@ -22,7 +22,7 @@ public class CriterioDTOResponse {
     	cDTO.setId(criterio.getId());
     	cDTO.setDescricao(criterio.getDescricao());
     	cDTO.setTipo(criterio.getTipo());
-    	cDTO.setCapacidade(criterio.getCapacidade());
+    	cDTO.setCapacidade(CapacidadeDTOResponse.fromCapacidade(criterio.getCapacidade()));
     	return cDTO;
     	
     }

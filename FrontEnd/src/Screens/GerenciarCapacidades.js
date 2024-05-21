@@ -22,21 +22,14 @@ import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GerenciarCriterios = ({ navigation }) => {
+const GerenciarCapacidades = ({ navigation }) => {
   const [descricao, setDescricao] = useState (""); 
-  const [capacidades, setCapacidades] = useState([]);
+  const [ucId, setUcId] = useState([]);
   const [tipo, setTipo] = useState("");
-  const [criterios, setCriterios] = useState([]);
-  const [capId, setCapId] = useState([]);
+  const [capacidades, setCapacidades] = useState([]);
+  const [ucs, setUcs] = useState([])
 
-  const fetchCriterios = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/criterio");
-      setCriterios(response.data);
-    } catch (error) {
-      console.error("Erro ao obter criterios:", error);
-    }
-  };
+
 
   const fetchCapacidade = async () => {
     try {
@@ -47,33 +40,41 @@ const GerenciarCriterios = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchCriterios();
-    fetchCapacidade();
-  }, []);
-
-  const handleAddCriterios = async () => {
+  const fetchUc = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/criterio", {  
-        descricao: descricao,
-        tipo: tipo,
-        capId: capId,
-
-      });
-      console.log(response.data);
-      limparCampos();
-      fetchCriterios();
+      const response = await axios.get("http://localhost:8080/uc");
+      setUcs(response.data);
     } catch (error) {
-      console.error("Erro ao adicionar criterios:", error);
+      console.error("Erro ao obter unidade curricular:", error);
     }
   };
 
-  const handleDeletarCriterio = async (id) => {
+  useEffect(() => {
+    fetchUc();
+    fetchCapacidade();
+  }, []);
+
+  const handleAddCapacidade = async () => {
     try {
-      await axios.delete(`http://localhost:8080/criterio/delete/${id}`);
-      fetchCriterios(); // Corrected function name
+      const response = await axios.post("http://localhost:8080/capacidade", {
+        descricao: descricao,
+        tipo: tipo,
+        ucId:ucId,
+      });
+      console.log(response.data);
+      limparCampos();
+      fetchCapacidade();
     } catch (error) {
-      console.error("Erro ao excluir criterio:", error);
+      console.error("Erro ao adicionar capacidade:", error);
+    }
+  };
+
+  const handleDeletarCapacidade = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/capacidade/delete/${id}`);
+      fetchCapacidade(); // Corrected function name
+    } catch (error) {
+      console.error("Erro ao excluir capacidade:", error);
     }
  };
 
@@ -98,23 +99,23 @@ const GerenciarCriterios = ({ navigation }) => {
               component="div"
               style={styles.title}
             >
-              Adicionar Criterio
+              Adicionar Capacidade
             </Typography>
 
             <Select
-              labelId="capacidade-select-label"
-              id="capacidade-select"
-              value={capId}
-              onChange={(e) => setCapId(e.target.value)}
+              labelId="uc-select-label"
+              id="uc-select"
+              value={ucId}
+              onChange={(e) => setUcId(e.target.value)}
               sx={{ marginBottom: "20px" }}
               displayEmpty
             >
               <MenuItem value="" disabled>
-                Selecionar Capacidade
+                Selecionar UC
               </MenuItem>
-              {capacidades.map((capacidade) => (
-                <MenuItem key={capacidade.id} value={capacidade.id}>
-                  {capacidade.descricao}
+              {ucs.map((uc) => (
+                <MenuItem key={uc.id} value={uc.id}>
+                  {uc.sigla}
                 </MenuItem>
               ))}
             </Select>
@@ -135,24 +136,24 @@ const GerenciarCriterios = ({ navigation }) => {
               displayEmpty
               style={styles.input}
               renderValue={
-                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de Criterio</span>
+                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de Capacidade</span>
               }
             >
               <MenuItem value="" disabled>
-                Tipo de Criterio
+                Tipo de Capacidades
               </MenuItem>
-              <MenuItem value="Critico">Critico</MenuItem>
-              <MenuItem value="Desejável">Desejável</MenuItem>
+              <MenuItem value="Técnica">Técnica</MenuItem>
+              <MenuItem value="Socioemocional">Socioemocional</MenuItem>
             </Select>
             
 
             <Button
               variant="contained"
               color="primary"
-              onClick={handleAddCriterios}
+              onClick={handleAddCapacidade}
               style={styles.button}
             >
-              Adicionar Criterio
+              Adicionar Capacidade
             </Button>
           </View>
           <View style={styles.tableContainer}>
@@ -160,21 +161,22 @@ const GerenciarCriterios = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Critério</TableCell>
-                    <TableCell>Tipo</TableCell>
                     <TableCell>Capacidade</TableCell>
+                    <TableCell>Tipo</TableCell>
+                    <TableCell>UC</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {criterios.map((criterio) => (
-                    <TableRow key={criterio.id}>
-                      <TableCell>{criterio.descricao}</TableCell>
-                      <TableCell>{criterio.tipo}</TableCell>
-                      <TableCell>{criterio.capacidade.descricao}</TableCell>
+                  {capacidades.map((capacidade) => (
+                    <TableRow key={capacidade.id}>
+                      <TableCell>{capacidade.descricao}</TableCell>
+                      <TableCell>{capacidade.tipo}</TableCell>
+                      <TableCell>{capacidade.uc.nomeUC || "não atribuído"}</TableCell>
                       
                       
+                     
                     
                       <TableCell>
                         <EditIcon
@@ -183,7 +185,7 @@ const GerenciarCriterios = ({ navigation }) => {
                         />
                         <DeleteIcon
                           color="primary"
-                          onClick={() => handleDeletarCriterio(criterio.id)}
+                          onClick={() => handleDeletarCapacidade(capacidade.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -232,4 +234,4 @@ const styles = StyleSheet.create({
 
 
 
-export default GerenciarCriterios;
+export default GerenciarCapacidades;

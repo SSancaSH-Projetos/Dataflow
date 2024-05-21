@@ -58,7 +58,6 @@ public class Capacidade implements Serializable {
     	capacidade.setId(capacidadeDTO.getId());
     	capacidade.setDescricao(capacidadeDTO.getDescricao());
     	capacidade.setTipo(capacidadeDTO.getTipo());
-    	capacidade.setUc(capacidadeDTO.getUc());
     	return capacidade;
     }
 }

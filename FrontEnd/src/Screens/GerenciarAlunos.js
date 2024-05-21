@@ -111,7 +111,7 @@ const GerenciarAlunos = ({ navigation }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
+                    <TableCell>Nome do Aluno</TableCell>
                     <TableCell>N° Da Chamada</TableCell>
                     <TableCell>Ação</TableCell>
                   </TableRow>

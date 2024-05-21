@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import { useHistory } from "react-router-dom"; 
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -11,10 +11,12 @@ import SchoolIcon from "@mui/icons-material/School";
 import GroupIcon from "@mui/icons-material/Group";
 import BookIcon from "@mui/icons-material/MenuBook";
 import WorkIcon from "@mui/icons-material/Work";
-import AssessmentIcon from "@mui/icons-material/Assessment"; // Ícone adicionado
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import CreateIcon from '@mui/icons-material/Create';
 import PersonIcon from '@mui/icons-material/Person';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { useTheme } from "@mui/material/styles";
 
 import { useNavigation } from "@react-navigation/native";
@@ -22,20 +24,18 @@ import { useNavigation } from "@react-navigation/native";
 const drawerWidth = 240;
 
 function CustomDrawer({ open, handleDrawerClose }) {
-
-  
-  
   const navigation = useNavigation();
 
   const handleTurmasClick = (index) => {
-    if (index == 0) navigation.navigate("GerenciarCursos");
-    if (index == 1) navigation.navigate("GerenciarTurmas");
-    if (index == 2) navigation.navigate("GerenciarAlunos");
-    if (index == 3) navigation.navigate("GerenciarUCs");
-    if (index == 4) navigation.navigate("GerenciarSAs");
-    if (index == 5) navigation.navigate("GerenciarAvaliacao");
-    if (index == 6) navigation.navigate("GerenciarRelatorios");
-   
+    if (index === 0) navigation.navigate("GerenciarCursos");
+    if (index === 1) navigation.navigate("GerenciarAlunos");
+    if (index === 2) navigation.navigate("GerenciarTurmas");
+    if (index === 3) navigation.navigate("GerenciarUCs");
+    if (index === 4) navigation.navigate("GerenciarCapacidades");
+    if (index === 5) navigation.navigate("GerenciarCriterios");
+    if (index === 6) navigation.navigate("GerenciarSAs");
+    if (index === 7) navigation.navigate("GerenciarAvaliacao");
+    if (index === 8) navigation.navigate("GerenciarRelatorios");
   };
 
   useEffect(() => {
@@ -52,15 +52,28 @@ function CustomDrawer({ open, handleDrawerClose }) {
     };
   }, [open, handleDrawerClose]);
 
-  const icons = [<SchoolIcon />, <GroupIcon />, <PersonIcon/>, <WorkIcon />,  <BookIcon />, <CreateIcon/>, <AssessmentIcon />]; // Adicionado o ícone de Avaliação
+  const icons = [
+    <SchoolIcon />,
+    <GroupIcon />,
+    <PersonIcon />,
+    <WorkIcon />,
+    <BookIcon />,
+    <CreateIcon />,
+    <AssessmentIcon />,
+    <AssignmentIcon />,
+    <DescriptionIcon />,
+  ];
+
   const actions = [
     () => handleTurmasClick(0),
     () => handleTurmasClick(1),
     () => handleTurmasClick(2),
     () => handleTurmasClick(3),
     () => handleTurmasClick(4),
-    () => handleTurmasClick(5), 
-    () => handleTurmasClick(6)
+    () => handleTurmasClick(5),
+    () => handleTurmasClick(6),
+    () => handleTurmasClick(7),
+    () => handleTurmasClick(8),
   ];
 
   return (
@@ -82,16 +95,28 @@ function CustomDrawer({ open, handleDrawerClose }) {
         <List>
           {[
             "Cursos",
-            "Turmas",
             "Alunos",
+            "Turmas",
+          ].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton onClick={actions[index]}>
+                <ListItemIcon>{icons[index]}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {[
             "Unidades Curriculares",
+            "Capacidades",
+            "Critérios",
             "Situações de Aprendizagem",
           ].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton
-                onClick={actions[index]} 
-              >
-                <ListItemIcon>{icons[index % icons.length]}</ListItemIcon>
+              <ListItemButton onClick={actions[index]}>
+                <ListItemIcon>{icons[index]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -99,29 +124,10 @@ function CustomDrawer({ open, handleDrawerClose }) {
         </List>
         <Divider />
         <List>
-          {[
-            "Avaliação",
-          ].map((text, index) => (
+          {["Avaliação", "Relatório"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton
-                onClick={actions[index + 5]} // Atualizado o índice para o ícone de Avaliação
-              >
-                <ListItemIcon>{icons[index + 5]}</ListItemIcon> {/* Atualizado o índice para o ícone de Avaliação */}
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {[
-            "Relatório",
-          ].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton
-                onClick={actions[index + 6]} // Atualizado o índice para o ícone de Relatório
-              >
-                <ListItemIcon>{icons[index + 6]}</ListItemIcon> {/* Atualizado o índice para o ícone de Relatório */}
+              <ListItemButton onClick={actions[index + 6]}>
+                <ListItemIcon>{icons[index + 6]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>

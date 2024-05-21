@@ -15,6 +15,6 @@ public class AlunoDTORequest {
     private String nome;
     private Integer numeroChamada;
     private Turma turma;
-	private boolean deletedA;
+
 
 }

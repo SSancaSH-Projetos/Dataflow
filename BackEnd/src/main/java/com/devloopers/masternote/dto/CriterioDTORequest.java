@@ -17,8 +17,8 @@ public class CriterioDTORequest {
 	
     private Long id;
     private String descricao;
-    private Capacidade capacidade;
     private String tipo;
+    private Long capId;
 
     
     
