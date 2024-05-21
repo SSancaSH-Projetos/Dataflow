@@ -22,12 +22,12 @@ import GerenciarAlunos from "../Screens/GerenciarAlunos";
 import GerenciarUCs from "../Screens/GerenciarUCs";
 import GerenciarSAs from "../Screens/GerenciarSAs";
 import GerenciarCriterios from "../Screens/GerenciarCriterios";
-<<<<<<< HEAD
+
 import GerenciarCapacidades from "../Screens/GerenciarCapacidades";
-=======
+
 import GerenciarAvaliacao from "../Screens/GerenciarAvaliacao";
 import GerenciarRelatorios from "../Screens/GerenciarRelatorios";
->>>>>>> 036cc0448195ed576cfd0c2bcb002825ba4836b8
+
 const Stack = createStackNavigator();
 
 const Navigation = () => {
