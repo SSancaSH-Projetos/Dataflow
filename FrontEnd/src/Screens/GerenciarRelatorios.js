@@ -65,7 +65,7 @@ const GerenciarRelatorios = ({ navigation }) => {
 
             <Select
               labelId="aluno-select-label"
-              id="curso-select"
+              id="aluno-select"
               value={aluno}
               onChange={(e) => setAlunoId(e.target.value)}
               sx={{ marginBottom: "20px" }}

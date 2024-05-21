@@ -1,163 +1,201 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
+import {
+  TextField,
+  Typography,
+  Breadcrumbs,
+  Link,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import axios from "axios";
-
 import TemplateCrud from "../Components/TemplateCrud";
 
+
 const GerenciarAvaliacao = ({ navigation }) => {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [coursesList, setCoursesList] = useState([]);
-  const [selectedTurma, setSelectedTurma] = useState(null);
-  const [turmasList, setTurmasList] = useState([]);
-  const [selectedUC, setSelectedUC] = useState(null);
-  const [UCList, setUCList] = useState([]);
+  const [curso, setCursoId] = useState("");
+  const [cursos, setCursos] = useState([]);
+  const [turma, setTurmaId] = useState("");
+  const [turmas, setTurmas] = useState([]);
+  const [uc, setUCId] = useState("");
+  const [ucs, setUCs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchCursos = () => axios.get("http://localhost:8080/curso");
-  const fetchUCs = () => axios.get("http://localhost:8080/uc");
-  const fetchTurmas = () => axios.get("http://localhost:8080/turma");
+
+
+  const fetchCursos = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/curso");
+      setCursos(response.data);
+    } catch (error) {
+      console.error("Erro ao obter cursos:", error);
+    }
+  };
+
+  const fetchUCs = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/uc");
+      setUCs(response.data);
+    } catch (error) {
+      console.error("Erro ao obter uc:", error);
+    }
+  };
+
+  const fetchTurmas = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/turma");
+      setTurmas(response.data);
+    } catch (error) {
+      console.error("Erro ao obter turmas:", error);
+    }
+  };
 
   useEffect(() => {
-    Promise.all([fetchCursos(), fetchUCs(), fetchTurmas()])
-      .then((responses) => {
-        setCoursesList(responses[0].data);
-        setUCList(responses[1].data);
-        setTurmasList(responses[2].data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados:", error);
-      });
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchCursos(), fetchTurmas(), fetchUCs()]);
+      setIsLoading(false);
+    };
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("opa");
-    console.log(UCList);
-  }, [UCList]);
-  
-
   return (
+    <ScrollView>
     <TemplateCrud>
-      {/* // PUXAR CURSO  -- no front, está aparecendo a sigla */}
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Selecione um curso:</Text>
-        <Picker
-          selectedValue={selectedCourse}
-          onValueChange={(itemValue, itemIndex) => setSelectedCourse(itemValue)}
-          style={styles.input}
-        >
-          {!isLoading & coursesList.map((course) => (
-            <Picker.Item
-              key={course.id}
-              label={course.nome}
-              value={course.id}
-            />
-          ))}
-        </Picker>
-      </View>
+      <View style={styles.mainContainer}>
+        <View style={styles.breadcrumbsContainer}>
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.formContainer}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              style={styles.title}>
+              Gerenciar Avaliação
+            </Typography>
 
-      {/* // PUXAR TURMA */}
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Selecione uma turma:</Text>
-        <Picker
-          selectedValue={selectedTurma}
-          onValueChange={(itemValue, itemIndex) => setSelectedTurma(itemValue)}
-          style={styles.input}
-        >
-          {!isLoading & turmasList.map((turma) => (
-            <Picker.Item key={turma.id} label={turma.sigla} value={turma.id} />
-          ))}
-        </Picker>
-      </View>
+            <Select
+              labelId="aluno-select-curso"
+              id="curso-select"
+              value={curso}
+              onChange={(e) => setCursoId(e.target.value)}
+              sx={{ marginBottom: "20px" }}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                Selecionar Curso
+              </MenuItem>
+              {cursos.map((curso) => (
+                <MenuItem key={curso.id} value={curso.id}>
+                  {curso.nome}
+                </MenuItem>
+              ))}
+            </Select>
 
-      {/* // PUXAR Unidade Curricular */}
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Selecione uma unidade curricular:</Text>
-        <Picker
-          selectedValue={selectedUC}
-          onValueChange={(itemValue, itemIndex) => setSelectedUC(itemValue)}
-          style={styles.input}
-        >
-          {!isLoading & UCList.map((uc) => (
-            <Picker.Item key={uc.id} label={uc.nomeUc} value={uc.id} />
-          ))}
-        </Picker>
-      </View>
 
-      <View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("IniciarAvCapacidade")}
-        >
-          <Text style={styles.buttonText}>Avançar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.goBackButton]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.buttonText}>Visualizar</Text>
-        </TouchableOpacity>
+            <Select
+              labelId="turma-select-curso"
+              id="turma-select"
+              value={turma}
+              onChange={(e) => setTurmaId(e.target.value)}
+              sx={{ marginBottom: "20px" }}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                Selecionar Turma
+              </MenuItem>
+              {turmas.map((turma) => (
+                <MenuItem key={turma.id} value={turma.id}>
+                  {turma.nome}
+                </MenuItem>
+              ))}
+            </Select>
+
+
+            <Select
+              labelId="uc-select-curso"
+              id="uc-select"
+              value={uc}
+              onChange={(e) => setUCId(e.target.value)}
+              sx={{ marginBottom: "20px" }}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                Selecionar UC
+              </MenuItem>
+              {ucs.map((uc) => (
+                <MenuItem key={uc.id} value={uc.id}>
+                  {uc.nome}
+                </MenuItem>
+              ))}
+            </Select>
+
+
+
+          </View>
+          <View style={styles.tableContainer}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nome</TableCell>
+                    <TableCell>Nivel</TableCell>
+                    <TableCell>Carga Horaria</TableCell>
+                    <TableCell>Ação</TableCell>
+                    
+                  </TableRow>
+                </TableHead>
+              </Table>
+            </TableContainer>
+          </View>
+        </View>
       </View>
     </TemplateCrud>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: "#FFF",
+    padding: 10,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#3A3042",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  backButtonText: {
-    color: "#FFF",
-    fontSize: 16,
-  },
-  title: {
-    flex: 1,
-    alignItems: "center",
-  },
-  titleText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  formContainer: {
-    marginTop: 20,
-  },
-  label: {
-    fontSize: 18,
+  breadcrumbsContainer: {
     marginBottom: 10,
   },
-  button: {
-    backgroundColor: "red",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  goBackButton: {
-    backgroundColor: "blue",
-  },
-  buttonContainer: {
+  contentContainer: {
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    marginTop: 20,
+  },
+  formContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  tableContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    marginBottom: 20,
+  },
+  input: {
+    marginBottom: 20,
+  },
+  button: {
+    marginTop: 10,
   },
 });
+
+
 
 export default GerenciarAvaliacao;
