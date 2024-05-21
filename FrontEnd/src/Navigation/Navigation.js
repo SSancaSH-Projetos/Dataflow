@@ -5,7 +5,6 @@ import DashboardProfessor from "../Screens/DashboardProfessor";
 import GerenciarTurmas from "../Screens/GerenciarTurmas";
 import GerenciarSA from "../Telas/GerenciarSA";
 import GerenciarUC from "../Telas/GerenciarUC";
-import GerarRelatorio from "../Telas/GerarRelatorio";
 import CadastroUC from "../Telas/CadastroUC";
 import CadastroCapacidades from "../Telas/CadastroCapacidades";
 import AdicionarSA from "../Telas/AdicionarSA";
@@ -23,6 +22,7 @@ import GerenciarAlunos from "../Screens/GerenciarAlunos";
 import GerenciarUCs from "../Screens/GerenciarUCs";
 import GerenciarSAs from "../Screens/GerenciarSAs";
 import GerenciarCriterios from "../Screens/GerenciarCriterios";
+import GerenciarRelatorios from "../Screens/GerenciarRelatorios";
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -43,13 +43,10 @@ const Navigation = () => {
         <Stack.Screen name="GerenciarCursos" component={GerenciarCursos} />
         <Stack.Screen name="GerenciarTurmas" component={GerenciarTurmas} />
         <Stack.Screen name="GerenciarUC" component={GerenciarUC} />
-        <Stack.Screen name="GerarRelatorio" component={GerarRelatorio} />
         <Stack.Screen name="AdicionarSA" component={AdicionarSA} />
         <Stack.Screen name="CadastroUC" component={CadastroUC} />
-        <Stack.Screen
-          name="CadastroCapacidades"
-          component={CadastroCapacidades}
-        />
+        <Stack.Screen name="GerenciarRelatorios" component={GerenciarRelatorios} />
+        <Stack.Screen name="CadastroCapacidades" component={CadastroCapacidades}/>
         <Stack.Screen name="AdicionarTurma" component={AdicionarTurma} />
         <Stack.Screen name=" AdicionarCurso" component={AdicionarCurso} />
         <Stack.Screen
