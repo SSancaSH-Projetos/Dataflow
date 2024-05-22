@@ -48,6 +48,10 @@ public class TurmaResource {
 				.collect(Collectors.toList());
 	}
 	
+	@GetMapping("/buscarAlunosDaTurma/{turmaId}")
+    public List<Aluno> getAlunosByTurmaId(@PathVariable Long turmaId) {
+        return alunoRepository.findAlunosByTurmaId(turmaId);
+    }
 	
 	@GetMapping("/pesquisaId/{id}")
 	public TurmaDTOResponse findById(@PathVariable Long id) {
