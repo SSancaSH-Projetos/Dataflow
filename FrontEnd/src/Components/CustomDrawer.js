@@ -115,8 +115,8 @@ function CustomDrawer({ open, handleDrawerClose }) {
             "Situações de Aprendizagem",
           ].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton onClick={actions[index]}>
-                <ListItemIcon>{icons[index]}</ListItemIcon>
+              <ListItemButton onClick={actions[index+3]}>
+                <ListItemIcon>{icons[index+3]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -126,8 +126,8 @@ function CustomDrawer({ open, handleDrawerClose }) {
         <List>
           {["Avaliação", "Relatório"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton onClick={actions[index + 6]}>
-                <ListItemIcon>{icons[index + 6]}</ListItemIcon>
+              <ListItemButton onClick={actions[index + 7]}>
+                <ListItemIcon>{icons[index + 7]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
