@@ -24,9 +24,9 @@ import TemplateCrud from "../Components/TemplateCrud";
 const GerenciarAvaliacao = ({ navigation }) => {
   const [curso, setCursoId] = useState("");
   const [cursos, setCursos] = useState([]);
-  const [turma, setTurmaId] = useState("");
+  const [turmaId, setTurmaId] = useState("");
   const [turmas, setTurmas] = useState([]);
-  const [uc, setUCId] = useState("");
+  const [ucId, setUcId] = useState([]);
   const [ucs, setUCs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -104,9 +104,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
 
 
             <Select
-              labelId="turma-select-curso"
+              labelId="turma-select-label"
               id="turma-select"
-              value={turma}
+              value={turmaId}
               onChange={(e) => setTurmaId(e.target.value)}
               sx={{ marginBottom: "20px" }}
               displayEmpty
@@ -116,17 +116,17 @@ const GerenciarAvaliacao = ({ navigation }) => {
               </MenuItem>
               {turmas.map((turma) => (
                 <MenuItem key={turma.id} value={turma.id}>
-                  {turma.nome}
+                  {turma.sigla}
                 </MenuItem>
               ))}
             </Select>
 
 
             <Select
-              labelId="uc-select-curso"
+              labelId="uc-select-label"
               id="uc-select"
-              value={uc}
-              onChange={(e) => setUCId(e.target.value)}
+              value={ucId}
+              onChange={(e) => setUcId(e.target.value)}
               sx={{ marginBottom: "20px" }}
               displayEmpty
             >
@@ -135,11 +135,10 @@ const GerenciarAvaliacao = ({ navigation }) => {
               </MenuItem>
               {ucs.map((uc) => (
                 <MenuItem key={uc.id} value={uc.id}>
-                  {uc.nome}
+                  {uc.sigla}
                 </MenuItem>
               ))}
             </Select>
-
 
 
           </View>
