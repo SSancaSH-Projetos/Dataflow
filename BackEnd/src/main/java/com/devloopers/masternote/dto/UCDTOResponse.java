@@ -16,6 +16,8 @@ public class UCDTOResponse {
     private Float cargaHoraria;
     private String modulo;
     private String conhecimentos;
+    private Long curso;
+
 
     public static UCDTOResponse fromUC(UC uc) {
         UCDTOResponse ucDTO = new UCDTOResponse();
@@ -25,6 +27,7 @@ public class UCDTOResponse {
         ucDTO.setCargaHoraria(uc.getCargaHoraria());
         ucDTO.setModulo(uc.getModulo());
         ucDTO.setConhecimentos(uc.getConhecimentos());
+        ucDTO.setCurso(uc.getCurso().getId());
         return ucDTO;
     }
 

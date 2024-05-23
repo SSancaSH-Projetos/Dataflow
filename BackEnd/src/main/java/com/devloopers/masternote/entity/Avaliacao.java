@@ -30,7 +30,7 @@ public class Avaliacao implements Serializable {
 	 private Date data;
 	 
 	 @Column(name = "resultado")
-	 private Boolean resultado;
+	 private String resultado;
 	 
 	 @ManyToOne
 	 @JoinColumn(name= "curso_id")

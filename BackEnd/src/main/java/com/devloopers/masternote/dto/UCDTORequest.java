@@ -15,11 +15,12 @@ public class UCDTORequest {
     private Float cargaHoraria;
     private String modulo;
     private String conhecimentos;
-    
-    
+    private Long curso;
 
 
-    
-    
+
+
+
+
 
 }

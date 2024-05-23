@@ -105,6 +105,17 @@ public class AvaliacaoResource {
         return criterioRepository.countByTipoContainingC();
     }
 
+    @GetMapping("/contarResultadoSCriterioCDoAluno/{id}")
+    public long countByTipoContainingSCriterioC(Long id) {
+        return avaliacaoRepository.countByResultadoSAndCriterioTipoCAndAlunoId(id);
+    }
+
+    @GetMapping("/contarResultadoSCriterioD")
+    public long countByTipoContainingSCriterioD() {
+        return avaliacaoRepository.countByResultadoSAndCriterioTipoD();
+    }
+
+
     @DeleteMapping("/delete/{id}")
     public void deleteAvaliacao(@PathVariable Long id) {
         avaliacaoRepository.deleteById(id);

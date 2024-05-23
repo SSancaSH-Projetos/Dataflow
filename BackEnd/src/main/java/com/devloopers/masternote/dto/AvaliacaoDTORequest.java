@@ -22,7 +22,7 @@ public class AvaliacaoDTORequest {
 
 	private Long id;
 	private Date data;
-	private Boolean resultado;
+	private String resultado;
 	private Curso curso;
 	private Turma turma;
 	private UC uc;

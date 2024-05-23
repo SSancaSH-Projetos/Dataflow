@@ -10,6 +10,7 @@ import com.devloopers.masternote.entity.Turma;
 public interface TurmaRepository extends JpaRepository<Turma, Long>{
 
 	List<Turma> findBySigla(String sigla);
-	
+
+	List<Turma> findByCursoId(Long cursoId);
 
 }

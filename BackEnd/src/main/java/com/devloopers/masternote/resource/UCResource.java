@@ -1,10 +1,16 @@
 package com.devloopers.masternote.resource;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.devloopers.masternote.dto.UCDTOResponse;
+import com.devloopers.masternote.entity.Capacidade;
+import com.devloopers.masternote.entity.Criterio;
+import com.devloopers.masternote.repository.CapacidadeRepository;
+import com.devloopers.masternote.repository.CursoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +32,12 @@ import com.devloopers.masternote.repository.UCRepository;
 public class UCResource {
 	@Autowired
 	private  UCRepository ucRepository;
+
+	@Autowired
+	private CursoRepository cursoRepository;
+
+	@Autowired
+	private CapacidadeRepository capacidadeRepository;
 	
 	@GetMapping
 	public Iterable<UCDTOResponse> findAll(){
@@ -54,9 +66,20 @@ public class UCResource {
 	@PostMapping
 	public UCDTOResponse createUC(@RequestBody UCDTORequest ucDTO) {
 		UC uc = UC.of(ucDTO);
+		cursoRepository.findById(ucDTO.getCurso())
+				.ifPresentOrElse(uc::setCurso, () -> {
+					throw new EntityNotFoundException("Curso não encontrado com o ID: " + ucDTO.getCurso());
+				});
+
 		return  UCDTOResponse.fromUC(ucRepository.save(uc));
 	}
-	
+	@GetMapping("/pesquisaCapacidadesUc/{id}")
+	public List<Capacidade> findByUcId(@PathVariable Long id){
+		UC uc = new UC();
+		uc.setId(id);
+		return capacidadeRepository.findByUc(uc);
+	}
+
 	@PutMapping("/update/{id}")
 	public ResponseEntity<UCDTOResponse> updateUC(@PathVariable Long id, @RequestBody UCDTORequest ucDTO) {
 		Optional<UC> ucOptional = ucRepository.findById(id);

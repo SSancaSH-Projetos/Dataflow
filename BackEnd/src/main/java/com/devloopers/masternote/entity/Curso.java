@@ -39,6 +39,8 @@ public class Curso {
     @Column(name = "nivel")
     private String nivel;
 
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<UC> ucs;
 
 
    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)

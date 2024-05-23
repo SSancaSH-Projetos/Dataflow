@@ -6,8 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.devloopers.masternote.dto.SADTOResponse;
-import com.devloopers.masternote.entity.SA;
-import com.devloopers.masternote.entity.UC;
+import com.devloopers.masternote.entity.*;
+import com.devloopers.masternote.repository.CriterioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devloopers.masternote.dto.CapacidadeDTORequest;
 import com.devloopers.masternote.dto.CapacidadeDTOResponse;
-import com.devloopers.masternote.entity.Capacidade;
 import com.devloopers.masternote.repository.CapacidadeRepository;
 import com.devloopers.masternote.repository.UCRepository;
 
@@ -38,6 +37,9 @@ public class CapacidadeResource {
 	    
 	    @Autowired
 	    private UCRepository ucRepository;
+
+		@Autowired
+		private CriterioRepository criterioRepository;
 	
 	
 	@GetMapping
@@ -59,6 +61,11 @@ public class CapacidadeResource {
 		Capacidade capacidade = capacidadeRepository.findById(id).get();
 		return CapacidadeDTOResponse.fromCapacidade(capacidade);
 		
+	}
+
+	@GetMapping("/pesquisaCriteriosDaCapacidade/{id}")
+	public List<Criterio> findByIdCapacidadeCriterio(@PathVariable Long id){
+		return criterioRepository.findByCapacidadeId(id);
 	}
 	
 	@PostMapping
