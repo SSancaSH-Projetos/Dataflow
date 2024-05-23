@@ -28,9 +28,11 @@ const GerenciarUCs = ({ navigation }) => {
   const [cargaHoraria, setCargaHoraria] = useState("");
   const [modulo, setModulo] = useState("");
   const [conhecimentos, setConhecimentos] = useState("");
-  const [capacidade, setCapacidade] =useState([]);
-  const [sa, setSa] = useState([]);
   const [ucs, setUcs] = useState([]);
+  const [curso, setCursoId] = useState("");
+  const [cursos, setCursos] = useState([]);
+
+
 
 
   const fetchUc = async () => {
@@ -44,6 +46,8 @@ const GerenciarUCs = ({ navigation }) => {
 
   useEffect(() => {
     fetchUc();
+    fetchCursos();
+
   }, []);
 
   const handleAddUc = async () => {
@@ -75,6 +79,16 @@ const GerenciarUCs = ({ navigation }) => {
     }
  };
 
+ const fetchCursos = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/curso");
+    setCursos(response.data);
+  } catch (error) {
+    console.error("Erro ao obter cursos:", error);
+  }
+};
+
+
   const limparCampos = () => {
     setNomeUC('');
     setSigla('');
@@ -99,6 +113,27 @@ const GerenciarUCs = ({ navigation }) => {
             >
               Adicionar Unidade Curricular
             </Typography>
+
+
+            <Select
+                labelId="curso-select-label"
+                id="curso-select"
+                value={curso}
+                onChange={(e) => setCursoId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Selecionar Curso
+                </MenuItem>
+                {cursos.map((curso) => (
+                  <MenuItem key={curso.id} value={curso.id}>
+                    {curso.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+
+
 
             <TextField
               label="Nome da Unidade Curricular"
@@ -222,3 +257,4 @@ const styles = StyleSheet.create({
 
 
 export default GerenciarUCs;
+
