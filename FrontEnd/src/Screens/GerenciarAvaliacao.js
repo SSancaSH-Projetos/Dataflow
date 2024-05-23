@@ -1,157 +1,170 @@
-  import React, { useState, useEffect } from "react";
-  import { View, StyleSheet, ScrollView } from "react-native";
-  import {
-    Typography,
-    MenuItem,
-    Select,
-    TableContainer,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
-    Button,
-    Paper,
-  } from "@mui/material";
-  import axios from "axios";
-  import TemplateCrud from "../Components/TemplateCrud";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
+import {
+  Typography,
+  MenuItem,
+  Select,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  Paper,
+} from "@mui/material";
+import axios from "axios";
+import TemplateCrud from "../Components/TemplateCrud";
 
-  const GerenciarAvaliacao = ({ navigation }) => {
-    const [curso, setCursoId] = useState("");
-    const [cursos, setCursos] = useState([]);
-    const [turmaId, setTurmaId] = useState("");
-    const [turmas, setTurmas] = useState([]);
-    const [ucId, setUcId] = useState([]);
-    const [ucs, setUCs] = useState([]);
-    const [saId, setSaId] = useState("");
-    const [sass, setSas] = useState([]);
-    const [capacidadeId, setCapacidadeId] = useState("");
-    const [capacidades, setCapacidades] = useState([]);
-    const [rowsData] = useState([]);
-    const [tabelaVisivel, setTabelaVisivel] = useState(false);
+const GerenciarAvaliacao = ({ navigation }) => {
+  const [curso, setCursoId] = useState("");
+  const [cursos, setCursos] = useState([]);
+  const [turmaId, setTurmaId] = useState("");
+  const [turmas, setTurmas] = useState([]);
+  const [ucId, setUcId] = useState([]);
+  const [ucs, setUCs] = useState([]);
+  const [saId, setSaId] = useState("");
+  const [sass, setSas] = useState([]);
+  const [capacidadeId, setCapacidadeId] = useState("");
+  const [capacidades, setCapacidades] = useState([]);
+  const [rowsData] = useState([]);
+  const [tabelaVisivel, setTabelaVisivel] = useState(false);
+  const [turmaPorCurso, setTurmaPorCurso] = useState ([]);
+  const [uCsPorCurso, setUCsPorCurso] = useState ([]);
 
 
-    const [isLoading, setIsLoading] = useState(true);
 
-    function createData(criterio, tipoCriterio, capacidade, tipoCapacidade) {
-      return { criterio, tipoCriterio, capacidade, tipoCapacidade };
+  const [isLoading, setIsLoading] = useState(true);
+
+  function createData(criterio, tipoCriterio, capacidade, tipoCapacidade) {
+    return { criterio, tipoCriterio, capacidade, tipoCapacidade };
+  }
+
+  const rows = rowsData.map((data) =>
+    createData(
+      data.criterio,
+      data.tipoCriterio,
+      data.capacidade,
+      data.tipoCapacidade
+    )
+  );
+
+  const fetchCursos = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/curso");
+      setCursos(response.data);
+    } catch (error) {
+      console.error("Erro ao obter cursos:", error);
     }
+  };
 
-    const rows = rowsData.map((data) =>
-      createData(
-        data.criterio,
-        data.tipoCriterio,
-        data.capacidade,
-        data.tipoCapacidade
-      )
-    );
+  const fetchCursosPorTurma = async (cursoId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/curso/pesquisaDeTurmaPorIdDoCurso/${cursoId}`);
+      setTurmaPorCurso(response.data);
+    } catch (error) {
+      console.error("Erro ao obter cursos por TURMAS:", error);
+    }
+  };
 
-    const fetchCursos = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/curso");
-        setCursos(response.data);
-      } catch (error) {
-        console.error("Erro ao obter cursos:", error);
-      }
+
+  const fetchUCsPorCurso = async (cursoId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/curso/pesquisarUcporCurso/${cursoId}`);
+      setUCsPorCurso(response.data);
+    } catch (error) {
+      console.error("Erro ao obter UCS por CURSOS:", error);
+    }
+  };
+  
+  
+
+  const fetchUCs = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/uc");
+      setUCs(response.data);
+    } catch (error) {
+      console.error("Erro ao obter uc:", error);
+    }
+  };
+
+  const fetchTurmas = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/turma");
+      setTurmas(response.data);
+    } catch (error) {
+      console.error("Erro ao obter turmas:", error);
+    }
+  };
+
+  const fetchCapacidade = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/capacidade");
+      setCapacidades(response.data);
+    } catch (error) {
+      console.error("Erro ao obter capacidade", error);
+    }
+  };
+
+  const fetchSa = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/sa");
+      setSas(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Erro ao obter situação de aprendizagem:", error);
+    }
+  };
+
+
+  const handleAvancar = async () => {
+    setTabelaVisivel(true);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fetchCursos(),
+        fetchTurmas(),
+        fetchUCs(),
+        fetchCapacidade(),
+        fetchSa(),
+        fetchUCsPorCurso(),
+        fetchCursosPorTurma(),
+      ]);
+      setIsLoading(false);
     };
+    fetchData();
+  }, []);
 
-    const fetchUCs = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/uc");
-        setUCs(response.data);
-      } catch (error) {
-        console.error("Erro ao obter uc:", error);
-      }
-    };
+  return (
+    <ScrollView>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Gerenciar Avaliação
+              </Typography>
 
-    const fetchTurmas = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/turma");
-        setTurmas(response.data);
-      } catch (error) {
-        console.error("Erro ao obter turmas:", error);
-      }
-    };
-
-    const fetchCapacidade = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/capacidade");
-        setCapacidades(response.data);
-      } catch (error) {
-        console.error("Erro ao obter capacidade", error);
-      }
-    };
-
-    const fetchSa = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/sa");
-        setSas(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Erro ao obter situação de aprendizagem:", error);
-      }
-    };
-
-    const handleAddCapacidade = async () => {
-      try {
-        const response = await axios.post("http://localhost:8080/capacidade", {
-          descricao: descricao,
-          tipo: tipo,
-          ucId: ucId,
-        });
-        console.log(response.data);
-        limparCampos();
-        fetchCapacidade();
-      } catch (error) {
-        console.error("Erro ao adicionar capacidade:", error);
-      }
-    };
-
-
-    const handleAvancar = async () => {
-      setTabelaVisivel(true);
-    };
-
-    useEffect(() => {
-      const fetchData = async () => {
-        setIsLoading(true);
-        await Promise.all([
-          fetchCursos(),
-          fetchTurmas(),
-          fetchUCs(),
-          fetchCapacidade(),
-          fetchSa(),
-          handleAddCapacidade(),
-        ]);
-        setIsLoading(false);
-      };
-      fetchData();
-    }, []);
-
-    return (
-      <ScrollView>
-        <TemplateCrud>
-          <View style={styles.mainContainer}>
-            <View style={styles.contentContainer}>
-              <View style={styles.formContainer}>
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="div"
-                  style={styles.title}
-                >
-                  Gerenciar Avaliação
-                </Typography>
-
-                <Select
+              <Select
                   labelId="curso-select-label"
                   id="curso-select"
                   value={curso}
-                  onChange={(e) => setCursoId(e.target.value)}
+                  onChange={(e) => {
+                    setCursoId(e.target.value);
+                    fetchCursosPorTurma(e.target.value);
+                    fetchUCsPorCurso(e.target.value); // Chama fetchCursosPorTurma com o id do curso selecionado
+                  }}
                   sx={{ marginBottom: "20px" }}
                   displayEmpty
                   style={styles.inputSelect}
-
                 >
                   <MenuItem value="" disabled>
                     Selecionar Curso
@@ -171,78 +184,66 @@
                   sx={{ marginBottom: "20px" }}
                   displayEmpty
                   style={styles.inputSelect}
-
                 >
                   <MenuItem value="" disabled>
                     Selecionar Turma
                   </MenuItem>
-                  {turmas.map((turma) => (
+                  {turmaPorCurso.map((turma) => (
                     <MenuItem key={turma.id} value={turma.id}>
                       {turma.sigla}
                     </MenuItem>
                   ))}
                 </Select>
 
-                <Select
-                  labelId="uc-select-label"
-                  id="uc-select"
-                  value={ucId}
-                  onChange={(e) => setUcId(e.target.value)}
-                  sx={{ marginBottom: "20px" }}
-                  displayEmpty
-                  style={styles.inputSelect}
-
-                >
-                  <MenuItem value="" disabled>
-                    Selecionar UC
+              <Select
+                labelId="uc-select-label"
+                id="uc-select"
+                value={ucId}
+                onChange={(e) => setUcId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+                style={styles.inputSelect}
+              >
+                <MenuItem value="" disabled>
+                  Selecionar UC
+                </MenuItem>
+                {uCsPorCurso.map((uc) => (
+                  <MenuItem key={uc.id} value={uc.id}>
+                    {uc.sigla}
                   </MenuItem>
-                  {ucs.map((uc) => (
-                    <MenuItem key={uc.id} value={uc.id}>
-                      {uc.sigla}
-                    </MenuItem>
-                  ))}
-                </Select>
+                ))}
+              </Select>
 
-                <Select
-                  labelId="sa-select-label"
-                  id="sa-select"
-                  value={saId}
-                  onChange={(e) => setSaId(e.target.value)}
-                  sx={{ marginBottom: "20px" }}
-                  displayEmpty
-                  style={styles.inputSelect}
-
-                >
-                  <MenuItem value="" disabled>
-                    Selecionar SA
+              <Select
+                labelId="sa-select-label"
+                id="sa-select"
+                value={saId}
+                onChange={(e) => setSaId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+                style={styles.inputSelect}
+              >
+                <MenuItem value="" disabled>
+                  Selecionar SA
+                </MenuItem>
+                {sass.map((sa) => (
+                  <MenuItem key={sa.id} value={sa.id}>
+                    {sa.descricao}
                   </MenuItem>
-                  {sass.map((sa) => (
-                    <MenuItem key={sa.id} value={sa.id}>
-                      {sa.descricao}
-                    </MenuItem>
-                  ))}
-                </Select>
-                
+                ))}
+              </Select>
 
-                <Button 
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAvancar}
-                    style={styles.button}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAvancar}
+                style={styles.button}
+              >
+                Iniciar Avaliação
+              </Button>
+            </View>
 
-                  >
-                    Iniciar Avaliação
-                  </Button>
-
-
-
-
-
-              </View>
-
-              {tabelaVisivel && (
-
-
+            {tabelaVisivel && (
               <View style={styles.tableContainer}>
                 <Select
                   labelId="capacidade-select-label"
@@ -281,64 +282,61 @@
                           <TableCell component="th" scope="row">
                             {row.criterio}
                           </TableCell>
-                          <TableCell align="right">{row.tipoCriterio}</TableCell>
+                          <TableCell align="right">
+                            {row.tipoCriterio}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-            
-
               </View>
-
-)}
-            </View>
+            )}
           </View>
-        </TemplateCrud>
-      </ScrollView>
-    );
-  };
-  const styles = StyleSheet.create({
-    mainContainer: {
-      flex: 1,
-      padding: 10,
-    },
-    breadcrumbsContainer: {
-      marginBottom: 10,
-    },
-    contentContainer: {
-      flex: 1,
-      flexDirection: "row",
-    },
-    formContainer: {
-      flex: 1,
-      padding: 20,
-    },
-    tableContainer: {
-      flex: 1,
-      padding: 20,
-    },
-    title: {
-      marginBottom: 20,
-    },
-    input: {
-      marginBottom: 20,
-    },
-    button: {
-      marginTop: 10,
-      marginBottom: 30,
-      marginLeft: 180,
-      width: 200, 
-      height: 50, 
-    },
+        </View>
+      </TemplateCrud>
+    </ScrollView>
+  );
+};
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  breadcrumbsContainer: {
+    marginBottom: 10,
+  },
+  contentContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  formContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  tableContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    marginBottom: 20,
+  },
+  input: {
+    marginBottom: 20,
+  },
+  button: {
+    marginTop: 10,
+    marginBottom: 30,
+    marginLeft: 180,
+    width: 200,
+    height: 50,
+  },
 
-    inputSelect: {
-      width: 550, 
+  inputSelect: {
+    width: 550,
+  },
+});
 
-    }
-
-  });
-
-  export default GerenciarAvaliacao;
+export default GerenciarAvaliacao;
 
 
