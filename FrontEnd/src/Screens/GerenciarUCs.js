@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
 import {
   TextField,
   Typography,
@@ -29,7 +29,7 @@ const GerenciarUCs = ({ navigation }) => {
   const [modulo, setModulo] = useState("");
   const [conhecimentos, setConhecimentos] = useState("");
   const [ucs, setUcs] = useState([]);
-  const [curso, setCursoId] = useState("");
+  const [curso, setCurso] = useState("");
   const [cursos, setCursos] = useState([]);
 
 
@@ -53,6 +53,7 @@ const GerenciarUCs = ({ navigation }) => {
   const handleAddUc = async () => {
     try {
       const response = await axios.post("http://localhost:8080/uc", {
+        curso: curso,
         nomeUC: nomeUC,
         sigla: sigla,
         cargaHoraria: cargaHoraria,
@@ -99,6 +100,7 @@ const GerenciarUCs = ({ navigation }) => {
   
 
   return (
+    <ScrollView>
     <TemplateCrud>
       <View style={styles.mainContainer}>
         <View style={styles.breadcrumbsContainer}>
@@ -119,7 +121,7 @@ const GerenciarUCs = ({ navigation }) => {
                 labelId="curso-select-label"
                 id="curso-select"
                 value={curso}
-                onChange={(e) => setCursoId(e.target.value)}
+                onChange={(e) => setCurso(e.target.value)}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
               >
@@ -192,6 +194,7 @@ const GerenciarUCs = ({ navigation }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Unidade Curricular</TableCell>
+                    <TableCell>Curso</TableCell>
                     <TableCell>Ação</TableCell>
                     
                   </TableRow>
@@ -200,6 +203,8 @@ const GerenciarUCs = ({ navigation }) => {
                   {ucs.map((uc) => (
                     <TableRow key={uc.id}>
                       <TableCell>{uc.sigla}</TableCell>
+                      <TableCell>{uc.curso}</TableCell>
+
               
                       <TableCell>
                         <EditIcon
@@ -220,6 +225,7 @@ const GerenciarUCs = ({ navigation }) => {
         </View>
       </View>
     </TemplateCrud>
+    </ScrollView>
   );
 };
 
@@ -257,4 +263,5 @@ const styles = StyleSheet.create({
 
 
 export default GerenciarUCs;
+
 
