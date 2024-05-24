@@ -141,7 +141,7 @@ const GerenciarCriterios = ({ navigation }) => {
               <MenuItem value="" disabled>
                 Tipo de Criterio
               </MenuItem>
-              <MenuItem value="Critico">Critico</MenuItem>
+              <MenuItem value="Crítico">Crítico</MenuItem>
               <MenuItem value="Desejável">Desejável</MenuItem>
             </Select>
             
@@ -152,7 +152,7 @@ const GerenciarCriterios = ({ navigation }) => {
               onClick={handleAddCriterios}
               style={styles.button}
             >
-              Adicionar Criterio
+              Adicionar Critério
             </Button>
           </View>
           <View style={styles.tableContainer}>
