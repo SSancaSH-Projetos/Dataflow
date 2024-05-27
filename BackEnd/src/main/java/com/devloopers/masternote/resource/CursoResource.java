@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.devloopers.masternote.entity.Turma;
+import com.devloopers.masternote.entity.UC;
 import com.devloopers.masternote.repository.TurmaRepository;
+import com.devloopers.masternote.repository.UCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +33,8 @@ public class CursoResource {
     private CursoRepository cursoRepository;
     @Autowired
     private TurmaRepository turmaRepository;
+    @Autowired
+    private UCRepository ucRepository;
 
     @GetMapping
     public Iterable<CursoDTOResponse> findAll() {
@@ -45,6 +49,11 @@ public class CursoResource {
     @GetMapping("/pesquisaDeTurmaPorIdDoCurso/{id}")
     public List<Turma> findByIdCursoTurma(@PathVariable Long id){
         return turmaRepository.findByCursoId(id);
+    }
+
+    @GetMapping("/pesquisarUcporCurso/{cursoId}")
+    public List<UC> findByIdCurso (@PathVariable Long cursoId) {
+        return ucRepository.findByCursoId(cursoId);
     }
 
     @GetMapping("/pesquisaNome/{nome}")

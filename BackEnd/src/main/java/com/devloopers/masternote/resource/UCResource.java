@@ -8,8 +8,10 @@ import java.util.Optional;
 import com.devloopers.masternote.dto.UCDTOResponse;
 import com.devloopers.masternote.entity.Capacidade;
 import com.devloopers.masternote.entity.Criterio;
+import com.devloopers.masternote.entity.SA;
 import com.devloopers.masternote.repository.CapacidadeRepository;
 import com.devloopers.masternote.repository.CursoRepository;
+import com.devloopers.masternote.repository.SARepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,8 @@ public class UCResource {
 
 	@Autowired
 	private CapacidadeRepository capacidadeRepository;
+	@Autowired
+	private SARepository saRepository;
 	
 	@GetMapping
 	public Iterable<UCDTOResponse> findAll(){
@@ -79,6 +83,15 @@ public class UCResource {
 		uc.setId(id);
 		return capacidadeRepository.findByUc(uc);
 	}
+
+	@GetMapping("/pesquisaSaporUC/{id}")
+	public List<SA> findBySAporUC (@PathVariable Long id){
+		UC uc = new UC();
+		uc.setId(id);
+		return saRepository.findByUc(uc);
+	}
+
+
 
 	@PutMapping("/update/{id}")
 	public ResponseEntity<UCDTOResponse> updateUC(@PathVariable Long id, @RequestBody UCDTORequest ucDTO) {

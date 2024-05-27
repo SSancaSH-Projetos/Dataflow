@@ -14,5 +14,6 @@ public interface UCRepository extends JpaRepository<UC, Long>{
 
 	List<UC> findBySigla(String sigla);
 
+	List<UC> findByCursoId(Long cursoId);
 	
 }

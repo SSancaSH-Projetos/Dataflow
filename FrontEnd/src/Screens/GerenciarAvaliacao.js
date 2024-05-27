@@ -95,7 +95,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
   const fetchSaPorUC = async (ucId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/uc/pesquisaSAsUC/${ucId}`
+        `http://localhost:8080/uc/pesquisaSaporUC/${ucId}`
       );
       setSaPorUc(response.data);
     } catch (error) {
