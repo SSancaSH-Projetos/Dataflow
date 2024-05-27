@@ -5,7 +5,6 @@ import {
   MenuItem,
   Select,
   Button,
-  Paper,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -18,6 +17,7 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  Alert
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
@@ -40,7 +40,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
   const [uCsPorCurso, setUCsPorCurso] = useState([]);
   const [capacidadePorUC, setCapacidadePorUC] = useState([]);
   const [saPorUC, setSaPorUc] = useState([]);
-  const [criterioPorCap, setCriterioPorCap] = useState([]);
+  const [criterioPorCapacidade, setCriterioPorCapacidade] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [alunosPorTurma, setAlunosPorTurma] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -78,18 +78,20 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchCriterioPorCapacidade = async (capId) => {
+  const fetchCriterioPorCapacidade = async (capacidadeId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capId}`
+        `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
       );
-      setCriterioPorCap(response.data);
+      console.log("entrei no fech",  `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`);
+      setCriterioPorCapacidade(response.data);
+      console.log(criterioPorCapacidade)
     } catch (error) {
       console.error("Erro ao obter criterio por Capacidade:", error);
     }
   };
 
-  const fetchSaPorUC = async (ucId) => {
+  const fetchSituacaoDeAprendizagemPorUnidadeCurricular = async (ucId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/uc/pesquisaSaporUC/${ucId}`
@@ -122,7 +124,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchUCsPorCurso = async (cursoId) => {
+  const fetchUnidadesCurricularesPorCurso = async (cursoId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/curso/pesquisarUcporCurso/${cursoId}`
@@ -133,7 +135,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchUCs = async () => {
+  const fetchUnidadesCurriculares = async () => {
     try {
       const response = await axios.get("http://localhost:8080/uc");
       setUCs(response.data);
@@ -160,7 +162,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchSa = async () => {
+  const fetchSituacaoDeAprendizagem = async () => {
     try {
       const response = await axios.get("http://localhost:8080/sa");
       setSas(response.data);
@@ -172,9 +174,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
 
   const handleAddEvaluation = async (alunoId) => {
     const alunoSelectedOptions = selectedOptions[alunoId];
-   console.log(criterioPorCap)
+   console.log(criterioPorCapacidade)
     try {
-      for (const criterioCap of criterioPorCap) {
+      for (const criterioCap of criterioPorCapacidade) {
        
         const { criterioId } = criterioCap;
   
@@ -205,7 +207,6 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
   
-
   const handleAvancar = async () => {
     setTabelaVisivel(true);
   };
@@ -220,7 +221,6 @@ const GerenciarAvaliacao = ({ navigation }) => {
     });
   };
 
-
   const handleSubmitAllEvaluations = () => {
     alunosPorTurma.forEach((aluno) => handleAdicionarAvaliacao(aluno.id));
   };
@@ -231,9 +231,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
       await Promise.all([
         fetchCursos(),
         fetchTurmas(),
-        fetchUCs(),
+        fetchUnidadesCurriculares(),
         fetchCapacidade(),
-        fetchSa(),
+        fetchSituacaoDeAprendizagem(),
       ]);
       setIsLoading(false);
     };
@@ -262,7 +262,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 onChange={(e) => {
                   setCursoId(e.target.value);
                   fetchCursosPorTurma(e.target.value);
-                  fetchUCsPorCurso(e.target.value); // Chama fetchCursosPorTurma com o id do curso selecionado
+                  fetchUnidadesCurricularesPorCurso(e.target.value); 
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -308,7 +308,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 onChange={(e) => {
                   setUcId(e.target.value);
                   fetchCapacidadePorUC(e.target.value);
-                  fetchSaPorUC(e.target.value);
+                  fetchSituacaoDeAprendizagemPorUnidadeCurricular(e.target.value);
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -374,6 +374,17 @@ const GerenciarAvaliacao = ({ navigation }) => {
               </Button>
             </View>
             <View style={styles.tableContainer}>
+            <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Alunos
+              </Typography>
+              {!tabelaVisivel && (
+                <Alert severity="warning">Você deve selecionar no menu ao lado as opções para iniciar uma avaliação.</Alert>
+              )}
               {tabelaVisivel && (
                 <View>
                   {alunosPorTurma.map((aluno) => (
@@ -399,7 +410,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {criterioPorCap.map((criterio) => (
+                              {criterioPorCapacidade.map((criterio) => (
                                 <TableRow key={criterio.id}>
                                   <TableCell>{criterio.descricao}</TableCell>
                                   <TableCell>{criterio.tipo}</TableCell>
@@ -435,7 +446,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                         color="error"
                         onClick={() => handleAddEvaluation(aluno.id)} // Adiciona a chamada da função handleAddEvaluation
                       >
-                        Adicionar Avaliação Para o(a) {aluno.nome}
+                        Guardar avaliação de {aluno.nome}
                       </Button>
                     </AccordionActions>
 
@@ -487,7 +498,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    width: 200,
+    width: 300,
     height: 50,
   },
   inputSelect: {
