@@ -7,11 +7,15 @@ import com.devloopers.masternote.dto.UCDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "uc")
 public class UC implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -47,8 +51,12 @@ public class UC implements Serializable {
     private List<SA> sas;
 
     // getters e setters
-    
-    
+
+
+    public UC(Long id) {
+        this.id = id;
+    }
+
     public static UC of(UCDTORequest ucDTO) {
     	UC uc = new UC();
     	uc.setId(ucDTO.getId());

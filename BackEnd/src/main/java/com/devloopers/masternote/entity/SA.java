@@ -13,11 +13,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "sa")
 public class SA implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,8 +35,11 @@ public class SA implements Serializable {
     private String descricao;
 
     private String tipo;
-      
-    
+
+    public SA(Long id) {
+        this.id = id;
+    }
+
     @ManyToOne
     @JoinColumn(name = "uc_id_uc")
     private UC uc;

@@ -16,11 +16,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "capacidade")
 public class Capacidade implements Serializable {
 	private static final long serialVersionUID = 1L; 
@@ -52,7 +56,11 @@ public class Capacidade implements Serializable {
    // private SA sa;
 
     // getters e setters
-    
+
+    public Capacidade(Long id) {
+        this.id = id;
+    }
+
     public static Capacidade of(CapacidadeDTORequest capacidadeDTO) {
     	Capacidade capacidade = new Capacidade();
     	capacidade.setId(capacidadeDTO.getId());

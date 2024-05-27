@@ -15,7 +15,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Checkbox,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -44,8 +43,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
   const [criterioPorCap, setCriterioPorCap] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [alunosPorTurma, setAlunosPorTurma] = useState([]);
-
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [avaliacao, setAvaliacao] = useState([]);
+  const [criterioId, setCriterioId] = useState("");
 
   function createData(criterio, tipoCriterio, capacidade, tipoCapacidade) {
     return { criterio, tipoCriterio, capacidade, tipoCapacidade };
@@ -77,11 +77,8 @@ const GerenciarAvaliacao = ({ navigation }) => {
       console.error("Erro ao obter alunos por turma:", error);
     }
   };
-  
 
-  
-
-  const fetchCriterioPorCap = async (capId) => {
+  const fetchCriterioPorCapacidade = async (capId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capId}`
@@ -173,20 +170,60 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
+  const handleAddEvaluation = async (alunoId) => {
+    const alunoSelectedOptions = selectedOptions[alunoId];
+   console.log(criterioPorCap)
+    try {
+      for (const criterioCap of criterioPorCap) {
+       
+        const { criterioId } = criterioCap;
+  
+        const avaliacaoData = {
+          resultado: alunoSelectedOptions ? alunoSelectedOptions.resultado : "",
+          curso: curso,
+          turma: turmaId,
+          uc: ucId,
+          aluno: alunoId,
+          capacidade: capacidadeId,
+          criterio: criterioId,
+          sa: saId,
+        };
+  
+        console.log(avaliacaoData);
+        console.log(selectedOptions);
+        
+        const response = await axios.post("http://localhost:8080/avaliacao", avaliacaoData);
+        
+        console.log("Avaliação adicionada com sucesso para o aluno:", alunoId, "com critério:", criterioId, "e capacidade:", capacidadeId, response.data);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Erro ao adicionar avaliação para o aluno:", alunoId, error.response.data);
+      } else {
+        console.error("Erro ao adicionar avaliação para o aluno:", alunoId, error.message);
+      }
+    }
+  };
+  
+
   const handleAvancar = async () => {
     setTabelaVisivel(true);
   };
 
-  
-const handleCheckChange = (alunoId, criterioId, value) => {
-  setSelectedOptions({
-    ...selectedOptions,
-    [alunoId]: {
-      ...selectedOptions[alunoId],
-      [criterioId]: value,
-    },
-  });
-};
+  const handleCheckChange = (alunoId, criterioId, value) => {
+    setSelectedOptions({
+      ...selectedOptions,
+      [alunoId]: {
+        ...selectedOptions[alunoId],
+        [criterioId]: value,
+      },
+    });
+  };
+
+
+  const handleSubmitAllEvaluations = () => {
+    alunosPorTurma.forEach((aluno) => handleAdicionarAvaliacao(aluno.id));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -197,11 +234,6 @@ const handleCheckChange = (alunoId, criterioId, value) => {
         fetchUCs(),
         fetchCapacidade(),
         fetchSa(),
-        fetchUCsPorCurso(),
-        fetchCursosPorTurma(),
-        fetchCapacidadePorUC(),
-        fetchSaPorUC(),
-        fetchCriterioPorCap(),
       ]);
       setIsLoading(false);
     };
@@ -316,7 +348,7 @@ const handleCheckChange = (alunoId, criterioId, value) => {
                 value={capacidadeId}
                 onChange={(e) => {
                   setCapacidadeId(e.target.value);
-                  fetchCriterioPorCap(e.target.value); // Aqui você está passando o valor selecionado
+                  fetchCriterioPorCapacidade(e.target.value); // Aqui você está passando o valor selecionado
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -368,37 +400,56 @@ const handleCheckChange = (alunoId, criterioId, value) => {
                             </TableHead>
                             <TableBody>
                               {criterioPorCap.map((criterio) => (
-                                 <TableRow key={criterio.id}>
-                                 <TableCell>{criterio.descricao}</TableCell>
-                                 <TableCell>{criterio.tipo}</TableCell>
-                                 <TableCell>
-                                   <RadioGroup
-                                     row
-                                     value={selectedOptions[aluno.id]?.[criterio.id] || ""}
-                                     onChange={(e) =>
-                                       handleCheckChange(aluno.id, criterio.id, e.target.value)
-                                     }
-                                   >
-                                     <FormControlLabel
-                                       control={<Radio />}
-                                       label="Atende"
-                                       value="atende"
-                                     />
-                                     <FormControlLabel
-                                       control={<Radio />}
-                                       label="Não Atende"
-                                       value="naoAtende"
-                                     />
-                                   </RadioGroup>
-                                 </TableCell>
-                               </TableRow>
+                                <TableRow key={criterio.id}>
+                                  <TableCell>{criterio.descricao}</TableCell>
+                                  <TableCell>{criterio.tipo}</TableCell>
+                                  <TableCell>
+                                    <RadioGroup
+                                      row
+                                      value={selectedOptions[aluno.id]?.[criterio.id] || ""}
+                                      onChange={(e) =>
+                                        handleCheckChange(aluno.id, criterio.id, e.target.value)
+                                      }
+                                    >
+                                      <FormControlLabel
+                                        control={<Radio />}
+                                        label="Atende"
+                                        value="atende"
+                                      />
+                                      <FormControlLabel
+                                        control={<Radio />}
+                                        label="Não Atende"
+                                        value="naoAtende"
+                                      />
+                                    </RadioGroup>
+                                  </TableCell>
+                                </TableRow>
                               ))}
                             </TableBody>
                           </Table>
                         </div>
                       </AccordionDetails>
+                      <AccordionActions>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleAddEvaluation(aluno.id)} // Adiciona a chamada da função handleAddEvaluation
+                      >
+                        Adicionar Avaliação Para o(a) {aluno.nome}
+                      </Button>
+                    </AccordionActions>
+
                     </Accordion>
                   ))}
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmitAllEvaluations}
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                  >
+                    Adicionar Avaliações para Todos
+                  </Button>
                 </View>
               )}
             </View>

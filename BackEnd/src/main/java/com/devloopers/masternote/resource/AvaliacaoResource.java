@@ -1,5 +1,6 @@
 package com.devloopers.masternote.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,36 +66,45 @@ public class AvaliacaoResource {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAvaliacao(@RequestBody AvaliacaoDTORequest avaliacaoDTO) {
-        Avaliacao avaliacao = Avaliacao.of(avaliacaoDTO);
+    public ResponseEntity<?> createAvaliacao(@RequestBody List<AvaliacaoDTORequest> avaliacaoDTOs) {
+        List<Avaliacao> avaliacoes = new ArrayList<>();
+        for (AvaliacaoDTORequest avaliacaoDTO : avaliacaoDTOs) {
+            Avaliacao avaliacao = Avaliacao.of(avaliacaoDTO);
 
-        Optional<Curso> curso = cursoRepository.findById(avaliacaoDTO.getCurso().getId());
-        Optional<Turma> turma = turmaRepository.findById(avaliacaoDTO.getTurma().getId());
-        Optional<UC> uc = ucRepository.findById(avaliacaoDTO.getUc().getId());
-        Optional<Aluno> aluno = alunoRepository.findById(avaliacaoDTO.getAluno().getId());
-        Optional<Capacidade> capacidade = capacidadeRepository.findById(avaliacaoDTO.getCapacidade().getId());
-        Optional<Criterio> criterio = criterioRepository.findById(avaliacaoDTO.getCriterio().getId());
-        Optional<SA> sa = saRepository.findById(avaliacaoDTO.getSa().getId());
+            Optional<Curso> curso = cursoRepository.findById(avaliacaoDTO.getCurso());
+            Optional<Turma> turma = turmaRepository.findById(avaliacaoDTO.getTurma());
+            Optional<UC> uc = ucRepository.findById(avaliacaoDTO.getUc());
+            Optional<Aluno> aluno = alunoRepository.findById(avaliacaoDTO.getAluno());
+            Optional<Capacidade> capacidade = capacidadeRepository.findById(avaliacaoDTO.getCapacidade());
+            Optional<Criterio> criterio = criterioRepository.findById(avaliacaoDTO.getCriterio());
+            Optional<SA> sa = saRepository.findById(avaliacaoDTO.getSa());
 
-        if (curso.isPresent() && turma.isPresent() && uc.isPresent() && aluno.isPresent() 
-            && capacidade.isPresent() && criterio.isPresent() && sa.isPresent()) {
+            if (curso.isPresent() && turma.isPresent() && uc.isPresent() && aluno.isPresent()
+                    && capacidade.isPresent() && criterio.isPresent() && sa.isPresent()) {
 
-            avaliacao.setCurso(curso.get());
-            avaliacao.setTurma(turma.get());
-            avaliacao.setUc(uc.get());
-            avaliacao.setAluno(aluno.get());
-            avaliacao.setCapacidade(capacidade.get());
-            avaliacao.setCriterio(criterio.get());
-            avaliacao.setSa(sa.get());
+                avaliacao.setCurso(curso.get());
+                avaliacao.setTurma(turma.get());
+                avaliacao.setUc(uc.get());
+                avaliacao.setAluno(aluno.get());
+                avaliacao.setCapacidade(capacidade.get());
+                avaliacao.setCriterio(criterio.get());
+                avaliacao.setSa(sa.get());
 
-            avaliacaoRepository.save(avaliacao);
-            return ResponseEntity.ok(AvaliacaoDTOResponse.fromAvaliacao(avaliacao));
-        } else {
-            String errorMessage = "Some associated entities were not found.";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+                avaliacoes.add(avaliacao);
+            } else {
+                String errorMessage = "Some associated entities were not found.";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+            }
         }
+
+        avaliacaoRepository.saveAll(avaliacoes);
+        List<AvaliacaoDTOResponse> response = avaliacoes.stream()
+                .map(AvaliacaoDTOResponse::fromAvaliacao)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
-    
+
+
     @GetMapping("/contarDesejavel")
     public long countCriteriosWithDInTipo() {
         return criterioRepository.countByTipoContainingD();

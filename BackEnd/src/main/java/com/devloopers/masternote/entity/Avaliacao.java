@@ -13,10 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "avaliacao")
 public class Avaliacao implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -25,10 +29,7 @@ public class Avaliacao implements Serializable {
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 @Column(name = "id_avaliacao")
 	 private Long id;
-	 
-	 @Column(name= "data_avaliacao")
-	 private Date data;
-	 
+
 	 @Column(name = "resultado")
 	 private String resultado;
 	 
@@ -69,15 +70,15 @@ public class Avaliacao implements Serializable {
     public static Avaliacao of(AvaliacaoDTORequest avaliacaoDTO) {
     	Avaliacao avaliacao = new Avaliacao();
     	avaliacao.setId(avaliacaoDTO.getId());
-    	avaliacao.setCurso(avaliacaoDTO.getCurso());
-    	avaliacao.setTurma(avaliacaoDTO.getTurma());
-    	avaliacao.setUc(avaliacaoDTO.getUc());
-    	avaliacao.setSa(avaliacaoDTO.getSa());
-    	avaliacao.setCapacidade(avaliacaoDTO.getCapacidade());
-    	avaliacao.setCriterio(avaliacaoDTO.getCriterio());
-    	avaliacao.setAluno(avaliacaoDTO.getAluno());
+    	avaliacao.setCurso(new Curso (avaliacaoDTO.getCurso()));
+    	avaliacao.setTurma(new Turma (avaliacaoDTO.getTurma()));
+    	avaliacao.setUc(new UC (avaliacaoDTO.getUc()));
+    	avaliacao.setSa(new SA(avaliacaoDTO.getSa()));
+    	avaliacao.setCapacidade(new Capacidade(avaliacaoDTO.getCapacidade()));
+    	avaliacao.setCriterio(new Criterio(avaliacaoDTO.getCriterio()));
+    	avaliacao.setAluno(new Aluno (avaliacaoDTO.getAluno()));
     	avaliacao.setResultado(avaliacaoDTO.getResultado());
-    	avaliacao.setData(avaliacaoDTO.getData());
+
     	return avaliacao;
     }
    

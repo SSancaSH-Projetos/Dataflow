@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class AvaliacaoDTOResponse {
 	
 	private Long id;
-	private Date data;
+
 	private String resultado;
 	private Curso curso;
 	private Turma turma;
@@ -34,7 +34,6 @@ public class AvaliacaoDTOResponse {
 	public static AvaliacaoDTOResponse fromAvaliacao(Avaliacao ava) {
 		AvaliacaoDTOResponse avaDTO = new AvaliacaoDTOResponse();
 		avaDTO.setId(ava.getId());
-		avaDTO.setData(ava.getData());
 		avaDTO.setResultado(ava.getResultado());
 		avaDTO.setCurso(ava.getCurso());
 		avaDTO.setTurma(ava.getTurma());

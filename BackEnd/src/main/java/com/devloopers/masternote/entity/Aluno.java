@@ -4,12 +4,16 @@ import com.devloopers.masternote.dto.AlunoDTOResponse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "aluno")
 public class Aluno {
 
@@ -29,6 +33,9 @@ public class Aluno {
     @JoinColumn(name = "turma_id_turma")
     private Turma turma;
 
+    public Aluno(Long id) {
+        this.id = id;
+    }
 
     public static Aluno of(AlunoDTOResponse alunoDTO) {
         Aluno aluno = new Aluno();

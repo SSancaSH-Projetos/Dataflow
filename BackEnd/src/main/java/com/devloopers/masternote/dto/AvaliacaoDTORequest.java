@@ -21,15 +21,14 @@ import lombok.NoArgsConstructor;
 public class AvaliacaoDTORequest {
 
 	private Long id;
-	private Date data;
 	private String resultado;
-	private Curso curso;
-	private Turma turma;
-	private UC uc;
-	private Aluno aluno;
-	private Capacidade capacidade;
-	private Criterio criterio;
-	private SA Sa;
+	private Long curso;
+	private Long turma;
+	private Long uc;
+	private Long aluno;
+	private Long capacidade;
+	private Long criterio;
+	private Long sa;
     
     
 
