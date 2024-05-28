@@ -51,6 +51,9 @@ public class Capacidade implements Serializable {
     @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Criterio> criterios;
 
+    @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
+
     //@ManyToOne
     //@JoinColumn(name = "sa_id_sa")
    // private SA sa;

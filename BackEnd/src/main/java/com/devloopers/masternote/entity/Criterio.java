@@ -6,15 +6,7 @@ import java.util.List;
 import com.devloopers.masternote.dto.CriterioDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +36,9 @@ public class Criterio implements Serializable {
     @ManyToOne
     @JoinColumn(name = "capacidade_id_capacidade")
     private Capacidade capacidade;
+
+    @OneToMany(mappedBy = "criterio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
 
     public Criterio(Long id) {
         this.id = id;

@@ -39,6 +39,9 @@ public class Turma {
     @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aluno> alunos;
 
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
+
     public static Turma of(TurmaDTORequest turmaDTO) {
         Turma turma = new Turma();
         turma.setId(turmaDTO.getId());

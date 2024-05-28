@@ -182,7 +182,7 @@ const GerenciarTurmas = ({ navigation }) => {
                   {turmas.map((turma) => (
                     <TableRow key={turma.id}>
                       <TableCell>{turma.sigla}</TableCell>
-                      <TableCell>{turma.curso || "não atribuído"}</TableCell>
+                      <TableCell>{turma.curso.nome}</TableCell>
                       <TableCell>
                         <EditIcon
                           color="primary"

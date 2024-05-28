@@ -50,6 +50,9 @@ public class UC implements Serializable {
     @OneToMany(mappedBy = "uc", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<SA> sas;
 
+    @OneToMany(mappedBy = "uc", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
+
     // getters e setters
 
 

@@ -60,7 +60,7 @@ public class Avaliacao implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "sa_id")
-    private SA Sa;
+    private SA sa;
         
     
     

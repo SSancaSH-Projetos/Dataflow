@@ -203,7 +203,7 @@ const GerenciarUCs = ({ navigation }) => {
                   {ucs.map((uc) => (
                     <TableRow key={uc.id}>
                       <TableCell>{uc.sigla}</TableCell>
-                      <TableCell>{uc.curso}</TableCell>
+                      <TableCell>{uc.curso.nome}</TableCell>
 
               
                       <TableCell>

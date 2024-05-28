@@ -46,6 +46,8 @@ public class Curso {
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<UC> ucs;
 
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes;
 
    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL,orphanRemoval = true)
    private List<Turma> turmas;

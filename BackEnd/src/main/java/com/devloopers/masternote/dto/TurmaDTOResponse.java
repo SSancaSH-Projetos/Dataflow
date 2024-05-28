@@ -15,7 +15,7 @@ public class TurmaDTOResponse {
 
 	private Long id;
 	private String sigla;
-	private Long curso;
+	private CursoDTOResponse curso;
 	private List<Aluno> alunosNaTurma;
 
 	// Método para transformar Turma em TurmaDTO
@@ -23,7 +23,7 @@ public class TurmaDTOResponse {
 		TurmaDTOResponse turmaDTO = new TurmaDTOResponse();
 		turmaDTO.setId(turma.getId());
 		turmaDTO.setSigla(turma.getSigla());
-		turmaDTO.setCurso(turma.getCurso().getId());
+		turmaDTO.setCurso(CursoDTOResponse.fromCurso(turma.getCurso()));
 		turmaDTO.setAlunosNaTurma(turma.getAlunos());
 		return turmaDTO;
 	}
