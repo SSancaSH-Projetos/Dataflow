@@ -22,6 +22,9 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
+import SaveIcon from '@mui/icons-material/Save';
+import GenericModal from '../Components/Modal';
+
 
 const GerenciarAvaliacao = ({ navigation }) => {
   const [curso, setCursoId] = useState("");
@@ -46,6 +49,12 @@ const GerenciarAvaliacao = ({ navigation }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [avaliacao, setAvaliacao] = useState([]);
   const [criterioId, setCriterioId] = useState("");
+
+
+  const [disabled, setDisabled] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: '', message: '', actions: null });
+
 
   function createData(criterio, tipoCriterio, capacidade, tipoCapacidade) {
     return { criterio, tipoCriterio, capacidade, tipoCapacidade };
@@ -83,7 +92,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
       const response = await axios.get(
         `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
       );
-      console.log("entrei no fech",  `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`);
+      console.log("entrei no fech", `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`);
       setCriterioPorCapacidade(response.data);
       console.log(criterioPorCapacidade)
     } catch (error) {
@@ -174,42 +183,61 @@ const GerenciarAvaliacao = ({ navigation }) => {
 
   const handleAddEvaluation = async (alunoId) => {
     const alunoSelectedOptions = selectedOptions[alunoId];
-   console.log(criterioPorCapacidade)
+    if (!alunoSelectedOptions) {
+      console.error(`Nenhuma opção selecionada para o aluno com ID ${alunoId}`);
+      return;
+    }
+
     try {
-      for (const criterioCap of criterioPorCapacidade) {
-       
-        const { criterioId } = criterioCap;
-  
-        const avaliacaoData = {
-          resultado: alunoSelectedOptions ? alunoSelectedOptions.resultado : "",
+      for (const [criterioId, resultado] of Object.entries(alunoSelectedOptions)) {
+        const avaliacaoData = [{
+          resultado: resultado,
           curso: curso,
           turma: turmaId,
           uc: ucId,
           aluno: alunoId,
           capacidade: capacidadeId,
-          criterio: criterioId,
+          criterio: parseInt(criterioId),
           sa: saId,
-        };
-  
+        }];
+
         console.log(avaliacaoData);
-        console.log(selectedOptions);
-        
+
         const response = await axios.post("http://localhost:8080/avaliacao", avaliacaoData);
-        
-        console.log("Avaliação adicionada com sucesso para o aluno:", alunoId, "com critério:", criterioId, "e capacidade:", capacidadeId, response.data);
+        // Define o conteúdo do modal para sucesso
+        setModalContent({
+          title: 'Sucesso!',
+          message: 'Avaliação adicionada com sucesso.',
+          actions: <Button onClick={() => setOpenModal(false)}>Fechar</Button>,
+        });
+        setOpenModal(true);
+
       }
     } catch (error) {
-      if (error.response) {
-        console.error("Erro ao adicionar avaliação para o aluno:", alunoId, error.response.data);
-      } else {
-        console.error("Erro ao adicionar avaliação para o aluno:", alunoId, error.message);
-      }
+      const errorMessage = error.response ? error.response.data : error.message;
+
+      // Define o conteúdo do modal para erro
+      setModalContent({
+        title: 'Erro',
+        message: `Erro ao adicionar avaliação: ${errorMessage}`,
+        actions: <Button onClick={() => setOpenModal(false)}>Fechar</Button>,
+      });
+      setOpenModal(true);
     }
   };
-  
+
+
   const handleAvancar = async () => {
     setTabelaVisivel(true);
+    setDisabled(true);
   };
+
+
+  const handleCancelar = () => {
+    setDisabled(false);
+    setTabelaVisivel(false);
+  };
+
 
   const handleCheckChange = (alunoId, criterioId, value) => {
     setSelectedOptions({
@@ -243,6 +271,13 @@ const GerenciarAvaliacao = ({ navigation }) => {
   return (
     <ScrollView>
       <TemplateCrud>
+        <GenericModal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          title={modalContent.title}
+          message={modalContent.message}
+          actions={modalContent.actions}
+        />
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.formContainer}>
@@ -262,11 +297,12 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 onChange={(e) => {
                   setCursoId(e.target.value);
                   fetchCursosPorTurma(e.target.value);
-                  fetchUnidadesCurricularesPorCurso(e.target.value); 
+                  fetchUnidadesCurricularesPorCurso(e.target.value);
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
                   Selecionar Curso
@@ -290,6 +326,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
                   Selecionar Turma
@@ -313,6 +350,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
                   Selecionar UC
@@ -332,6 +370,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
                   Selecionar SA
@@ -353,6 +392,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
                   Selecionar Capacidade
@@ -369,12 +409,24 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 color="primary"
                 onClick={handleAvancar}
                 style={styles.button}
+                disabled={disabled}
               >
                 Iniciar Avaliação
               </Button>
+
+              {disabled && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleCancelar}
+                  style={styles.button}
+                >
+                  Cancelar
+                </Button>
+              )}
             </View>
             <View style={styles.tableContainer}>
-            <Typography
+              <Typography
                 variant="h6"
                 noWrap
                 component="div"
@@ -441,14 +493,14 @@ const GerenciarAvaliacao = ({ navigation }) => {
                         </div>
                       </AccordionDetails>
                       <AccordionActions>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleAddEvaluation(aluno.id)} // Adiciona a chamada da função handleAddEvaluation
-                      >
-                        Guardar avaliação de {aluno.nome}
-                      </Button>
-                    </AccordionActions>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleAddEvaluation(aluno.id)} // Adiciona a chamada da função handleAddEvaluation
+                        >
+                          Guardar avaliação de {aluno.nome}
+                        </Button>
+                      </AccordionActions>
 
                     </Accordion>
                   ))}
@@ -458,8 +510,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
                     color="primary"
                     onClick={handleSubmitAllEvaluations}
                     style={{ marginTop: 20, marginBottom: 20 }}
+                    startIcon={<SaveIcon />}
                   >
-                    Adicionar Avaliações para Todos
+                    Salvar tudo
                   </Button>
                 </View>
               )}
