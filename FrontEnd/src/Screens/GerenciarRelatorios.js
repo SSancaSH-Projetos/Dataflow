@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Typography, MenuItem, Select, Button, Alert } from "@mui/material";
+import { Typography, MenuItem, Select, Button, Grid } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
 import GenericModal from '../Components/Modal';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
 
 const GerenciarRelatorios = ({ navigation }) => {
   const [curso, setCursoId] = useState("");
   const [cursos, setCursos] = useState([]);
   const [turmaId, setTurmaId] = useState("");
   const [turmaPorCurso, setTurmaPorCurso] = useState([]);
-  const [ucId, setUcId] = useState([]);
+  const [ucId, setUcId] = useState("");
   const [uCsPorCurso, setUCsPorCurso] = useState([]);
   const [saId, setSaId] = useState("");
   const [saPorUC, setSaPorUc] = useState([]);
   const [alunosPorTurma, setAlunosPorTurma] = useState([]);
-  const [alunoId, setAlunoId] = useState([]);
+  const [alunoId, setAlunoId] = useState("");
+  const [alunoNome, setAlunoNome] = useState("");
+  const [sigla, setSigla] = useState("");
+  const [saTitulo, setSaTitulo] = useState("");
   const [tabelaVisivel, setTabelaVisivel] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -66,14 +78,38 @@ const GerenciarRelatorios = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchCursos();
+  const fetchAlunoNome = async (alunoId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/aluno/pesquisaId/${alunoId}`);
+      setAlunoNome(response.data.nome);
+    } catch (error) {
+      console.error("Erro ao obter nome do aluno:", error);
+    }
+  };
 
-    };
-    fetchUnidadesCurricularesPorCurso();
+  const fetchUcNome = async (ucId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/uc/pesquisaId/${ucId}`);
+      setSigla(response.data.sigla);
+    } catch (error) {
+      console.error("Erro ao obter nome da UC:", error);
+    }
+  };
+
+  const fetchSaTitulo = async (saId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/sa/pesquisaId/${saId}`);
+      setSaTitulo(response.data.titulo);
+    } catch (error) {
+      console.error("Erro ao obter descrição da SA:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCursos();
     fetchCursosPorTurma();
-    fetchData();
+    fetchUnidadesCurricularesPorCurso();
+    fetchSituacaoDeAprendizagemPorUnidadeCurricular();
     fetchAlunosPorTurma();
   }, []);
 
@@ -146,13 +182,13 @@ const GerenciarRelatorios = ({ navigation }) => {
                 ))}
               </Select>
 
-
               <Select
                 labelId="aluno-select-label"
                 id="aluno-select"
                 value={alunoId}
                 onChange={(e) => {
-                  setAlunoId(e.target.value)
+                  setAlunoId(e.target.value);
+                  fetchAlunoNome(e.target.value);
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -176,6 +212,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 onChange={(e) => {
                   setUcId(e.target.value);
                   fetchSituacaoDeAprendizagemPorUnidadeCurricular(e.target.value);
+                  fetchUcNome(e.target.value);
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -196,7 +233,10 @@ const GerenciarRelatorios = ({ navigation }) => {
                 labelId="sa-select-label"
                 id="sa-select"
                 value={saId}
-                onChange={(e) => setSaId(e.target.value)}
+                onChange={(e) => {
+                  setSaId(e.target.value);
+                  fetchSaTitulo(e.target.value);
+                }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
@@ -233,6 +273,100 @@ const GerenciarRelatorios = ({ navigation }) => {
                 </Button>
               )}
             </View>
+            <View style={styles.tableContainer}>
+              <Card style={{ marginBottom: 20 }}>
+                <CardContent>
+                <Typography variant="h5" component="div">
+                  Informações Adicionais
+                </Typography>
+                {alunoNome && (
+                  <Typography variant="body2" color="textPrimary">
+                    <strong>Nome do Aluno:</strong> {alunoNome}
+                  </Typography>
+                )}
+
+                {sigla && (
+                  <Typography variant="body2" color="textPrimary">
+                    <strong>Nome da UC:</strong> {sigla}
+                  </Typography>
+                )}
+                {saTitulo && (
+                  <Typography variant="body2" color="textPrimary">
+                    <strong>Titulo da SA:</strong> {saTitulo}
+                  </Typography>
+                )}
+                </CardContent>
+              </Card>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6">CritÃ©rio CrÃ­tico</Typography>
+                      <Typography> Total: </Typography>
+                      <Typography> Atendidos: </Typography>
+                      <Typography> NÃ£o atendidos: </Typography>
+                      <Typography> NÃ£o avaliados: </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6">CritÃ©rio DesejÃ¡vel</Typography>
+                      <Typography> Total: </Typography>
+                      <Typography> Atendidos: </Typography>
+                      <Typography> NÃ£o atendidos: </Typography>
+                      <Typography> NÃ£o avaliados: </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              <Card style={{ marginTop: 20, marginBottom: 20 }}>
+                <CardContent>
+                  <Typography variant="h6">CritÃ©rio CrÃ­tico </Typography>
+                  COLOCAR INFORMAÃ‡Ã•ES AQUI DENTRO
+                </CardContent>
+              </Card>
+
+              <Card style={{ marginBottom: 20 }}>
+                <CardContent>
+                  <Typography variant="h6"> CritÃ©rio DesejÃ¡vel </Typography>
+                  COLOCAR INFORMAÃ‡Ã•ES AQUI DENTRO
+                  <List>
+                    <ListItem>
+                      <ListItemIcon>
+                        <CheckCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="CritÃ©rio A atingido" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <CancelIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="CritÃ©rio B nÃ£o atingido" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <CropSquareIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="CritÃ©rio C nÃ£o avaliado" />
+                    </ListItem>
+                  </List> 
+
+                  <Typography variant="body2">
+          <p> Legenda </p>
+            <CheckCircleIcon /> CritÃ©rio atingido
+            <CancelIcon /> CritÃ©rio nÃ£o atingido
+            <CropSquareIcon /> CritÃ©rio nÃ£o avaliado
+        </Typography>
+
+
+
+                </CardContent>
+              </Card>
+              </View>
+            
           </View>
         </View>
       </TemplateCrud>
@@ -263,6 +397,12 @@ const styles = StyleSheet.create({
   inputSelect: {
     width: 300,
   },
+  tableContainer: {
+    flex: 2,
+    padding: 20,
+  },
 });
+
+
 
 export default GerenciarRelatorios;

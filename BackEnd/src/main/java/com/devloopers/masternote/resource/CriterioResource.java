@@ -15,7 +15,10 @@ import com.devloopers.masternote.entity.Criterio;
 import com.devloopers.masternote.repository.CriterioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,6 +76,11 @@ public class CriterioResource {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/contagemDeCriteriosCriticosPorCapacidade/{capacidadeId}")
+    public ResponseEntity<Long> countCriteriosCriticosByCapacidadeId(@PathVariable Long capacidadeId) {
+        long count = criterioRepository.countCriteriosCriticosByCapacidadeId(capacidadeId);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
