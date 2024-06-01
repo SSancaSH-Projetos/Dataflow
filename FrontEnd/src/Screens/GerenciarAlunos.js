@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text , ScrollView} from "react-native";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import {
   TextField,
   Typography,
@@ -10,7 +10,11 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
@@ -21,18 +25,49 @@ const GerenciarAlunos = ({ navigation }) => {
   const [nome, setNome] = useState("");
   const [numeroChamada, setNumeroChamada] = useState("");
   const [alunos, setAlunos] = useState([]);
+  const [editAluno, setEditAluno] = useState(null);
+  const [editedAluno, setEditedAluno] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
 
-  const fetchAluno = async () => {
+  const handleEditarAluno = (aluno) => {
+    setEditAluno(aluno);
+    setEditedAluno(aluno);
+    setModalOpen(true); // Abrir o modal ao pressionar o ícone de editar
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false); // Fechar o modal
+  };
+
+  const handleConfirmarEdicao = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/aluno/update/${editedAluno.id}`,
+        {
+          nome: editedAluno.nome,
+          numeroChamada: editedAluno.numeroChamada,
+        }
+      );
+      console.log(response.data);
+      fetchAlunos();
+      setModalOpen(false);
+      limparCampos();
+    } catch (error) {
+      console.error("Erro ao editar Aluno:", error);
+    }
+  };
+
+  const fetchAlunos = async () => {
     try {
       const response = await axios.get("http://localhost:8080/aluno");
       setAlunos(response.data);
     } catch (error) {
-      console.error("Erro ao obter cursos:", error);
+      console.error("Erro ao obter alunos:", error);
     }
   };
 
   useEffect(() => {
-    fetchAluno();
+    fetchAlunos();
   }, []);
 
   const handleAddAluno = async () => {
@@ -43,7 +78,7 @@ const GerenciarAlunos = ({ navigation }) => {
       });
       console.log(response.data);
       limparCampos();
-      fetchAluno();
+      fetchAlunos();
     } catch (error) {
       console.error("Erro ao adicionar aluno:", error);
     }
@@ -53,93 +88,120 @@ const GerenciarAlunos = ({ navigation }) => {
     setNome("");
     setNumeroChamada("");
   };
-
-  const handleEditarAluno = (id) => {
-    console.log("Editar aluno com ID:", id);
-  };
-
+  
   const handleDeletarAluno = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/aluno/delete/${id}`);
-      fetchAluno(); // Corrected function name
+      fetchAlunos();
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
     }
- };
+  };
 
   return (
     <ScrollView>
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Alunos
-            </Typography>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Alunos
+              </Typography>
+              <TextField
+                label="Nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Numero da Chamada"
+                value={numeroChamada}
+                onChange={(e) => setNumeroChamada(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddAluno}
+                style={styles.button}
+              >
+                Adicionar Alunos
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Nome do Aluno</TableCell>
+                      <TableCell>N° Da Chamada</TableCell>
+                      <TableCell>Ação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {alunos.map((aluno) => (
+                      <TableRow key={aluno.id}>
+                        <TableCell>{aluno.nome}</TableCell>
+                        <TableCell>{aluno.numeroChamada}</TableCell>
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarAluno(aluno)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarAluno(aluno.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
+          </View>
+        </View>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Aluno</DialogTitle>
+          <DialogContent>
             <TextField
               label="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              variant="outlined"
+              value={editedAluno ? editedAluno.nome : ""}
+              onChange={(e) =>
+                setEditedAluno({ ...editedAluno, nome: e.target.value })
+              }
               fullWidth
+              variant="outlined"
               style={styles.input}
             />
             <TextField
               label="Numero da Chamada"
-              value={numeroChamada}
-              onChange={(e) => setNumeroChamada(e.target.value)}
-              variant="outlined"
+              value={editedAluno ? editedAluno.numeroChamada : ""}
+              onChange={(e) =>
+                setEditedAluno({ ...editedAluno, numeroChamada: e.target.value })
+              }
               fullWidth
+              variant="outlined"
               style={styles.input}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddAluno}
-              style={styles.button}
-            >
-              Adicionar Alunos
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cancelar</Button>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+              Confirmar
             </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Nome do Aluno</TableCell>
-                    <TableCell>N° Da Chamada</TableCell>
-                    <TableCell>Ação</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {alunos.map((aluno) => (
-                    <TableRow key={aluno.id}>
-                      <TableCell>{aluno.nome}</TableCell>
-                      <TableCell>{aluno.numeroChamada}</TableCell>
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarAluno(aluno.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarAluno(aluno.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </View>
-        </View>
-      </View>
-    </TemplateCrud>
+          </DialogActions>
+        </Dialog>
+      </TemplateCrud>
     </ScrollView>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextField,
   Typography,
@@ -11,6 +11,10 @@ import {
   TableRow,
   Paper,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -18,7 +22,6 @@ import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ListaDeTransferencia from "../Components/ListaDeTransferencia";
 
 const GerenciarSAs = ({ navigation }) => {
   const [ucId, setUcId] = useState("");
@@ -27,6 +30,8 @@ const GerenciarSAs = ({ navigation }) => {
   const [tipo, setTipo] = useState("");
   const [ucs, setUcs] = useState([]);
   const [sas, setSas] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editedSa, setEditedSa] = useState(null);
 
   const fetchUc = async () => {
     try {
@@ -47,16 +52,6 @@ const GerenciarSAs = ({ navigation }) => {
     }
   };
 
-  const handleDeletarSA = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/sa/delete/${id}`);
-      fetchSa(); // Corrected function name
-    } catch (error) {
-      console.error("Erro ao excluir sa:", error);
-    }
- };
-
-
   useEffect(() => {
     fetchSa();
     fetchUc();
@@ -65,24 +60,27 @@ const GerenciarSAs = ({ navigation }) => {
   const handleAddSas = async () => {
     try {
       const response = await axios.post("http://localhost:8080/sa", {
-         // Passar IDs dos alunos selecionados
-         titulo: titulo,
-         descricao: descricao,
-         tipo: tipo,
-         ucId: ucId,
+        titulo: titulo,
+        descricao: descricao,
+        tipo: tipo,
+        ucId: ucId,
       });
       console.log(response.data);
-      
-      // Supondo que fetchSa() e limparCampos() estejam definidos e fazem sentido aqui
-       fetchSa();
-       limparCampos();
+      fetchSa();
+      limparCampos();
     } catch (error) {
       console.error("Erro ao adicionar sa:", error);
     }
-};
+  };
 
-
-
+  const handleDeletarSA = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/sa/delete/${id}`);
+      fetchSa();
+    } catch (error) {
+      console.error("Erro ao excluir sa:", error);
+    }
+  };
 
   const limparCampos = () => {
     setUcId("");
@@ -91,37 +89,197 @@ const GerenciarSAs = ({ navigation }) => {
     setTipo("");
   };
 
-  const handleEditarTurma = (id) => {
-    console.log("Editar turma com ID:", id);
+  const handleEditarSa = (sa) => {
+    setEditedSa(sa);
+    setModalOpen(true);
   };
 
-  const handleExcluirTurma = (id) => {
-    
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
+  const handleConfirmarEdicao = async () => {
+    if (!editedSa || !editedSa.uc) {
+      console.error("Dados incompletos para edição");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/sa/update/${editedSa.id}`,
+        {
+          titulo: editedSa.titulo,
+          descricao: editedSa.descricao,
+          tipo: editedSa.tipo,
+          ucId: editedSa.uc.id,
+        }
+      );
+      console.log(response.data);
+      fetchSa();
+      setModalOpen(false);
+      limparCampos();
+    } catch (error) {
+      console.error("Erro ao editar sa:", error);
+    }
+  };
 
   return (
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-        </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Situação de Aprendizagem
-            </Typography>
+    <ScrollView>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.breadcrumbsContainer}></View>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Situação de Aprendizagem
+              </Typography>
 
+              <Select
+                labelId="uc-select-label"
+                id="uc-select"
+                value={ucId}
+                onChange={(e) => setUcId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Selecionar UC
+                </MenuItem>
+                {ucs.map((uc) => (
+                  <MenuItem key={uc.id} value={uc.id}>
+                    {uc.sigla}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <TextField
+                label="Título"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Descrição"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+
+              <Select
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                variant="outlined"
+                fullWidth
+                displayEmpty
+                style={styles.input}
+                renderValue={(selected) => {
+                  if (selected === "") {
+                    return <span style={{ color: "gray" }}>Tipo de SA</span>;
+                  } else {
+                    return selected;
+                  }
+                }}
+              >
+                <MenuItem value="" disabled>
+                  Tipo de SA
+                </MenuItem>
+                <MenuItem value="Somativa">Somativa</MenuItem>
+                <MenuItem value="Formativa">Formativa</MenuItem>
+                <MenuItem value="Formativa e Somativa">
+                  Formativa e Somativa
+                </MenuItem>
+              </Select>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddSas}
+                style={styles.button}
+              >
+                Adicionar Situação de Aprendizagem
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Situação de Aprendizagem</TableCell>
+                      <TableCell>Tipo</TableCell>
+                      <TableCell>Unidade Curricular</TableCell>
+                      <TableCell>Ação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sas.map((sa) => (
+                      <TableRow key={sa.id}>
+                        <TableCell>{sa.titulo}</TableCell>
+                        <TableCell>{sa.tipo}</TableCell>
+                        <TableCell>{sa.uc?.nomeUC || "não atribuído"}</TableCell>
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarSa(sa)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarSA(sa.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
+          </View>
+        </View>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Situação de Aprendizagem</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Título"
+              value={editedSa ? editedSa.titulo : ""}
+              onChange={(e) =>
+                setEditedSa({
+                  ...editedSa,
+                  titulo: e.target.value,
+                })
+              }
+              fullWidth
+            />
+            <TextField
+              label="Descrição"
+              value={editedSa ? editedSa.descricao : ""}
+              onChange={(e) =>
+                setEditedSa({
+                  ...editedSa,
+                  descricao: e.target.value,
+                })
+              }
+              fullWidth
+              margin="normal"
+            />
             <Select
               labelId="uc-select-label"
-              id="uc-select"
-              value={ucId}
-              onChange={(e) => setUcId(e.target.value)}
-              sx={{ marginBottom: "20px" }}
+              value={editedSa?.uc?.id || ""}
+              onChange={(e) =>
+                setEditedSa({
+                  ...editedSa,
+                  uc: { id: e.target.value },
+                })
+              }
+              fullWidth
+              margin="normal"
               displayEmpty
             >
               <MenuItem value="" disabled>
@@ -133,86 +291,47 @@ const GerenciarSAs = ({ navigation }) => {
                 </MenuItem>
               ))}
             </Select>
-
-            <TextField
-              label="Título"
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-            <TextField
-              label="Descrição"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-
-              <Select
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              variant="outlined"
-              fullWidth
-              displayEmpty
-              style={styles.input}
-              renderValue={
-                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de SA</span>
+            <Select
+              labelId="tipo-select-label"
+              value={editedSa?.tipo || ""}
+              onChange={(e) =>
+                setEditedSa({
+                  ...editedSa,
+                  tipo: e.target.value,
+                })
               }
+              fullWidth
+              margin="normal"
+              displayEmpty
+              renderValue={(selected) => {
+                if (selected === "") {
+                  return <span style={{ color: "gray" }}>Tipo de SA</span>;
+                } else {
+                  return selected;
+                }
+              }}
             >
               <MenuItem value="" disabled>
                 Tipo de SA
               </MenuItem>
               <MenuItem value="Somativa">Somativa</MenuItem>
               <MenuItem value="Formativa">Formativa</MenuItem>
-              <MenuItem value="Formativa">Formativa e Somativa</MenuItem>
+              <MenuItem value="Formativa e Somativa">
+                Formativa e Somativa
+              </MenuItem>
             </Select>
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddSas}
-              style={styles.button}
-            >
-              Adicionar Situação de Aprendizagem 
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              Cancelar
             </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Situação de Aprendizagem</TableCell>
-                    <TableCell>UC</TableCell>
-                    <TableCell>Ação</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {sas.map((sa) => (
-                    <TableRow key={sa.id}>
-                      <TableCell>{sa.titulo}</TableCell>
-                      <TableCell>{sa.uc.nomeUC || "não atribuído"}</TableCell>
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarTurma(turma.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarSA(sa.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </View>
-        </View>
-      </View>
-    </TemplateCrud>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </TemplateCrud>
+    </ScrollView>
   );
 };
 

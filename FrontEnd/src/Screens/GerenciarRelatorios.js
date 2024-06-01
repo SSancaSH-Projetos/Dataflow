@@ -301,22 +301,22 @@ const GerenciarRelatorios = ({ navigation }) => {
                 <Grid item xs={12} sm={6}>
                   <Card>
                     <CardContent>
-                      <Typography variant="h6">CritÃ©rio CrÃ­tico</Typography>
+                      <Typography variant="h6">Critérios Críticos</Typography>
                       <Typography> Total: </Typography>
                       <Typography> Atendidos: </Typography>
-                      <Typography> NÃ£o atendidos: </Typography>
-                      <Typography> NÃ£o avaliados: </Typography>
+                      <Typography> Não atendidos: </Typography>
+                      <Typography> Não avaliados: </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Card>
                     <CardContent>
-                      <Typography variant="h6">CritÃ©rio DesejÃ¡vel</Typography>
+                      <Typography variant="h6">Critérios Desejáveis</Typography>
                       <Typography> Total: </Typography>
                       <Typography> Atendidos: </Typography>
-                      <Typography> NÃ£o atendidos: </Typography>
-                      <Typography> NÃ£o avaliados: </Typography>
+                      <Typography> Não atendidos: </Typography>
+                      <Typography> Não avaliados: </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -324,15 +324,15 @@ const GerenciarRelatorios = ({ navigation }) => {
 
               <Card style={{ marginTop: 20, marginBottom: 20 }}>
                 <CardContent>
-                  <Typography variant="h6">CritÃ©rio CrÃ­tico </Typography>
-                  COLOCAR INFORMAÃ‡Ã•ES AQUI DENTRO
+                  <Typography variant="h6">Critérios Crí­tico </Typography>
+                  Colocar os critérios aqui
                 </CardContent>
               </Card>
 
               <Card style={{ marginBottom: 20 }}>
                 <CardContent>
-                  <Typography variant="h6"> CritÃ©rio DesejÃ¡vel </Typography>
-                  COLOCAR INFORMAÃ‡Ã•ES AQUI DENTRO
+                  <Typography variant="h6"> Critérios Desejável </Typography>
+                  colocar os critérios aqui
                   <List>
                     <ListItem>
                       <ListItemIcon>

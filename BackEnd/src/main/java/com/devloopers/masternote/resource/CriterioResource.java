@@ -19,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,13 +66,22 @@ public class CriterioResource {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CriterioDTOResponse> update(@PathVariable Long id, @RequestBody CriterioDTORequest criterioDTORequest) {
         Optional<Criterio> optionalCriterio = criterioRepository.findById(id);
         if (optionalCriterio.isPresent()) {
             Criterio criterio = optionalCriterio.get();
+            System.out.println(criterio);
+            Capacidade capacidade = new Capacidade();
+            capacidade.setId(criterioDTORequest.getCapId());
+            if(!Objects.equals(criterio.getCapacidade().getId(), criterioDTORequest.getCapId())){
+                Optional<Capacidade> novaCapacidade = capacidadeRepository.findById(criterioDTORequest.getCapId());
+                novaCapacidade.ifPresent(criterio::setCapacidade);
+            }
+            criterio.setTipo(criterioDTORequest.getTipo());
             criterio.setDescricao(criterioDTORequest.getDescricao());
             criterioRepository.save(criterio);
+
             return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(criterio));
         } else {
             return ResponseEntity.notFound().build();

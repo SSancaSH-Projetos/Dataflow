@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Picker,
+  ScrollView,
+} from "react-native";
 import {
   TextField,
   Typography,
@@ -16,6 +23,10 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
@@ -23,11 +34,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const GerenciarCursos = ({ navigation }) => {
-  const [nome, setNome] = useState (""); 
+  const [nome, setNome] = useState("");
   const [cargaHoraria, setCargaHoraria] = useState("");
   const [nivel, setNivel] = useState("");
-  const [cursos, setCursos] =useState([]);
-
+  const [cursos, setCursos] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editedCurso, setEditedCurso] = useState(null);
 
   const fetchCursos = async () => {
     try {
@@ -47,7 +59,7 @@ const GerenciarCursos = ({ navigation }) => {
       const response = await axios.post("http://localhost:8080/curso", {
         nome: nome,
         cargaHoraria: cargaHoraria,
-        nivel: nivel
+        nivel: nivel,
       });
       console.log(response.data);
       limparCampos();
@@ -64,107 +76,172 @@ const GerenciarCursos = ({ navigation }) => {
     } catch (error) {
       console.error("Erro ao excluir curso:", error);
     }
- };
+  };
 
   const limparCampos = () => {
-    setNome('');
-    setCargaHoraria('');
-    setNivel('');
+    setNome("");
+    setCargaHoraria("");
+    setNivel("");
   };
-  
+
+  const handleEditarCurso = (curso) => {
+    setEditedCurso(curso);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleConfirmarEdicao = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/curso/update/${editedCurso.id}`,
+        {
+          nome: editedCurso.nome,
+          cargaHoraria: editedCurso.cargaHoraria,
+          nivel: editedCurso.nivel,
+        }
+      );
+      console.log(response.data);
+      fetchCursos();
+      setModalOpen(false);
+      limparCampos();
+    } catch (error) {
+      console.error("Erro ao editar curso:", error);
+    }
+  };
 
   return (
     <ScrollView>
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-          
-        </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Curso
-            </Typography>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.breadcrumbsContainer}></View>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Curso
+              </Typography>
 
+              <TextField
+                label="Nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Nivel"
+                value={nivel}
+                onChange={(e) => setNivel(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Carga Horaria"
+                value={cargaHoraria}
+                onChange={(e) => setCargaHoraria(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddCurso}
+                style={styles.button}
+              >
+                Adicionar Curso
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Curso</TableCell>
+                      <TableCell>Nível</TableCell>
+                      <TableCell>Carga Horária</TableCell>
+                      <TableCell>Ação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {cursos.map((curso) => (
+                      <TableRow key={curso.id}>
+                        <TableCell>{curso.nome}</TableCell>
+                        <TableCell>{curso.nivel}</TableCell>
+                        <TableCell>{curso.cargaHoraria}</TableCell>
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarCurso(curso)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarCurso(curso.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
+          </View>
+        </View>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Curso</DialogTitle>
+          <DialogContent>
             <TextField
               label="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              variant="outlined"
+              value={editedCurso ? editedCurso.nome : ""}
+              onChange={(e) =>
+                setEditedCurso({ ...editedCurso, nome: e.target.value })
+              }
               fullWidth
+              variant="outlined"
               style={styles.input}
             />
             <TextField
               label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
-              variant="outlined"
+              value={editedCurso ? editedCurso.nivel : ""}
+              onChange={(e) =>
+                setEditedCurso({ ...editedCurso, nivel: e.target.value })
+              }
               fullWidth
+              variant="outlined"
               style={styles.input}
             />
             <TextField
               label="Carga Horaria"
-              value={cargaHoraria}
-              onChange={(e) => setCargaHoraria(e.target.value)}
-              variant="outlined"
+              value={editedCurso ? editedCurso.cargaHoraria : ""}
+              onChange={(e) =>
+                setEditedCurso({
+                  ...editedCurso,
+                  cargaHoraria: e.target.value,
+                })
+              }
               fullWidth
+              variant="outlined"
               style={styles.input}
             />
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddCurso}
-              style={styles.button}
-            >
-              Adicionar Curso
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cancelar</Button>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+              Confirmar
             </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Curso</TableCell>
-                    <TableCell>Nível</TableCell>
-                    <TableCell>Carga Horária</TableCell>
-                    <TableCell>Ação</TableCell>
-                    
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {cursos.map((curso) => (
-                    <TableRow key={curso.id}>
-                      <TableCell>{curso.nome}</TableCell>
-                      <TableCell>{curso.nivel}</TableCell>
-                      <TableCell>{curso.cargaHoraria}</TableCell>
-                      
-                     
-                    
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarCurso(curso.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarCurso(curso.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </View>
-        </View>
-      </View>
-    </TemplateCrud>
+          </DialogActions>
+        </Dialog>
+      </TemplateCrud>
     </ScrollView>
   );
 };
@@ -199,7 +276,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-
-
 
 export default GerenciarCursos;

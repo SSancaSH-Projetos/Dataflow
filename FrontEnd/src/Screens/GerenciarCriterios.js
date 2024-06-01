@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   TextField,
   Typography,
-  Breadcrumbs,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +11,10 @@ import {
   TableRow,
   Paper,
   Button,
-  InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -23,46 +24,48 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const GerenciarCriterios = ({ navigation }) => {
-  const [descricao, setDescricao] = useState (""); 
+  const [descricao, setDescricao] = useState("");
   const [capacidades, setCapacidades] = useState([]);
   const [tipo, setTipo] = useState("");
   const [criterios, setCriterios] = useState([]);
-  const [capId, setCapId] = useState([]);
+  const [capId, setCapId] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editedCriterio, setEditedCriterio] = useState();
 
   const fetchCriterios = async () => {
     try {
       const response = await axios.get("http://localhost:8080/criterio");
       setCriterios(response.data);
     } catch (error) {
-      console.error("Erro ao obter criterios:", error);
+      console.error("Erro ao obter critérios:", error);
     }
   };
 
-  const fetchCapacidade = async () => {
+  const fetchCapacidades = async () => {
     try {
       const response = await axios.get("http://localhost:8080/capacidade");
       setCapacidades(response.data);
     } catch (error) {
-      console.error("Erro ao obter capacidade", error);
+      console.error("Erro ao obter capacidades:", error);
     }
   };
 
   useEffect(() => {
     fetchCriterios();
-    fetchCapacidade();
+    fetchCapacidades();
   }, []);
-
+  
   const handleAddCriterios = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/criterio", {  
+      const response = await axios.post("http://localhost:8080/criterio", {
         descricao: descricao,
         tipo: tipo,
         capId: capId,
-
       });
+      console.log("chegou"),
       console.log(response.data);
       limparCampos();
-      fetchCriterios();
+      await fetchCriterios(); // Atualizar a lista de critérios
     } catch (error) {
       console.error("Erro ao adicionar criterios:", error);
     }
@@ -71,43 +74,196 @@ const GerenciarCriterios = ({ navigation }) => {
   const handleDeletarCriterio = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/criterio/delete/${id}`);
-      fetchCriterios(); // Corrected function name
+      await fetchCriterios(); // Atualizar a lista de critérios
     } catch (error) {
       console.error("Erro ao excluir criterio:", error);
     }
- };
+  };
 
   const limparCampos = () => {
-    setTipo('');
-    setDescricao('');
+    setTipo("");
+    setDescricao("");
+    setCapId("");
   };
-  
+
+  const handleEditarCriterio = (criterio) => {
+    setEditedCriterio(criterio);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleConfirmarEdicao = async () => {
+    try {
+      const dados ={
+        descricao: editedCriterio.descricao,
+        tipo: editedCriterio.tipo,
+        capId: editedCriterio.capacidade.id,
+      };
+      console.log(dados)
+      const response = await axios.put(
+        `http://localhost:8080/criterio/${editedCriterio.id}`,
+        dados
+      );
+      console.log("entrei");
+      console.log(response.data);
+      await fetchCriterios(); // Atualizar a lista de critérios
+      setModalOpen(false);
+      limparCampos();
+    } catch (error) {
+      console.error("Erro ao editar criterio:", error);
+    }
+  };
 
   return (
     <ScrollView>
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-          
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.breadcrumbsContainer}></View>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Criterio
+              </Typography>
+
+              <Select
+                labelId="capacidade-select-label"
+                id="capacidade-select"
+                value={capId}
+                onChange={(e) => setCapId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Selecionar Capacidade
+                </MenuItem>
+                {capacidades.map((capacidade) => (
+                  <MenuItem key={capacidade.id} value={capacidade.id}>
+                    {capacidade.descricao}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <TextField
+                label="Descrição"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <Select
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                variant="outlined"
+                fullWidth
+                displayEmpty
+                style={styles.input}
+                renderValue={(selected) => {
+                  if (selected === "") {
+                    return (
+                      <span style={{ color: "gray" }}>Tipo de Criterio</span>
+                    );
+                  } else {
+                    return selected;
+                  }
+                }}
+              >
+                <MenuItem value="" disabled>
+                  Tipo de Criterio
+                </MenuItem>
+                <MenuItem value="Crítico">Crítico</MenuItem>
+                <MenuItem value="Desejável">Desejável</MenuItem>
+              </Select>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddCriterios}
+                style={styles.button}
+              >
+                Adicionar Critério
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Critério</TableCell>
+                      <TableCell>Tipo</TableCell>
+                      <TableCell>Capacidade</TableCell>
+                      <TableCell>Ação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {criterios.map((criterio) => (
+                      <TableRow key={criterio.id}>
+                        <TableCell>{criterio.descricao}</TableCell>
+                        <TableCell>{criterio.tipo}</TableCell>
+                        <TableCell>
+                          {criterio.capacidade
+                            ? criterio.capacidade.descricao
+                            : ""}
+                        </TableCell>
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarCriterio(criterio)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarCriterio(criterio.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
+          </View>
         </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Criterio
-            </Typography>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Critério</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Descrição"
+              value={editedCriterio ? editedCriterio.descricao : ""}
+              onChange={(e) =>
+                setEditedCriterio({
+                  ...editedCriterio,
+                  descricao: e.target.value,
+                })
+              }
+              fullWidth
+              variant="outlined"
+              style={styles.input}
+            />
 
             <Select
-              labelId="capacidade-select-label"
-              id="capacidade-select"
-              value={capId}
-              onChange={(e) => setCapId(e.target.value)}
-              sx={{ marginBottom: "20px" }}
-              displayEmpty
+              label="Capacidade"
+              value={
+                editedCriterio && editedCriterio.capacidade
+                  ? editedCriterio.capacidade.id
+                  : ""
+              }
+              onChange={(e) =>
+                setEditedCriterio({
+                  ...editedCriterio,
+                  capacidade: { id: e.target.value },
+                })
+              }
+              fullWidth
+              variant="outlined"
+              style={styles.input}
             >
               <MenuItem value="" disabled>
                 Selecionar Capacidade
@@ -119,117 +275,70 @@ const GerenciarCriterios = ({ navigation }) => {
               ))}
             </Select>
 
-            <TextField
-              label="Descrição"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-             <Select
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              variant="outlined"
-              fullWidth
-              displayEmpty
-              style={styles.input}
-              renderValue={
-                tipo !== "" ? undefined : () => <span style={{ color: "gray" }}>Tipo de Criterio</span>
+            <Select
+              labelId="tipo-select-label"
+              id="tipo-select"
+              value={editedCriterio ? editedCriterio.tipo : ""}
+              onChange={(e) =>
+                setEditedCriterio({
+                  ...editedCriterio,
+                  tipo: e.target.value,
+                })
               }
+              displayEmpty
+              fullWidth
+              style={styles.input}
+              inputProps={{ style: { color: "black" } }}
             >
               <MenuItem value="" disabled>
-                Tipo de Criterio
+                Tipo de Critério
               </MenuItem>
               <MenuItem value="Crítico">Crítico</MenuItem>
               <MenuItem value="Desejável">Desejável</MenuItem>
             </Select>
-            
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddCriterios}
-              style={styles.button}
-            >
-              Adicionar Critério
-            </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Critério</TableCell>
-                    <TableCell>Tipo</TableCell>
-                    <TableCell>Capacidade</TableCell>
-                    <TableCell>Ação</TableCell>
-                    
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {criterios.map((criterio) => (
-                    <TableRow key={criterio.id}>
-                      <TableCell>{criterio.descricao}</TableCell>
-                      <TableCell>{criterio.tipo}</TableCell>
-                      <TableCell>{criterio.capacidade.descricao}</TableCell>
-                      
-                      
-                    
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarCurso(curso.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarCriterio(criterio.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </View>
-        </View>
-      </View>
-    </TemplateCrud>
-    </ScrollView>
-  );
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cancelar</Button>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+Confirmar
+</Button>
+</DialogActions>
+</Dialog>
+</TemplateCrud>
+</ScrollView>
+);
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    padding: 10,
-  },
-  breadcrumbsContainer: {
-    marginBottom: 10,
-  },
-  contentContainer: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  formContainer: {
-    flex: 1,
-    padding: 20,
-  },
-  tableContainer: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    marginBottom: 20,
-  },
-  input: {
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 10,
-  },
+mainContainer: {
+flex: 1,
+padding: 10,
+},
+breadcrumbsContainer: {
+marginBottom: 10,
+},
+contentContainer: {
+flex: 1,
+flexDirection: "row",
+},
+formContainer: {
+flex: 1,
+padding: 20,
+},
+tableContainer: {
+flex: 1,
+padding: 20,
+},
+title: {
+marginBottom: 20,
+},
+input: {
+marginBottom: 20,
+color: "black",
+},
+button: {
+marginTop: 10,
+},
 });
-
-
 
 export default GerenciarCriterios;
