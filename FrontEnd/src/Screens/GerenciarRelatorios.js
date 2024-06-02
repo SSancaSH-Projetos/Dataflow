@@ -31,6 +31,12 @@ const GerenciarRelatorios = ({ navigation }) => {
   const [tabelaVisivel, setTabelaVisivel] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [capacidades, setCapacidades] = useState([]);
+  const [capacidadeId, setCapacidadeId] = useState("");
+  const [capacidadePorUC, setCapacidadePorUC] = useState([]);
+  const [capaDescricao, setCapaDescricao] = useState("");
+
+
   const [modalContent, setModalContent] = useState({ title: '', message: '', actions: null });
 
   const fetchCursos = async () => {
@@ -105,12 +111,35 @@ const GerenciarRelatorios = ({ navigation }) => {
     }
   };
 
+  const fetchCapacidadeDescricao = async (capacidadeId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/capacidade/pesquisaId/${capacidadeId}`);
+      setCapaDescricao(response.data.descricao);
+    } catch (error) {
+      console.error("Erro ao obter descrição da Capacidade:", error);
+    }
+  };
+
+
+  const fetchCapacidadePorUC = async (ucId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/uc/pesquisaCapacidadesUc/${ucId}`
+      );
+      setCapacidadePorUC(response.data);
+    } catch (error) {
+      console.error("Erro ao obter sa por ucs:", error);
+    }
+  };
+
+
   useEffect(() => {
     fetchCursos();
     fetchCursosPorTurma();
     fetchUnidadesCurricularesPorCurso();
     fetchSituacaoDeAprendizagemPorUnidadeCurricular();
     fetchAlunosPorTurma();
+    fetchCapacidadePorUC();
   }, []);
 
   return (
@@ -212,6 +241,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 onChange={(e) => {
                   setUcId(e.target.value);
                   fetchSituacaoDeAprendizagemPorUnidadeCurricular(e.target.value);
+                  fetchCapacidadePorUC(e.target.value);
                   fetchUcNome(e.target.value);
                 }}
                 sx={{ marginBottom: "20px" }}
@@ -225,6 +255,29 @@ const GerenciarRelatorios = ({ navigation }) => {
                 {uCsPorCurso.map((uc) => (
                   <MenuItem key={uc.id} value={uc.id}>
                     {uc.sigla}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <Select
+                labelId="capacidade-select-label"
+                id="capacidade-select"
+                value={capacidadeId}
+                onChange={(e) => {
+                  fetchCapacidadeDescricao(e.target.value)
+                  setCapacidadeId(e.target.value);
+                }}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+                style={styles.inputSelect}
+                disabled={disabled} // Adiciona esta linha
+              >
+                <MenuItem value="" disabled>
+                  Selecionar Capacidade
+                </MenuItem>
+                {capacidadePorUC.map((capacidade) => (
+                  <MenuItem key={capacidade.id} value={capacidade.id}>
+                    {capacidade.descricao}
                   </MenuItem>
                 ))}
               </Select>
@@ -276,25 +329,30 @@ const GerenciarRelatorios = ({ navigation }) => {
             <View style={styles.tableContainer}>
               <Card style={{ marginBottom: 20 }}>
                 <CardContent>
-                <Typography variant="h5" component="div">
-                  Informações Adicionais
-                </Typography>
-                {alunoNome && (
-                  <Typography variant="body2" color="textPrimary">
-                    <strong>Nome do Aluno:</strong> {alunoNome}
+                  <Typography variant="h5" component="div">
+                    Informações Adicionais
                   </Typography>
-                )}
+                  {alunoNome && (
+                    <Typography variant="body2" color="textPrimary">
+                      <strong>Nome do Aluno:</strong> {alunoNome}
+                    </Typography>
+                  )}
 
-                {sigla && (
-                  <Typography variant="body2" color="textPrimary">
-                    <strong>Nome da UC:</strong> {sigla}
-                  </Typography>
-                )}
-                {saTitulo && (
-                  <Typography variant="body2" color="textPrimary">
-                    <strong>Titulo da SA:</strong> {saTitulo}
-                  </Typography>
-                )}
+                  {sigla && (
+                    <Typography variant="body2" color="textPrimary">
+                      <strong>Nome da UC:</strong> {sigla}
+                    </Typography>
+                  )}
+                  {saTitulo && (
+                    <Typography variant="body2" color="textPrimary">
+                      <strong>Titulo da SA:</strong> {saTitulo}
+                    </Typography>
+                  )}
+                  {capaDescricao && (
+                    <Typography variant="body2" color="textPrimary">
+                      <strong>Capacidade:</strong> {capaDescricao}
+                    </Typography>
+                  )}
                 </CardContent>
               </Card>
               <Grid container spacing={2}>
@@ -352,21 +410,21 @@ const GerenciarRelatorios = ({ navigation }) => {
                       </ListItemIcon>
                       <ListItemText primary="CritÃ©rio C nÃ£o avaliado" />
                     </ListItem>
-                  </List> 
+                  </List>
 
                   <Typography variant="body2">
-          <p> Legenda </p>
-            <CheckCircleIcon /> CritÃ©rio atingido
-            <CancelIcon /> CritÃ©rio nÃ£o atingido
-            <CropSquareIcon /> CritÃ©rio nÃ£o avaliado
-        </Typography>
+                    <p> Legenda </p>
+                    <CheckCircleIcon /> CritÃ©rio atingido
+                    <CancelIcon /> CritÃ©rio nÃ£o atingido
+                    <CropSquareIcon /> CritÃ©rio nÃ£o avaliado
+                  </Typography>
 
 
 
                 </CardContent>
               </Card>
-              </View>
-            
+            </View>
+
           </View>
         </View>
       </TemplateCrud>

@@ -162,9 +162,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchCapacidade = async () => {
+  const fetchCapacidadePorUc = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/capacidade");
+      const response = await axios.get("http://localhost:8080/uc/pesquisaCapacidadesUc/${id}");
       setCapacidades(response.data);
     } catch (error) {
       console.error("Erro ao obter capacidade", error);
@@ -260,7 +260,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
         fetchCursos(),
         fetchTurmas(),
         fetchUnidadesCurriculares(),
-        fetchCapacidade(),
+        fetchCapacidadePorUc(),
         fetchSituacaoDeAprendizagem(),
       ]);
       setIsLoading(false);

@@ -105,7 +105,13 @@ public class CriterioResource {
 
     @GetMapping("/contagemDeCriteriosCriticosPorCapacidade/{capacidadeId}")
     public ResponseEntity<Long> countCriteriosCriticosByCapacidadeId(@PathVariable Long capacidadeId) {
-        long count = criterioRepository.countCriteriosCriticosByCapacidadeId(capacidadeId);
+        long count = criterioRepository.countTotalDeCriteriosCriticosByCapacidadeId(capacidadeId);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    
+    @GetMapping("/contagemDeCriteriosDesejavelPorCapacidade/{capacidadeId}")
+    public ResponseEntity<Long> countTotalDeCriteriosDesejavelByCapacidadeId(@PathVariable Long capacidadeId) {
+        long count = criterioRepository.countTotalDeCriteriosDesejavelByCapacidadeId(capacidadeId);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
