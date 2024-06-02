@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Picker, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import {
   TextField,
   Typography,
-  Breadcrumbs,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -13,9 +15,12 @@ import {
   TableRow,
   Paper,
   Button,
-  InputLabel,
   MenuItem,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
@@ -23,7 +28,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const GerenciarUCs = ({ navigation }) => {
-  const [nomeUC, setNomeUC] = useState (""); 
+  const [nomeUC, setNomeUC] = useState("");
   const [sigla, setSigla] = useState("");
   const [cargaHoraria, setCargaHoraria] = useState("");
   const [modulo, setModulo] = useState("");
@@ -31,9 +36,36 @@ const GerenciarUCs = ({ navigation }) => {
   const [ucs, setUcs] = useState([]);
   const [curso, setCurso] = useState("");
   const [cursos, setCursos] = useState([]);
+  const [editedUC, setEditedUC] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
+  const handleEditarUC = (uc) => {
+    setEditedUC(uc);
+    setModalOpen(true);
+  };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditedUC(null);
+  };
 
+  const handleConfirmarEdicao = async () => {
+    try {
+      await axios.put(`http://localhost:8080/uc/update/${editedUC.id}`, {
+        nomeUC: editedUC.nomeUC,
+        sigla: editedUC.sigla,
+        cargaHoraria: editedUC.cargaHoraria,
+        modulo: editedUC.modulo,
+        conhecimentos: editedUC.conhecimentos,
+        curso: editedUC.curso.id, // Supondo que curso seja um objeto com id
+      });
+      setUcs(ucs.map((uc) => (uc.id === editedUC.id ? editedUC : uc)));
+      setModalOpen(false);
+      setEditedUC(null);
+    } catch (error) {
+      console.error("Erro ao editar Unidade Curricular:", error);
+    }
+  };
 
   const fetchUc = async () => {
     try {
@@ -47,7 +79,6 @@ const GerenciarUCs = ({ navigation }) => {
   useEffect(() => {
     fetchUc();
     fetchCursos();
-
   }, []);
 
   const handleAddUc = async () => {
@@ -59,11 +90,8 @@ const GerenciarUCs = ({ navigation }) => {
         cargaHoraria: cargaHoraria,
         modulo: modulo,
         conhecimentos: conhecimentos,
-
-        
       });
       console.log(response.data);
-
       fetchUc();
       limparCampos();
     } catch (error) {
@@ -74,50 +102,45 @@ const GerenciarUCs = ({ navigation }) => {
   const handleDeletarUC = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/uc/delete/${id}`);
-      fetchUc(); // Corrected function name
+      fetchUc();
     } catch (error) {
       console.error("Erro ao excluir UC:", error);
     }
- };
+  };
 
- const fetchCursos = async () => {
-  try {
-    const response = await axios.get("http://localhost:8080/curso");
-    setCursos(response.data);
-  } catch (error) {
-    console.error("Erro ao obter cursos:", error);
-  }
-};
-
+  const fetchCursos = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/curso");
+      setCursos(response.data);
+    } catch (error) {
+      console.error("Erro ao obter cursos:", error);
+    }
+  };
 
   const limparCampos = () => {
-    setNomeUC('');
-    setSigla('');
-    setCargaHoraria('');
-    setModulo('');
-    setConhecimentos('')
+    setNomeUC("");
+    setSigla("");
+    setCargaHoraria("");
+    setModulo("");
+    setConhecimentos("");
   };
-  
 
   return (
     <ScrollView>
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-        </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Unidade Curricular
-            </Typography>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Unidade Curricular
+              </Typography>
 
-
-            <Select
+              <Select
                 labelId="curso-select-label"
                 id="curso-select"
                 value={curso}
@@ -135,96 +158,176 @@ const GerenciarUCs = ({ navigation }) => {
                 ))}
               </Select>
 
+              <TextField
+                label="Nome da Unidade Curricular"
+                value={nomeUC}
+                onChange={(e) => setNomeUC(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Sigla da Unidade Curricular"
+                value={sigla}
+                onChange={(e) => setSigla(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Carga Horária da UC"
+                value={cargaHoraria}
+                onChange={(e) => setCargaHoraria(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
 
+              <TextField
+                label="Módulo"
+                value={modulo}
+                onChange={(e) => setModulo(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
 
-            <TextField
-              label="Nome da Unidade Curricular"
-              value={nomeUC}
-              onChange={(e) => setNomeUC(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-            <TextField
-              label="Sigla da Unidade Curricular"
-              value={sigla}
-              onChange={(e) => setSigla(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-            <TextField
-              label="Carga Horária da UC"
-              value={cargaHoraria}
-              onChange={(e) => setCargaHoraria(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-
-            <TextField
-              label="Módulo"
-              value={modulo}
-              onChange={(e) => setModulo(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-
-            <TextField
-              label="Conhecimentos"
-              value={conhecimentos}
-              onChange={(e) => setConhecimentos(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddUc}
-              style={styles.button}
-            >
-              Adicionar Unidade Curricular
-            </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Unidade Curricular</TableCell>
-                    <TableCell>Curso</TableCell>
-                    <TableCell>Ação</TableCell>
-                    
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {ucs.map((uc) => (
-                    <TableRow key={uc.id}>
-                      <TableCell>{uc.sigla}</TableCell>
-                      <TableCell>{uc.curso.nome}</TableCell>
-
-              
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarCurso(curso.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarUC(uc.id)}
-                        />
-                      </TableCell>
+              <TextField
+                label="Conhecimentos"
+                value={conhecimentos}
+                onChange={(e) => setConhecimentos(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddUc}
+                style={styles.button}
+              >
+                Adicionar Unidade Curricular
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Unidade Curricular</TableCell>
+                      <TableCell>Curso</TableCell>
+                      <TableCell>Ação</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {ucs.map((uc) => (
+                      <TableRow key={uc.id}>
+                        <TableCell>{uc.sigla}</TableCell>
+                        <TableCell>{uc.curso.nome}</TableCell> {/* Render the course name */}
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarUC(uc)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarUC(uc.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
           </View>
         </View>
-      </View>
-    </TemplateCrud>
+      </TemplateCrud>
+
+      {/* Modal */}
+      <ScrollView>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Unidade Curricular</DialogTitle>
+          <DialogContent>
+            <Select
+              labelId="curso-select-label"
+              id="curso-select"
+              value={editedUC ? editedUC.curso.id : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, curso: cursos.find(curso => curso.id === e.target.value) })
+              }
+              sx={{ marginBottom: "20px" }}
+              displayEmpty
+              fullWidth
+            >
+              <MenuItem value="" disabled>
+                Selecionar Curso
+              </MenuItem>
+              {cursos.map((curso) => (
+                <MenuItem key={curso.id} value={curso.id}>
+                  {curso.nome}
+                </MenuItem>
+              ))}
+            </Select>
+            <TextField
+              label="Nome da Unidade Curricular"
+              value={editedUC ? editedUC.nomeUC : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, nomeUC: e.target.value })
+              }
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+            <TextField
+              label="Sigla"
+              value={editedUC ? editedUC.sigla : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, sigla: e.target.value })
+              }
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+            <TextField
+              label="Carga Horária"
+              value={editedUC ? editedUC.cargaHoraria : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, cargaHoraria: e.target.value })
+              }
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+            <TextField
+              label="Módulo"
+              value={editedUC ? editedUC.modulo : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, modulo: e.target.value })
+              }
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+            <TextField
+              label="Conhecimentos"
+              value={editedUC ? editedUC.conhecimentos : ""}
+              onChange={(e) =>
+                setEditedUC({ ...editedUC, conhecimentos: e.target.value })
+              }
+              variant="outlined"
+              fullWidth
+              style={styles.input}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cancelar</Button>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </ScrollView>
     </ScrollView>
   );
 };
@@ -260,8 +363,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 export default GerenciarUCs;
-
-

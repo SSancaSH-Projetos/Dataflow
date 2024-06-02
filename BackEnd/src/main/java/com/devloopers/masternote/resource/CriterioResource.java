@@ -67,26 +67,42 @@ public class CriterioResource {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CriterioDTOResponse> update(@PathVariable Long id, @RequestBody CriterioDTORequest criterioDTORequest) {
-        Optional<Criterio> optionalCriterio = criterioRepository.findById(id);
-        if (optionalCriterio.isPresent()) {
-            Criterio criterio = optionalCriterio.get();
-            System.out.println(criterio);
-            Capacidade capacidade = new Capacidade();
-            capacidade.setId(criterioDTORequest.getCapId());
-            if(!Objects.equals(criterio.getCapacidade().getId(), criterioDTORequest.getCapId())){
-                Optional<Capacidade> novaCapacidade = capacidadeRepository.findById(criterioDTORequest.getCapId());
-                novaCapacidade.ifPresent(criterio::setCapacidade);
-            }
-            criterio.setTipo(criterioDTORequest.getTipo());
-            criterio.setDescricao(criterioDTORequest.getDescricao());
-            criterioRepository.save(criterio);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CriterioDTORequest criterioDTORequest) {
+        try {
+            Optional<Criterio> optionalCriterio = criterioRepository.findById(id);
+            if (optionalCriterio.isPresent()) {
+                Criterio criterio = optionalCriterio.get();
+                // Atualize os campos do objeto Criterio com base nos dados recebidos
+                criterio.setDescricao(criterioDTORequest.getDescricao());
+                criterio.setTipo(criterioDTORequest.getTipo());
+                
+                // Verifique se a capacidade foi modificada
+                if (!Objects.equals(criterio.getCapacidade().getId(), criterioDTORequest.getCapId())) {
+                    Optional<Capacidade> novaCapacidade = capacidadeRepository.findById(criterioDTORequest.getCapId());
+                    if (novaCapacidade.isPresent()) {
+                        criterio.setCapacidade(novaCapacidade.get());
+                    } else {
+                        // Retorne uma resposta de erro caso a nova capacidade não exista
+                        return ResponseEntity.badRequest().body("Capacidade não encontrada com o ID fornecido.");
+                    }
+                }
 
-            return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(criterio));
-        } else {
-            return ResponseEntity.notFound().build();
+                // Salve o objeto atualizado no banco de dados
+                criterioRepository.save(criterio);
+
+                // Retorne uma resposta de sucesso com os dados atualizados
+                return ResponseEntity.ok(CriterioDTOResponse.fromCriterio(criterio));
+            } else {
+                // Se o critério não for encontrado, retorne uma resposta de não encontrado
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            // Se ocorrer uma exceção durante o processo, retorne uma resposta de erro interno do servidor
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o critério.");
         }
     }
+
+
     @GetMapping("/contagemDeCriteriosCriticosPorCapacidade/{capacidadeId}")
     public ResponseEntity<Long> countCriteriosCriticosByCapacidadeId(@PathVariable Long capacidadeId) {
         long count = criterioRepository.countCriteriosCriticosByCapacidadeId(capacidadeId);

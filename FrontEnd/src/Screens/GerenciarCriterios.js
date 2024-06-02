@@ -23,6 +23,7 @@ import TemplateCrud from "../Components/TemplateCrud";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
 const GerenciarCriterios = ({ navigation }) => {
   const [descricao, setDescricao] = useState("");
   const [capacidades, setCapacidades] = useState([]);
@@ -30,23 +31,30 @@ const GerenciarCriterios = ({ navigation }) => {
   const [criterios, setCriterios] = useState([]);
   const [capId, setCapId] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [editedCriterio, setEditedCriterio] = useState();
+  const [editedCriterio, setEditedCriterio] = useState(null); // Alteração aqui
 
   const fetchCriterios = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/criterio");
-      setCriterios(response.data);
+      const response = await fetch("http://localhost:8080/criterio");
+      if (!response.ok) {
+        throw new Error("Erro ao obter critérios");
+      }
+      const data = await response.json();
+      setCriterios(data);
     } catch (error) {
-      console.error("Erro ao obter critérios:", error);
+      console.error("Erro ao obter critérios:", error.message);
     }
   };
-
   const fetchCapacidades = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/capacidade");
-      setCapacidades(response.data);
+      const response = await fetch("http://localhost:8080/capacidade");
+      if (!response.ok) {
+        throw new Error("Erro ao obter capacidades");
+      }
+      const data = await response.json();
+      setCapacidades(data);
     } catch (error) {
-      console.error("Erro ao obter capacidades:", error);
+      console.error("Erro ao obter capacidades:", error.message);
     }
   };
 
@@ -62,10 +70,10 @@ const GerenciarCriterios = ({ navigation }) => {
         tipo: tipo,
         capId: capId,
       });
-      console.log("chegou"),
+      console.log("chegou");
       console.log(response.data);
       limparCampos();
-      await fetchCriterios(); // Atualizar a lista de critérios
+      await fetchCriterios();
     } catch (error) {
       console.error("Erro ao adicionar criterios:", error);
     }
@@ -74,7 +82,7 @@ const GerenciarCriterios = ({ navigation }) => {
   const handleDeletarCriterio = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/criterio/delete/${id}`);
-      await fetchCriterios(); // Atualizar a lista de critérios
+      await fetchCriterios();
     } catch (error) {
       console.error("Erro ao excluir criterio:", error);
     }
@@ -87,9 +95,17 @@ const GerenciarCriterios = ({ navigation }) => {
   };
 
   const handleEditarCriterio = (criterio) => {
-    setEditedCriterio(criterio);
+    setEditedCriterio({
+      id: criterio.id,
+      descricao: criterio.descricao,
+      tipo: criterio.tipo,
+      capacidade: criterio.capacidade ? criterio.capacidade.id : "", // Garantindo que estamos armazenando o ID da capacidade
+    });
+    fetchCriterios()
     setModalOpen(true);
   };
+  
+  
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -97,25 +113,26 @@ const GerenciarCriterios = ({ navigation }) => {
 
   const handleConfirmarEdicao = async () => {
     try {
-      const dados ={
-        descricao: editedCriterio.descricao,
-        tipo: editedCriterio.tipo,
-        capId: editedCriterio.capacidade.id,
-      };
-      console.log(dados)
       const response = await axios.put(
-        `http://localhost:8080/criterio/${editedCriterio.id}`,
-        dados
+        `http://localhost:8080/criterio/update/${editedCriterio.id}`,
+        {
+          descricao: editedCriterio.descricao,
+          tipo: editedCriterio.tipo,
+          capId: editedCriterio.capacidade, // Envie o ID da capacidade selecionada
+        }
       );
-      console.log("entrei");
       console.log(response.data);
-      await fetchCriterios(); // Atualizar a lista de critérios
+      // Atualize o critério no estado com os dados atualizados
+      setCriterios(criterios.map((criterio) => (criterio.id === editedCriterio.id ? editedCriterio : criterio)));
       setModalOpen(false);
-      limparCampos();
+      setEditedCriterio(null);
+      fetchCriterios();
     } catch (error) {
-      console.error("Erro ao editar criterio:", error);
+      console.error("Erro ao editar critério:", error);
     }
   };
+  
+  
 
   return (
     <ScrollView>
@@ -209,9 +226,8 @@ const GerenciarCriterios = ({ navigation }) => {
                         <TableCell>{criterio.descricao}</TableCell>
                         <TableCell>{criterio.tipo}</TableCell>
                         <TableCell>
-                          {criterio.capacidade
-                            ? criterio.capacidade.descricao
-                            : ""}
+                          {criterio.capacidade.descricao}
+                           
                         </TableCell>
                         <TableCell>
                           <EditIcon
@@ -232,113 +248,114 @@ const GerenciarCriterios = ({ navigation }) => {
           </View>
         </View>
         <Dialog open={modalOpen} onClose={handleCloseModal}>
-          <DialogTitle>Editar Critério</DialogTitle>
+          <DialogTitle>Editar Critério
+          </DialogTitle>
           <DialogContent>
-            <TextField
-              label="Descrição"
-              value={editedCriterio ? editedCriterio.descricao : ""}
-              onChange={(e) =>
-                setEditedCriterio({
-                  ...editedCriterio,
-                  descricao: e.target.value,
-                })
-              }
-              fullWidth
-              variant="outlined"
-              style={styles.input}
-            />
+            {editedCriterio && ( // Verificação adicionada
+              <>
+                <TextField
+                  label="Descrição"
+                  value={editedCriterio.descricao}
+                  onChange={(e) =>
+                    setEditedCriterio({
+                      ...editedCriterio,
+                      descricao: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  variant="outlined"
+                  style={styles.input}
+                />
 
-            <Select
-              label="Capacidade"
-              value={
-                editedCriterio && editedCriterio.capacidade
-                  ? editedCriterio.capacidade.id
-                  : ""
-              }
-              onChange={(e) =>
-                setEditedCriterio({
-                  ...editedCriterio,
-                  capacidade: { id: e.target.value },
-                })
-              }
-              fullWidth
-              variant="outlined"
-              style={styles.input}
-            >
-              <MenuItem value="" disabled>
-                Selecionar Capacidade
-              </MenuItem>
-              {capacidades.map((capacidade) => (
-                <MenuItem key={capacidade.id} value={capacidade.id}>
-                  {capacidade.descricao}
-                </MenuItem>
-              ))}
-            </Select>
+                <Select
+                  label="Capacidade"
+                  value={editedCriterio.capacidade}
+                  onChange={(e) =>
+                    setEditedCriterio({
+                      ...editedCriterio,
+                      capacidade: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  variant="outlined"
+                  style={styles.input}
+                >
+                  <MenuItem value="" disabled>
+                    Selecionar Capacidade
+                  </MenuItem>
+                  {capacidades.map((capacidade) => (
+                    <MenuItem key={capacidade.id} value={capacidade.id}>
+                      {capacidade.descricao}
+                    </MenuItem>
+                  ))}
+                </Select>
 
-            <Select
-              labelId="tipo-select-label"
-              id="tipo-select"
-              value={editedCriterio ? editedCriterio.tipo : ""}
-              onChange={(e) =>
-                setEditedCriterio({
-                  ...editedCriterio,
-                  tipo: e.target.value,
-                })
-              }
-              displayEmpty
-              fullWidth
-              style={styles.input}
-              inputProps={{ style: { color: "black" } }}
-            >
-              <MenuItem value="" disabled>
-                Tipo de Critério
-              </MenuItem>
-              <MenuItem value="Crítico">Crítico</MenuItem>
-              <MenuItem value="Desejável">Desejável</MenuItem>
-            </Select>
+                <Select
+                  labelId="tipo-select-label"
+                  id="tipo-select"
+                  value={editedCriterio.tipo}
+                  onChange={(e) =>
+                    setEditedCriterio({
+                      ...editedCriterio,
+                      tipo: e.target.value,
+                    })
+                  }
+                  displayEmpty
+                  fullWidth
+                  style={styles.input}
+                  inputProps={{ style: { color: "black" } }}
+                >
+                  <MenuItem value="" disabled>
+                    Tipo de Critério
+                  </MenuItem>
+                  <MenuItem value="Crítico">Crítico</MenuItem>
+                  <MenuItem value="Desejável">Desejável</MenuItem>
+                </Select>
+              </>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal}>Cancelar</Button>
             <Button onClick={handleConfirmarEdicao} color="primary">
-Confirmar
-</Button>
-</DialogActions>
-</Dialog>
-</TemplateCrud>
-</ScrollView>
-);
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </TemplateCrud>
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-mainContainer: {
-flex: 1,
-padding: 10,
-},
-breadcrumbsContainer: {
-marginBottom: 10,
-},
-contentContainer: {
-flex: 1,
-flexDirection: "row",
-},
-formContainer: {
-flex: 1,
-padding: 20,
-},
-tableContainer: {
-flex: 1,
-padding: 20,
-},
-title: {
-marginBottom: 20,
-},
-input: {
-marginBottom: 20,
-color: "black",
-},
-button: {
-marginTop: 10,
-},
+  mainContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  breadcrumbsContainer: {
+    marginBottom: 10,
+  },
+  contentContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  formContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  tableContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    marginBottom: 20,
+  },
+  input: {
+    marginBottom: 20,
+    color: "black",
+  },
+  button: {
+    marginTop: 10,
+  },
 });
 
 export default GerenciarCriterios;

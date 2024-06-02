@@ -1,6 +1,5 @@
-// GerenciarTurmas.js
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator, ScrollView } from "react-native";
+import { View, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import {
   TextField,
   Typography,
@@ -14,6 +13,10 @@ import {
   Button,
   MenuItem,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
@@ -29,6 +32,13 @@ const GerenciarTurmas = ({ navigation }) => {
   const [alunos, setAlunos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [alunosSelecionados, setAlunosSelecionados] = useState([]);
+  const [editedTurma, setEditedTurma] = useState({
+    id: "",
+    curso: "",
+    sigla: "",
+    alunosNaTurma: []
+  });
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchCursos = async () => {
     try {
@@ -53,18 +63,18 @@ const GerenciarTurmas = ({ navigation }) => {
       const response = await axios.get("http://localhost:8080/aluno");
       setAlunos(response.data);
     } catch (error) {
-      console.error("Erro ao obter Alunos:", error);
+      console.error("Erro ao obter alunos:", error);
     }
   };
 
   const handleDeletarTurma = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/turma/delete/${id}`);
-      fetchTurmas(); // Corrected function name
+      fetchTurmas();
     } catch (error) {
-      console.error("Erro ao excluir capacidade:", error);
+      console.error("Erro ao excluir turma:", error);
     }
- };
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +90,7 @@ const GerenciarTurmas = ({ navigation }) => {
       const response = await axios.post("http://localhost:8080/turma", {
         curso: cursoId,
         sigla: sigla,
-        alunosNaTurma: alunosSelecionados.map(aluno => aluno.id), // Passar IDs dos alunos selecionados
+        alunosNaTurma: alunosSelecionados.map(aluno => aluno.id),
       });
       console.log(response.data);
       limparCampos();
@@ -91,7 +101,8 @@ const GerenciarTurmas = ({ navigation }) => {
   };
 
   const handleAlunosSelecionadosChange = (selectedAlunos) => {
-    setAlunosSelecionados(selectedAlunos); console.log(selectedAlunos)
+    setAlunosSelecionados(selectedAlunos);
+    console.log(selectedAlunos);
   };
 
   const limparCampos = () => {
@@ -99,12 +110,37 @@ const GerenciarTurmas = ({ navigation }) => {
     setSigla("");
   };
 
-  const handleEditarTurma = (id) => {
-    console.log("Editar turma com ID:", id);
+  const handleEditarTurma = (turma) => {
+    setEditedTurma({
+      id: turma.id,
+      curso: turma.curso,
+      sigla: turma.sigla,
+      alunosNaTurma: turma.alunosNaTurma || []
+    });
+    setModalOpen(true);
   };
 
-  const handleExcluirTurma = (id) => {
-    
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleConfirmarEdicao = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/turma/update/${editedTurma.id}`,
+        {
+          curso: editedTurma.curso,
+          sigla: editedTurma.sigla,
+          alunosNaTurma: editedTurma.alunosNaTurma.map(aluno => aluno.id),
+        }
+      );
+      console.log(response.data);
+      fetchTurmas();
+      setModalOpen(false);
+      limparCampos();
+    } catch (error) {
+      console.error("Erro ao editar turma:", error);
+    }
   };
 
   if (isLoading) {
@@ -117,28 +153,113 @@ const GerenciarTurmas = ({ navigation }) => {
 
   return (
     <ScrollView>
-    <TemplateCrud>
-      <View style={styles.mainContainer}>
-        <View style={styles.breadcrumbsContainer}>
-        </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.formContainer}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              style={styles.title}
-            >
-              Adicionar Turmas
-            </Typography>
+      <TemplateCrud>
+        <View style={styles.mainContainer}>
+          <View style={styles.breadcrumbsContainer}></View>
+          <View style={styles.contentContainer}>
+            <View style={styles.formContainer}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                style={styles.title}
+              >
+                Adicionar Turmas
+              </Typography>
 
+              <Select
+                labelId="curso-select-label"
+                id="curso-select"
+                value={cursoId}
+                onChange={(e) => setCursoId(e.target.value)}
+                sx={{ marginBottom: "20px" }}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Selecionar Curso
+                </MenuItem>
+                {cursos.map((curso) => (
+                  <MenuItem key={curso.id} value={curso.id}>
+                    {curso.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <TextField
+                label="Sigla"
+                value={sigla}
+                onChange={(e) => setSigla(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <ListaDeTransferencia alunos={alunos} onSelectionChange={handleAlunosSelecionadosChange} />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddTurma}
+                style={styles.button}
+              >
+                Adicionar Turma
+              </Button>
+            </View>
+            <View style={styles.tableContainer}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Turma</TableCell>
+                      <TableCell>Curso</TableCell>
+                      <TableCell>Ação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {turmas.map((turma) => (
+                      <TableRow key={turma.id}>
+                        <TableCell>{typeof turma.sigla === "string" ? turma.sigla : ""}</TableCell>
+                        <TableCell>{typeof turma.curso.nome === "string" ? turma.curso.nome : "não atribuído"}</TableCell>
+
+                        <TableCell>
+                          <EditIcon
+                            color="primary"
+                            onClick={() => handleEditarTurma(turma)}
+                          />
+                          <DeleteIcon
+                            color="primary"
+                            onClick={() => handleDeletarTurma(turma.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </View>
+          </View>
+        </View>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+          <DialogTitle>Editar Turma</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Sigla"
+              value={editedTurma.sigla}
+              onChange={(e) =>
+                setEditedTurma({ ...editedTurma, sigla: e.target.value })
+              }
+              fullWidth
+              variant="outlined"
+              style={styles.input}
+            />
             <Select
               labelId="curso-select-label"
               id="curso-select"
-              value={cursoId}
-              onChange={(e) => setCursoId(e.target.value)}
-              sx={{ marginBottom: "20px" }}
+              value={editedTurma.curso}
+              onChange={(e) =>
+                setEditedTurma({ ...editedTurma, curso: e.target.value })
+              }
               displayEmpty
+              fullWidth
+              style={styles.input}
             >
               <MenuItem value="" disabled>
                 Selecionar Curso
@@ -149,59 +270,15 @@ const GerenciarTurmas = ({ navigation }) => {
                 </MenuItem>
               ))}
             </Select>
-
-            <TextField
-              label="Sigla"
-              value={sigla}
-              onChange={(e) => setSigla(e.target.value)}
-              variant="outlined"
-              fullWidth
-              style={styles.input}
-            />
-            <ListaDeTransferencia alunos={alunos} onSelectionChange={handleAlunosSelecionadosChange} />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddTurma}
-              style={styles.button}
-            >
-              Adicionar Turma
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cancelar</Button>
+            <Button onClick={handleConfirmarEdicao} color="primary">
+              Confirmar
             </Button>
-          </View>
-          <View style={styles.tableContainer}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Turma</TableCell>
-                    <TableCell>Curso</TableCell>
-                    <TableCell>Ação</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {turmas.map((turma) => (
-                    <TableRow key={turma.id}>
-                      <TableCell>{turma.sigla}</TableCell>
-                      <TableCell>{turma.curso.nome}</TableCell>
-                      <TableCell>
-                        <EditIcon
-                          color="primary"
-                          onClick={() => handleEditarTurma(turma.id)}
-                        />
-                        <DeleteIcon
-                          color="primary"
-                          onClick={() => handleDeletarTurma(turma.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </View>
-        </View>
-      </View>
-    </TemplateCrud>
+          </DialogActions>
+        </Dialog>
+      </TemplateCrud>
     </ScrollView>
   );
 };

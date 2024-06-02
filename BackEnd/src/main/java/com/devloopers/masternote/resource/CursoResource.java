@@ -90,6 +90,7 @@ public class CursoResource {
         }
     }
 
+
     @DeleteMapping("/delete/{id}")
     public void deleteCurso(@PathVariable Long id) {
         cursoRepository.deleteById(id);
