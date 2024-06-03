@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.devloopers.masternote.entity.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,14 +26,12 @@ import com.devloopers.masternote.repository.TurmaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
-
-
 @RestController
 @RequestMapping("/turma")
 public class TurmaResource {
-	
+
 	@Autowired
-	private  TurmaRepository turmaRepository;
+	private TurmaRepository turmaRepository;
 
 	@Autowired
 	private CursoRepository cursoRepository;
@@ -47,18 +46,18 @@ public class TurmaResource {
 				.map(TurmaDTOResponse::fromTurma) // Usando o método fromTurma para transformar Turma em TurmaDTO
 				.collect(Collectors.toList());
 	}
-	
+
 	@GetMapping("/buscarAlunosDaTurma/{turmaId}")
-    public List<Aluno> getAlunosByTurmaId(@PathVariable Long turmaId) {
-        return alunoRepository.findAlunosByTurmaId(turmaId);
-    }
-	
+	public List<Aluno> getAlunosByTurmaId(@PathVariable Long turmaId) {
+		return alunoRepository.findAlunosByTurmaId(turmaId);
+	}
+
 	@GetMapping("/pesquisaId/{id}")
 	public TurmaDTOResponse findById(@PathVariable Long id) {
 		Turma turma = turmaRepository.findById(id).get();
-        return TurmaDTOResponse.fromTurma(turma);
+		return TurmaDTOResponse.fromTurma(turma);
 	}
-	
+
 	@GetMapping("/pesquisaSigla/{sigla}")
 	public Iterable<Turma> findBySigla(@PathVariable String sigla){
 		return turmaRepository.findBySigla(sigla);
@@ -97,22 +96,30 @@ public class TurmaResource {
 		return TurmaDTOResponse.fromTurma(savedTurma);
 	}
 
-
-
 	@PutMapping("/update/{id}")
-	public ResponseEntity<TurmaDTOResponse> updateTurma(@PathVariable Long id, @RequestBody TurmaDTORequest turmaDTO) {
+	public ResponseEntity<?> updateTurma(@PathVariable Long id, @RequestBody TurmaDTORequest turmaDTO) {
 		Optional<Turma> turmaOptional = turmaRepository.findById(id);
-		
+
 		if(turmaOptional.isPresent()) {
 			Turma turma = turmaOptional.get();
 			turma.setSigla(turmaDTO.getSigla());
+
+			// Buscar o novo curso pelo ID e setar na turma
+			Optional<Curso> cursoOptional = cursoRepository.findById(turmaDTO.getCurso());
+			if(cursoOptional.isPresent()) {
+				turma.setCurso(cursoOptional.get());
+			} else {
+				// Se o curso não for encontrado, retornar um erro apropriado
+				return ResponseEntity.badRequest().body("Curso não encontrado");
+			}
+
 			turmaRepository.save(turma);
 			return ResponseEntity.ok(TurmaDTOResponse.fromTurma(turma));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public void deleteTurma(@PathVariable Long id) {
 		turmaRepository.deleteById(id);

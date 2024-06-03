@@ -113,7 +113,7 @@ const GerenciarTurmas = ({ navigation }) => {
   const handleEditarTurma = (turma) => {
     setEditedTurma({
       id: turma.id,
-      curso: turma.curso,
+      curso: turma.curso.id, // Armazenar o ID do curso
       sigla: turma.sigla,
       alunosNaTurma: turma.alunosNaTurma || []
     });
