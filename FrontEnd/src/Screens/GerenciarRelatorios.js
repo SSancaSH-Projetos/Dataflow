@@ -21,24 +21,19 @@ const GerenciarRelatorios = ({ navigation }) => {
   const [turmaPorCurso, setTurmaPorCurso] = useState([]);
   const [ucId, setUcId] = useState("");
   const [uCsPorCurso, setUCsPorCurso] = useState([]);
-  const [saId, setSaId] = useState("");
-  const [saPorUC, setSaPorUc] = useState([]);
-  const [alunosPorTurma, setAlunosPorTurma] = useState([]);
   const [alunoId, setAlunoId] = useState("");
+  const [alunosPorTurma, setAlunosPorTurma] = useState([]);
   const [alunoNome, setAlunoNome] = useState("");
   const [sigla, setSigla] = useState("");
-  const [saTitulo, setSaTitulo] = useState("");
   const [tabelaVisivel, setTabelaVisivel] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [capacidadePorUC, setCapacidadePorUC] = useState([]);
-  const [capaDescricao, setCapaDescricao] = useState("");
   const [criterioPorCapacidade, setCriterioPorCapacidade] = useState([]);
-  const [capacidadeNome, setCapacidadeNome] = useState("");
   const [totalCritico, setTotalCritico] = useState("");
   const [totalDesejavel, setTotalDesejavel] = useState("");
-  const [atendidosCritico, setAtendidosCritico]= useState("");
-  const [naoAtendidosCritico, setNaoAtendidosCritico]= useState("");
+  const [atendidosCritico, setAtendidosCritico] = useState("");
+  const [naoAtendidosCritico, setNaoAtendidosCritico] = useState("");
 
   const [modalContent, setModalContent] = useState({
     title: "",
@@ -46,25 +41,12 @@ const GerenciarRelatorios = ({ navigation }) => {
     actions: null,
   });
 
-  const fetchCapacidadeNome = async (capacidadeId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/capacidade/pesquisaId/${capacidadeId}`
-      );
-      setCapacidadeNome(response.data.nome);
-    } catch (error) {
-      console.error("Erro ao obter nome da capacidade:", error);
-    }
-  };
-
   const fetchCriterioPorCapacidade = async (capacidadeId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
       );
-      console.log("entrei no fech", `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`);
       setCriterioPorCapacidade(response.data);
-      console.log(criterioPorCapacidade)
     } catch (error) {
       console.error("Erro ao obter criterio por Capacidade:", error);
     }
@@ -73,9 +55,8 @@ const GerenciarRelatorios = ({ navigation }) => {
   const fetchAtendidosCritico = async (alunoId, ucId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/capacidade/contarAtendidosCriticos/${alunoId}/${ucId}`
-      )
-  ;
+        `http://localhost:8080/avaliacao/contarCriticosAtendidos/${alunoId}/${ucId}`
+      );
       setAtendidosCritico(response.data);
     } catch (error) {
       console.error("Erro ao obter total de critérios atendidos criticos:", error);
@@ -85,15 +66,13 @@ const GerenciarRelatorios = ({ navigation }) => {
   const fetchNaoAtendidosCritico = async (alunoId, ucId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/capacidade/contarNaoAtendidosCriticos/${alunoId}/${ucId}`
+        `http://localhost:8080/avaliacao/contarCriticosNaoAtendidos/${alunoId}/${ucId}`
       );
       setNaoAtendidosCritico(response.data);
     } catch (error) {
       console.error("Erro ao obter total de critérios não atendidos criticos:", error);
     }
   };
-  
-
 
   const fetchTotalCritico = async (ucId) => {
     try {
@@ -117,7 +96,6 @@ const GerenciarRelatorios = ({ navigation }) => {
     }
   };
   
-
   const fetchCursos = async () => {
     try {
       const response = await axios.get("http://localhost:8080/curso");
@@ -146,17 +124,6 @@ const GerenciarRelatorios = ({ navigation }) => {
       setUCsPorCurso(response.data);
     } catch (error) {
       console.error("Erro ao obter UCS por CURSOS:", error);
-    }
-  };
-
-  const fetchSituacaoDeAprendizagemPorUnidadeCurricular = async (ucId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/uc/pesquisaSaporUC/${ucId}`
-      );
-      setSaPorUc(response.data);
-    } catch (error) {
-      console.error("Erro ao obter sa por uc:", error);
     }
   };
 
@@ -193,18 +160,6 @@ const GerenciarRelatorios = ({ navigation }) => {
     }
   };
 
-  const fetchSaTitulo = async (saId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/sa/pesquisaId/${saId}`
-      );
-      setSaTitulo(response.data.titulo);
-    } catch (error) {
-      console.error("Erro ao obter descrição da SA:", error);
-    }
-  };
-
-
   const fetchCapacidadePorUC = async (ucId) => {
     try {
       const response = await axios.get(
@@ -212,41 +167,45 @@ const GerenciarRelatorios = ({ navigation }) => {
       );
       setCapacidadePorUC(response.data);
     } catch (error) {
-      console.error("Erro ao obter sa por ucs:", error);
-    }
-  };
-
-  // :D
-  const fetchCriteriosDesejaveis = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/criterio/tipo/desejavel`
-      );
-      setCriteriosDesejaveis(response.data);
-    } catch (error) {
-      console.error("Erro ao obter critérios:", error);
-    }
-  };
-
-  const fetchCriteriosCriticos = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/criterio/tipo/critico`
-      );
-      setCriteriosCriticos(response.data);
-    } catch (error) {
-      console.error("Erro ao obter critérios:", error);
+      console.error("Erro ao obter capacidade por ucs:", error);
     }
   };
 
   useEffect(() => {
     fetchCursos();
-    fetchCursosPorTurma();
-    fetchUnidadesCurricularesPorCurso();
-    fetchSituacaoDeAprendizagemPorUnidadeCurricular();
-    fetchAlunosPorTurma();
-    fetchCapacidadePorUC();
   }, []);
+
+  useEffect(() => {
+    if (curso) {
+      fetchCursosPorTurma(curso);
+      fetchUnidadesCurricularesPorCurso(curso);
+    }
+  }, [curso]);
+
+  useEffect(() => {
+    if (turmaId) {
+      fetchAlunosPorTurma(turmaId);
+    }
+  }, [turmaId]);
+
+  useEffect(() => {
+    if (alunoId) {
+      fetchAlunoNome(alunoId);
+      if (ucId) {
+        fetchAtendidosCritico(alunoId, ucId);
+        fetchNaoAtendidosCritico(alunoId, ucId);
+      }
+    }
+  }, [alunoId, ucId]);
+
+  useEffect(() => {
+    if (ucId) {
+      fetchTotalCritico(ucId);
+      fetchTotalDesejavel(ucId);
+      fetchCapacidadePorUC(ucId);
+      fetchUcNome(ucId);
+    }
+  }, [ucId]);
 
   return (
     <ScrollView>
@@ -274,11 +233,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 labelId="curso-select-label"
                 id="curso-select"
                 value={curso}
-                onChange={(e) => {
-                  setCursoId(e.target.value);
-                  fetchCursosPorTurma(e.target.value);
-                  fetchUnidadesCurricularesPorCurso(e.target.value);
-                }}
+                onChange={(e) => setCursoId(e.target.value)}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
@@ -298,10 +253,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 labelId="turma-select-label"
                 id="turma-select"
                 value={turmaId}
-                onChange={(e) => {
-                  setTurmaId(e.target.value);
-                  fetchAlunosPorTurma(e.target.value);
-                }}
+                onChange={(e) => setTurmaId(e.target.value)}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
@@ -321,10 +273,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 labelId="aluno-select-label"
                 id="aluno-select"
                 value={alunoId}
-                onChange={(e) => {
-                  setAlunoId(e.target.value);
-                  fetchAlunoNome(e.target.value);
-                }}
+                onChange={(e) => setAlunoId(e.target.value)}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
@@ -344,16 +293,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 labelId="uc-select-label"
                 id="uc-select"
                 value={ucId}
-                onChange={(e) => {
-                  setUcId(e.target.value);
-                  fetchSituacaoDeAprendizagemPorUnidadeCurricular(
-                    e.target.value);
-
-                  fetchTotalCritico(e.target.value); // Chama a função para buscar o total de critérios críticos
-                  fetchTotalDesejavel(e.target.value);
-                  fetchCapacidadePorUC(e.target.value);
-                  fetchUcNome(e.target.value);
-                }}
+                onChange={(e) => setUcId(e.target.value)}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
@@ -368,7 +308,6 @@ const GerenciarRelatorios = ({ navigation }) => {
                   </MenuItem>
                 ))}
               </Select>
-
 
               <Button
                 variant="contained"
@@ -408,101 +347,64 @@ const GerenciarRelatorios = ({ navigation }) => {
                       <strong>Nome da UC:</strong> {sigla}
                     </Typography>
                   )}
-                  {saTitulo && (
-                    <Typography variant="body2" color="textPrimary">
-                      <strong>Titulo da SA:</strong> {saTitulo}
-                    </Typography>
-                  )}
-                  {capaDescricao && (
-                    <Typography variant="body2" color="textPrimary">
-                      <strong>Capacidade:</strong> {capaDescricao}
-                    </Typography>
-                  )}
                 </CardContent>
               </Card>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                <Card>
+                  <Card>
                     <CardContent>
                       <Typography variant="h6">Critérios Críticos</Typography>
                       <Typography> Total: {totalCritico}</Typography>
                       <Typography> Atendidos: {atendidosCritico}</Typography>
                       <Typography> Não atendidos: {naoAtendidosCritico}</Typography>
-                      <Typography> Não avaliados: {totalCritico - (atendidosCritico + naoAtendidosCritico)}</Typography>
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <Card>
+                  <Card>
                     <CardContent>
                       <Typography variant="h6">Critérios Desejáveis</Typography>
                       <Typography> Total: {totalDesejavel}</Typography> 
                       <Typography> Atendidos: </Typography>
                       <Typography> Não atendidos: </Typography>
-                      <Typography> Não avaliados: </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
               </Grid>
               {capacidadePorUC.map((capacidade) => (
-              <Card style={{ marginTop: 20, marginBottom: 20 }}>
-                <CardContent>
-                    <Card key={capacidade.id} value={capacidade.id}>
-                    
-                    <Typography variant="h6">Capacidade: {capacidadeNome}</Typography>
-                      <CardContent>
-                        {criterioPorCapacidade.map((criterio)=>(
-                        <TableContainer component={Paper}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Critério</TableCell>
-                                <TableCell>Tipo de critério</TableCell>
-                                <TableCell>Status</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
+                <Card style={{ marginTop: 20, marginBottom: 20 }} key={capacidade.id}>
+                  <CardContent>
+                    <Typography variant="h6">Capacidade: {capacidade.descricao}</Typography>
+                    <CardContent>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Critério</TableCell>
+                              <TableCell>Tipo de critério</TableCell>
+                              <TableCell>Status</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {capacidade.criterios.map((criterio) => (
                               <TableRow key={criterio.id}>
                                 <TableCell>{criterio.descricao}</TableCell>
                                 <TableCell>{criterio.tipo}</TableCell>
                                 <TableCell>Status aqui</TableCell>
                               </TableRow>
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                        ))};
-                        <List>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CheckCircleIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Critério A atingido" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CancelIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Critério B Não atingido" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CropSquareIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Critério Não avaliado" />
-                    </ListItem>
-                  </List>
-                  <Typography variant="body2">
-                    <p> Legenda </p>
-                    <CheckCircleIcon /> Critério atingido
-                    <CancelIcon /> Critério não atingido
-                    <CropSquareIcon /> Critério não avaliado
-                  </Typography>
-                      </CardContent>
-                    </Card>
-                  
-                </CardContent>
-              </Card>
-            ))}
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Typography variant="body2">
+                        <p>Legenda</p>
+                        <CheckCircleIcon /> Critério atingido
+                        <CancelIcon /> Critério não atingido
+                      </Typography>
+                    </CardContent>
+                  </CardContent>
+                </Card>
+              ))}
             </View>
           </View>
         </View>

@@ -92,15 +92,15 @@ public class CapacidadeResource {
 		}
 			
 	}
-	@GetMapping("/contagemTotalCriticos/{ucId}")
-	public long countTotalDeCriteriosCriticosByCapacidadeId(@PathVariable Long ucId) {
-		return criterioRepository.countTotalDeCriteriosCriticosByUcId(ucId);
-	}
+//	@GetMapping("/contagemTotalCriticos/{ucId}")
+//	public long countTotalDeCriteriosCriticosByCapacidadeId(@PathVariable Long ucId) {
+//		return criterioRepository.countTotalDeCriteriosCriticosByUcId(ucId);
+//	}
 
-	@GetMapping("/contagemTotalDesejavel/{ucId}")
-	public long countTotalDeCriteriosDesejavelByCapacidadeId(@PathVariable Long ucId) {
-		return criterioRepository.countTotalDeCriteriosDesejavelByUcId(ucId);
-	}
+//	@GetMapping("/contagemTotalDesejavel/{ucId}")
+//	public long countTotalDeCriteriosDesejavelByCapacidadeId(@PathVariable Long ucId) {
+//		return criterioRepository.countTotalDeCriteriosDesejaveisByUcId(ucId);
+//	}
 	@DeleteMapping("/delete/{id}")
 	public void deleteCapacidade(@PathVariable Long id) {
 		capacidadeRepository.deleteById(id);

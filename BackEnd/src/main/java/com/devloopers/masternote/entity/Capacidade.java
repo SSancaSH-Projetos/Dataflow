@@ -43,7 +43,7 @@ public class Capacidade implements Serializable {
     @JoinColumn(name = "uc_id")
     private UC uc;
 
-    @JsonIgnore
+    
     @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Criterio> criterios;
 

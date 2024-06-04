@@ -103,19 +103,17 @@ public class AvaliacaoResource {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/listarCriterioCriticoPorAlunoAndUc/{alunoId}/{ucId}")
-    public ResponseEntity<List<Criterio>> getCriticoCriterios(@PathVariable Long alunoId, @PathVariable Long ucId) {
-        List<Criterio> criteriosCriticos = avaliacaoRepository.findCriticoCriteriosByAlunoAndUc(alunoId, ucId);
-        return ResponseEntity.ok(criteriosCriticos);
+    
+    @GetMapping("/contarCriticosAtendidos/{alunoId}/{ucId}")
+    public Long contarCriticosAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        return avaliacaoRepository.countAtendeCriticoCriteriosByAlunoAndUc(alunoId, ucId);
     }
-
-    @GetMapping("/listarCriterioDesejavelPorAlunoAndUc/{alunoId}/{ucId}")
-    public ResponseEntity<List<Criterio>> getDesejavelCriterios(@PathVariable Long alunoId, @PathVariable Long ucId) {
-        List<Criterio> criteriosDesejaveis = avaliacaoRepository.findDesejavelCriteriosByAlunoAndUc(alunoId, ucId);
-        return ResponseEntity.ok(criteriosDesejaveis);
+    
+    @GetMapping("/contarCriticosNaoAtendidos/{alunoId}/{ucId}")
+    public Long contarCriticosNaoAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        return avaliacaoRepository.countNaoAtendeCriticoCriteriosByAlunoAndUc(alunoId, ucId);
     }
-
+    
     @GetMapping("/listarCriterioCriticoNaoAtendidoPorAlunoAndUc/{alunoId}/{ucId}")
     public ResponseEntity<List<Criterio>> getCriticoCriteriosNaoAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
         List<Criterio> criteriosCriticos = avaliacaoRepository.findNaoAtendidoCriticoCriteriosByAlunoAndUc(alunoId, ucId);
@@ -128,15 +126,8 @@ public class AvaliacaoResource {
         return ResponseEntity.ok(criteriosDesejaveis);
     }
 
-    @GetMapping("/contarDesejavel")
-    public long countCriteriosWithDInTipo() {
-        return criterioRepository.countByTipoContainingD();
-    }
     
-    @GetMapping("/contarCritico")
-    public long countByTipoContainingC() {
-        return criterioRepository.countByTipoContainingC();
-    }
+    
     
 
     @DeleteMapping("/delete/{id}")

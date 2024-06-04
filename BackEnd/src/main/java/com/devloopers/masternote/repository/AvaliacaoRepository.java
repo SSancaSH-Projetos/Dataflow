@@ -16,22 +16,21 @@ import java.util.List;
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
 
 
-	@Query("SELECT c FROM Avaliacao a " +
-			"JOIN a.criterio c " +
-			"WHERE a.uc.id = :ucId " +
-			"AND a.aluno.id = :alunoId " +
-			"AND a.resultado = 'atende' " +
-			"AND c.tipo = 'critico'")
-	List<Criterio> findCriticoCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
+	@Query("SELECT COUNT(c) FROM Avaliacao a " +
+		       "JOIN a.criterio c " +
+		       "WHERE a.uc.id = :ucId " +
+		       "AND a.aluno.id = :alunoId " +
+		       "AND a.resultado = 'atende' " +
+		       "AND c.tipo = 'critico'")
+		Long countAtendeCriticoCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 
-
-	@Query("SELECT c FROM Avaliacao a " +
-			"JOIN a.criterio c " +
-			"WHERE a.uc.id = :ucId " +
-			"AND a.aluno.id = :alunoId " +
-			"AND a.resultado = 'atende' " +
-			"AND c.tipo = 'desejavel'")
-	List<Criterio> findDesejavelCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
+		@Query("SELECT COUNT(c) FROM Avaliacao a " +
+		       "JOIN a.criterio c " +
+		       "WHERE a.uc.id = :ucId " +
+		       "AND a.aluno.id = :alunoId " +
+		       "AND a.resultado = 'naoAtende' " +
+		       "AND c.tipo = 'critico'")
+		Long countNaoAtendeCriticoCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 
 
 	@Query("SELECT c FROM Avaliacao a " +
