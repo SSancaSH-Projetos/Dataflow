@@ -35,6 +35,7 @@ const GerenciarCapacidades = ({ navigation }) => {
   const [editCapacidade, setEditCapacidade] = useState(null);
   const [editedCapacidade, setEditedCapacidade] = useState(null);
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const fetchCapacidade = async () => {
     try {
@@ -60,6 +61,10 @@ const GerenciarCapacidades = ({ navigation }) => {
   }, []);
 
   const handleAddCapacidade = async () => {
+    if (!descricao || !ucId || !tipo) {
+      setMensagemAviso("Por favor, preencha todos os campos.");
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/capacidade", {
         descricao: descricao,
@@ -69,6 +74,7 @@ const GerenciarCapacidades = ({ navigation }) => {
       console.log(response.data);
       limparCampos();
       fetchCapacidade();
+
     } catch (error) {
       console.error("Erro ao adicionar capacidade:", error);
     }
@@ -176,6 +182,12 @@ const GerenciarCapacidades = ({ navigation }) => {
                 <MenuItem value="Técnica">Técnica</MenuItem>
                 <MenuItem value="Socioemocional">Socioemocional</MenuItem>
               </Select>
+
+              {mensagemAviso && (
+                <Typography color="error" style={styles.mensagemAviso}>
+                  {mensagemAviso}
+                </Typography>
+              )}
 
               <Button
                 variant="contained"
@@ -295,6 +307,9 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
   },
+  mensagemAviso: {
+    marginBottom: 10
+  }
 });
 
 export default GerenciarCapacidades;

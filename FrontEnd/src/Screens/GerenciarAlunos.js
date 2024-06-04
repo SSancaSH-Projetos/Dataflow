@@ -14,7 +14,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
@@ -28,6 +28,7 @@ const GerenciarAlunos = ({ navigation }) => {
   const [editAluno, setEditAluno] = useState(null);
   const [editedAluno, setEditedAluno] = useState(null);
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const handleEditarAluno = (aluno) => {
     setEditAluno(aluno);
@@ -71,6 +72,10 @@ const GerenciarAlunos = ({ navigation }) => {
   }, []);
 
   const handleAddAluno = async () => {
+    if (!nome || !numeroChamada) {
+      setMensagemAviso("Por favor, preencha todos os campos. ");
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/aluno", {
         nome: nome,
@@ -79,6 +84,7 @@ const GerenciarAlunos = ({ navigation }) => {
       console.log(response.data);
       limparCampos();
       fetchAlunos();
+      setMensagemAviso("");
     } catch (error) {
       console.error("Erro ao adicionar aluno:", error);
     }
@@ -88,7 +94,7 @@ const GerenciarAlunos = ({ navigation }) => {
     setNome("");
     setNumeroChamada("");
   };
-  
+
   const handleDeletarAluno = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/aluno/delete/${id}`);
@@ -128,6 +134,11 @@ const GerenciarAlunos = ({ navigation }) => {
                 fullWidth
                 style={styles.input}
               />
+              {mensagemAviso && (
+                <Typography color="error" style={styles.mensagemAviso}>
+                  {mensagemAviso}
+                </Typography>
+              )}
               <Button
                 variant="contained"
                 color="primary"
@@ -187,7 +198,10 @@ const GerenciarAlunos = ({ navigation }) => {
               label="Numero da Chamada"
               value={editedAluno ? editedAluno.numeroChamada : ""}
               onChange={(e) =>
-                setEditedAluno({ ...editedAluno, numeroChamada: e.target.value })
+                setEditedAluno({
+                  ...editedAluno,
+                  numeroChamada: e.target.value,
+                })
               }
               fullWidth
               variant="outlined"
@@ -231,6 +245,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  mensagemAviso: {
+    marginBottom: 10,
   },
 });
 

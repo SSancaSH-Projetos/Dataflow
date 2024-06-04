@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.devloopers.masternote.dto.CapacidadeDTORequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -20,15 +21,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "capacidade")
 public class Capacidade implements Serializable {
-	private static final long serialVersionUID = 1L; 
-	
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_capacidade")
@@ -37,26 +37,19 @@ public class Capacidade implements Serializable {
     private String descricao;
 
     private String tipo;
-    
-   // @ManyToOne
-   // @JoinColumn(name = "capacidade_id_capacidade")
-  //  private Capacidade capacidade;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "uc_id")
     private UC uc;
-    
+
     @JsonIgnore
-    @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Criterio> criterios;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "capacidade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
-
-    //@ManyToOne
-    //@JoinColumn(name = "sa_id_sa")
-   // private SA sa;
 
     // getters e setters
 
@@ -65,11 +58,19 @@ public class Capacidade implements Serializable {
     }
 
     public static Capacidade of(CapacidadeDTORequest capacidadeDTO) {
-    	Capacidade capacidade = new Capacidade();
-    	capacidade.setId(capacidadeDTO.getId());
-    	capacidade.setDescricao(capacidadeDTO.getDescricao());
-    	capacidade.setTipo(capacidadeDTO.getTipo());
-    	return capacidade;
+        Capacidade capacidade = new Capacidade();
+        capacidade.setId(capacidadeDTO.getId());
+        capacidade.setDescricao(capacidadeDTO.getDescricao());
+        capacidade.setTipo(capacidadeDTO.getTipo());
+        return capacidade;
+    }
+
+    @Override
+    public String toString() {
+        return "Capacidade{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                ", tipo='" + tipo + '\'' +
+                '}';
     }
 }
-

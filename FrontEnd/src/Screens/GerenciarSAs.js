@@ -32,6 +32,7 @@ const GerenciarSAs = ({ navigation }) => {
   const [sas, setSas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editedSa, setEditedSa] = useState(null);
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const fetchUc = async () => {
     try {
@@ -58,6 +59,10 @@ const GerenciarSAs = ({ navigation }) => {
   }, []);
 
   const handleAddSas = async () => {
+    if (!ucId || !titulo || !descricao || !tipo) {
+      setMensagemAviso("Por favor, preencha todos os campos.");
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/sa", {
         titulo: titulo,
@@ -72,6 +77,7 @@ const GerenciarSAs = ({ navigation }) => {
       console.error("Erro ao adicionar sa:", error);
     }
   };
+  
 
   const handleDeletarSA = async (id) => {
     try {
@@ -198,6 +204,12 @@ const GerenciarSAs = ({ navigation }) => {
                   Formativa e Somativa
                 </MenuItem>
               </Select>
+
+              {mensagemAviso && (
+                <Typography color="error" style={styles.mensagemAviso}>
+                  {mensagemAviso}
+                </Typography>
+              )}
 
               <Button
                 variant="contained"
@@ -369,6 +381,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  mensagemAviso: {
+    marginBottom: 10
+  }
 });
 
 export default GerenciarSAs;

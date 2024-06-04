@@ -17,14 +17,13 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Alert
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
-import SaveIcon from '@mui/icons-material/Save';
-import GenericModal from '../Components/Modal';
-
+import SaveIcon from "@mui/icons-material/Save";
+import GenericModal from "../Components/Modal";
 
 const GerenciarAvaliacao = ({ navigation }) => {
   const [curso, setCursoId] = useState("");
@@ -50,11 +49,13 @@ const GerenciarAvaliacao = ({ navigation }) => {
   const [avaliacao, setAvaliacao] = useState([]);
   const [criterioId, setCriterioId] = useState("");
 
-
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [modalContent, setModalContent] = useState({ title: '', message: '', actions: null });
-
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    message: "",
+    actions: null,
+  });
 
   function createData(criterio, tipoCriterio, capacidade, tipoCapacidade) {
     return { criterio, tipoCriterio, capacidade, tipoCapacidade };
@@ -80,7 +81,9 @@ const GerenciarAvaliacao = ({ navigation }) => {
 
   const fetchAlunosPorTurma = async (turmaId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/turma/buscarAlunosDaTurma/${turmaId}`);
+      const response = await axios.get(
+        `http://localhost:8080/turma/buscarAlunosDaTurma/${turmaId}`
+      );
       setAlunosPorTurma(response.data);
     } catch (error) {
       console.error("Erro ao obter alunos por turma:", error);
@@ -92,9 +95,12 @@ const GerenciarAvaliacao = ({ navigation }) => {
       const response = await axios.get(
         `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
       );
-      console.log("entrei no fech", `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`);
+      console.log(
+        "entrei no fech",
+        `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
+      );
       setCriterioPorCapacidade(response.data);
-      console.log(criterioPorCapacidade)
+      console.log(criterioPorCapacidade);
     } catch (error) {
       console.error("Erro ao obter criterio por Capacidade:", error);
     }
@@ -122,7 +128,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchCapacidadePorUC = async (ucId) => {
+  const fetchCapacidadePorUc = async (ucId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/uc/pesquisaCapacidadesUc/${ucId}`
@@ -162,9 +168,11 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-  const fetchCapacidadePorUc = async () => {
+  const fetchCapacidades = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/uc/pesquisaCapacidadesUc/${id}");
+      const response = await axios.get(
+        "http://localhost:8080/uc/pesquisaCapacidadesUc/${ucId}"
+      );
       setCapacidades(response.data);
     } catch (error) {
       console.error("Erro ao obter capacidade", error);
@@ -189,36 +197,42 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
 
     try {
-      for (const [criterioId, resultado] of Object.entries(alunoSelectedOptions)) {
-        const avaliacaoData = [{
-          resultado: resultado,
-          curso: curso,
-          turma: turmaId,
-          uc: ucId,
-          aluno: alunoId,
-          capacidade: capacidadeId,
-          criterio: parseInt(criterioId),
-          sa: saId,
-        }];
+      for (const [criterioId, resultado] of Object.entries(
+        alunoSelectedOptions
+      )) {
+        const avaliacaoData = [
+          {
+            resultado: resultado,
+            curso: curso,
+            turma: turmaId,
+            uc: ucId,
+            aluno: alunoId,
+            capacidade: capacidadeId,
+            criterio: parseInt(criterioId),
+            sa: saId,
+          },
+        ];
 
         console.log(avaliacaoData);
 
-        const response = await axios.post("http://localhost:8080/avaliacao", avaliacaoData);
+        const response = await axios.post(
+          "http://localhost:8080/avaliacao",
+          avaliacaoData
+        );
         // Define o conteúdo do modal para sucesso
         setModalContent({
-          title: 'Sucesso!',
-          message: 'Avaliação adicionada com sucesso.',
+          title: "Sucesso!",
+          message: "Avaliação adicionada com sucesso.",
           actions: <Button onClick={() => setOpenModal(false)}>Fechar</Button>,
         });
         setOpenModal(true);
-
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data : error.message;
 
       // Define o conteúdo do modal para erro
       setModalContent({
-        title: 'Erro',
+        title: "Erro",
         message: `Erro ao adicionar avaliação: ${errorMessage}`,
         actions: <Button onClick={() => setOpenModal(false)}>Fechar</Button>,
       });
@@ -226,18 +240,15 @@ const GerenciarAvaliacao = ({ navigation }) => {
     }
   };
 
-
   const handleAvancar = async () => {
     setTabelaVisivel(true);
     setDisabled(true);
   };
 
-
   const handleCancelar = () => {
     setDisabled(false);
     setTabelaVisivel(false);
   };
-
 
   const handleCheckChange = (alunoId, criterioId, value) => {
     setSelectedOptions({
@@ -260,7 +271,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
         fetchCursos(),
         fetchTurmas(),
         fetchUnidadesCurriculares(),
-        fetchCapacidadePorUc(),
+        fetchCapacidades(),
         fetchSituacaoDeAprendizagem(),
       ]);
       setIsLoading(false);
@@ -344,8 +355,10 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 value={ucId}
                 onChange={(e) => {
                   setUcId(e.target.value);
-                  fetchCapacidadePorUC(e.target.value);
-                  fetchSituacaoDeAprendizagemPorUnidadeCurricular(e.target.value);
+                  fetchCapacidadePorUc(e.target.value);
+                  fetchSituacaoDeAprendizagemPorUnidadeCurricular(
+                    e.target.value
+                  );
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
@@ -387,12 +400,12 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 value={capacidadeId}
                 onChange={(e) => {
                   setCapacidadeId(e.target.value);
-                  fetchCriterioPorCapacidade(e.target.value); // Aqui você está passando o valor selecionado
+                  fetchCriterioPorCapacidade(e.target.value); // Fetch criteria when capacity changes
                 }}
                 sx={{ marginBottom: "20px" }}
                 displayEmpty
                 style={styles.inputSelect}
-                disabled={disabled} // Adiciona esta linha
+                disabled={disabled}
               >
                 <MenuItem value="" disabled>
                   Selecionar Capacidade
@@ -435,7 +448,10 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 Alunos
               </Typography>
               {!tabelaVisivel && (
-                <Alert severity="warning">Você deve selecionar no menu ao lado as opções para iniciar uma avaliação.</Alert>
+                <Alert severity="warning">
+                  Você deve selecionar no menu ao lado as opções para iniciar
+                  uma avaliação.
+                </Alert>
               )}
               {tabelaVisivel && (
                 <View>
@@ -450,7 +466,10 @@ const GerenciarAvaliacao = ({ navigation }) => {
                       </AccordionSummary>
                       <AccordionDetails>
                         <div style={{ overflowX: "auto", width: "100%" }}>
-                          <Typography variant="h6" style={{ textAlign: "center" }}>
+                          <Typography
+                            variant="h6"
+                            style={{ textAlign: "center" }}
+                          >
                             Critérios
                           </Typography>
                           <Table>
@@ -469,9 +488,17 @@ const GerenciarAvaliacao = ({ navigation }) => {
                                   <TableCell>
                                     <RadioGroup
                                       row
-                                      value={selectedOptions[aluno.id]?.[criterio.id] || ""}
+                                      value={
+                                        selectedOptions[aluno.id]?.[
+                                          criterio.id
+                                        ] || ""
+                                      }
                                       onChange={(e) =>
-                                        handleCheckChange(aluno.id, criterio.id, e.target.value)
+                                        handleCheckChange(
+                                          aluno.id,
+                                          criterio.id,
+                                          e.target.value
+                                        )
                                       }
                                     >
                                       <FormControlLabel
@@ -501,7 +528,6 @@ const GerenciarAvaliacao = ({ navigation }) => {
                           Guardar avaliação de {aluno.nome}
                         </Button>
                       </AccordionActions>
-
                     </Accordion>
                   ))}
 

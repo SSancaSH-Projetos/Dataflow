@@ -104,6 +104,29 @@ public class AvaliacaoResource {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/listarCriterioCriticoPorAlunoAndUc/{alunoId}/{ucId}")
+    public ResponseEntity<List<Criterio>> getCriticoCriterios(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        List<Criterio> criteriosCriticos = avaliacaoRepository.findCriticoCriteriosByAlunoAndUc(alunoId, ucId);
+        return ResponseEntity.ok(criteriosCriticos);
+    }
+
+    @GetMapping("/listarCriterioDesejavelPorAlunoAndUc/{alunoId}/{ucId}")
+    public ResponseEntity<List<Criterio>> getDesejavelCriterios(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        List<Criterio> criteriosDesejaveis = avaliacaoRepository.findDesejavelCriteriosByAlunoAndUc(alunoId, ucId);
+        return ResponseEntity.ok(criteriosDesejaveis);
+    }
+
+    @GetMapping("/listarCriterioCriticoNaoAtendidoPorAlunoAndUc/{alunoId}/{ucId}")
+    public ResponseEntity<List<Criterio>> getCriticoCriteriosNaoAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        List<Criterio> criteriosCriticos = avaliacaoRepository.findNaoAtendidoCriticoCriteriosByAlunoAndUc(alunoId, ucId);
+        return ResponseEntity.ok(criteriosCriticos);
+    }
+
+    @GetMapping("/listarCriterioDesejavelNaoAtendidoPorAlunoAndUc/{alunoId}/{ucId}")
+    public ResponseEntity<List<Criterio>> getDesejavelCriteriosNaoAtendido(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        List<Criterio> criteriosDesejaveis = avaliacaoRepository.findNaoAtendidoDesejavelCriteriosByAlunoAndUc(alunoId, ucId);
+        return ResponseEntity.ok(criteriosDesejaveis);
+    }
 
     @GetMapping("/contarDesejavel")
     public long countCriteriosWithDInTipo() {
@@ -114,17 +137,7 @@ public class AvaliacaoResource {
     public long countByTipoContainingC() {
         return criterioRepository.countByTipoContainingC();
     }
-
-    @GetMapping("/contarResultadoSCriterioCDoAluno/{id}")
-    public long countByTipoContainingSCriterioC(Long id) {
-        return avaliacaoRepository.countByResultadoSAndCriterioTipoCAndAlunoId(id);
-    }
-
-    @GetMapping("/contarResultadoSCriterioD")
-    public long countByTipoContainingSCriterioD() {
-        return avaliacaoRepository.countByResultadoSAndCriterioTipoD();
-    }
-
+    
 
     @DeleteMapping("/delete/{id}")
     public void deleteAvaliacao(@PathVariable Long id) {

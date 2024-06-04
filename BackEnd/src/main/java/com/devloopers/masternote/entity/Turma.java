@@ -27,7 +27,7 @@ public class Turma {
     @Column(name = "sigla")
     private String sigla;
 
-    @JsonIgnore
+    @JsonIgnore // Adicione esta anotação para evitar o looping infinito
     @ManyToOne
     @JoinColumn(name = "cursoId")
     private Curso curso;
@@ -36,9 +36,11 @@ public class Turma {
         this.id = id;
     }
 
+    @JsonIgnore // Adicione esta anotação para evitar o looping infinito
     @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aluno> alunos;
 
+    @JsonIgnore // Adicione esta anotação para evitar o looping infinito
     @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
 
@@ -49,3 +51,4 @@ public class Turma {
         return turma;
     }
 }
+

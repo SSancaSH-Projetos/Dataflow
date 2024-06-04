@@ -40,6 +40,7 @@ const GerenciarCursos = ({ navigation }) => {
   const [cursos, setCursos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editedCurso, setEditedCurso] = useState(null);
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const fetchCursos = async () => {
     try {
@@ -55,6 +56,10 @@ const GerenciarCursos = ({ navigation }) => {
   }, []);
 
   const handleAddCurso = async () => {
+    if(!nome || !cargaHoraria || !nivel){
+      setMensagemAviso("Por favor, preencha todos os campos. ");
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/curso", {
         nome: nome,
@@ -64,6 +69,7 @@ const GerenciarCursos = ({ navigation }) => {
       console.log(response.data);
       limparCampos();
       fetchCursos();
+      setMensagemAviso("");
     } catch (error) {
       console.error("Erro ao adicionar curso:", error);
     }
@@ -152,6 +158,12 @@ const GerenciarCursos = ({ navigation }) => {
                 fullWidth
                 style={styles.input}
               />
+
+              {mensagemAviso && (
+                <Typography color="error" style={styles.mensagemAviso}>
+                  {mensagemAviso}
+                </Typography>
+              )}
 
               <Button
                 variant="contained"
@@ -274,6 +286,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  mensagemAviso: {
+    marginBottom: 10,
   },
 });
 

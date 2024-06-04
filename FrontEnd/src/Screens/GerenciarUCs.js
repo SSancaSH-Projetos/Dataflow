@@ -38,6 +38,7 @@ const GerenciarUCs = ({ navigation }) => {
   const [cursos, setCursos] = useState([]);
   const [editedUC, setEditedUC] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const handleEditarUC = (uc) => {
     setEditedUC(uc);
@@ -82,6 +83,10 @@ const GerenciarUCs = ({ navigation }) => {
   }, []);
 
   const handleAddUc = async () => {
+    if(!curso || !nomeUC || !sigla || !cargaHoraria || !modulo || !conhecimentos) {
+      setMensagemAviso("Por favor, preencha todos os campos.");
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/uc", {
         curso: curso,
@@ -94,6 +99,7 @@ const GerenciarUCs = ({ navigation }) => {
       console.log(response.data);
       fetchUc();
       limparCampos();
+      setMensagemAviso("");
     } catch (error) {
       console.error("Erro ao adicionar Unidade Curricular:", error);
     }
@@ -200,6 +206,13 @@ const GerenciarUCs = ({ navigation }) => {
                 fullWidth
                 style={styles.input}
               />
+
+                {mensagemAviso && (
+                  <Typography color="error" style={styles.mensagemAviso}>
+                    {mensagemAviso}
+                  </Typography>
+                )}
+
               <Button
                 variant="contained"
                 color="primary"
@@ -361,6 +374,9 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
   },
+  mensagemAviso: {
+    marginBottom: 10
+  }
 });
 
 export default GerenciarUCs;

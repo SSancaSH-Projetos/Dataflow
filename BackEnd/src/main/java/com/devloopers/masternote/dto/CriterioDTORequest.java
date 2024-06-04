@@ -13,16 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CriterioDTORequest {
-	
-	
+
+
     private Long id;
     private String descricao;
     private String tipo;
     private Long capId;
 
-    
-    
-    
-    
+
+
+
+
 
 }

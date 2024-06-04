@@ -1,13 +1,11 @@
 package com.devloopers.masternote.resource;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.devloopers.masternote.dto.UCDTOResponse;
 import com.devloopers.masternote.entity.Capacidade;
-import com.devloopers.masternote.entity.Criterio;
 import com.devloopers.masternote.entity.SA;
 import com.devloopers.masternote.repository.CapacidadeRepository;
 import com.devloopers.masternote.repository.CursoRepository;
@@ -28,45 +26,44 @@ import com.devloopers.masternote.dto.UCDTORequest;
 import com.devloopers.masternote.entity.UC;
 import com.devloopers.masternote.repository.UCRepository;
 
-
 @RestController
 @RequestMapping("/uc")
 public class UCResource {
+
 	@Autowired
-	private  UCRepository ucRepository;
+	private UCRepository ucRepository;
 
 	@Autowired
 	private CursoRepository cursoRepository;
 
 	@Autowired
 	private CapacidadeRepository capacidadeRepository;
+
 	@Autowired
 	private SARepository saRepository;
-	
+
 	@GetMapping
-	public Iterable<UCDTOResponse> findAll(){
+	public Iterable<UCDTOResponse> findAll() {
 		Iterable<UC> ucs = ucRepository.findAll();
 		List<UCDTOResponse> ucsDTO = new ArrayList<>();
-		for(UC uc: ucs) {
+		for (UC uc : ucs) {
 			UCDTOResponse ucDTO = UCDTOResponse.fromUC(uc);
 			ucsDTO.add(ucDTO);
 		}
 		return ucsDTO;
 	}
-	
-	
+
 	@GetMapping("/pesquisaId/{id}")
 	public UCDTOResponse findById(@PathVariable Long id) {
-		UC uc = ucRepository.findById(id).get();
-		UCDTOResponse ucDTO =  UCDTOResponse.fromUC(uc);
-		return ucDTO;
+		UC uc = ucRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("UC não encontrada com o ID: " + id));
+		return UCDTOResponse.fromUC(uc);
 	}
-	
+
 	@GetMapping("/pesquisaSigla/{sigla}")
-	public Iterable<UC> findBySigla(@PathVariable String sigla){
+	public Iterable<UC> findBySigla(@PathVariable String sigla) {
 		return ucRepository.findBySigla(sigla);
 	}
-	
+
 	@PostMapping
 	public UCDTOResponse createUC(@RequestBody UCDTORequest ucDTO) {
 		UC uc = UC.of(ucDTO);
@@ -75,29 +72,26 @@ public class UCResource {
 					throw new EntityNotFoundException("Curso não encontrado com o ID: " + ucDTO.getCurso());
 				});
 
-		return  UCDTOResponse.fromUC(ucRepository.save(uc));
+		return UCDTOResponse.fromUC(ucRepository.save(uc));
 	}
+
 	@GetMapping("/pesquisaCapacidadesUc/{id}")
-	public List<Capacidade> findByUcId(@PathVariable Long id){
-		UC uc = new UC();
-		uc.setId(id);
+	public List<Capacidade> findByUcId(@PathVariable Long id) {
+		UC uc = ucRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("UC não encontrada com o ID: " + id));
 		return capacidadeRepository.findByUc(uc);
 	}
 
 	@GetMapping("/pesquisaSaporUC/{id}")
-	public List<SA> findBySAporUC (@PathVariable Long id){
-		UC uc = new UC();
-		uc.setId(id);
+	public List<SA> findBySAporUC(@PathVariable Long id) {
+		UC uc = ucRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("UC não encontrada com o ID: " + id));
 		return saRepository.findByUc(uc);
 	}
-
-
 
 	@PutMapping("/update/{id}")
 	public ResponseEntity<UCDTOResponse> updateUC(@PathVariable Long id, @RequestBody UCDTORequest ucDTO) {
 		Optional<UC> ucOptional = ucRepository.findById(id);
-		
-		if(ucOptional.isPresent()) {
+
+		if (ucOptional.isPresent()) {
 			UC uc = ucOptional.get();
 			uc.setNomeUc(ucDTO.getNomeUC());
 			uc.setSigla(ucDTO.getSigla());
@@ -110,10 +104,9 @@ public class UCResource {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public void deleteUC(@PathVariable Long id) {
 		ucRepository.deleteById(id);
 	}
-
 }

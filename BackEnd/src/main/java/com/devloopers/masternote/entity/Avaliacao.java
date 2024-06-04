@@ -61,13 +61,13 @@ public class Avaliacao implements Serializable {
     @ManyToOne
     @JoinColumn(name = "sa_id")
     private SA sa;
-        
-    
-    
-    
-        
-    
-    public static Avaliacao of(AvaliacaoDTORequest avaliacaoDTO) {
+
+
+	public Avaliacao(Long id) {
+		this.id = id;
+	}
+
+	public static Avaliacao of(AvaliacaoDTORequest avaliacaoDTO) {
     	Avaliacao avaliacao = new Avaliacao();
     	avaliacao.setId(avaliacaoDTO.getId());
     	avaliacao.setCurso(new Curso (avaliacaoDTO.getCurso()));

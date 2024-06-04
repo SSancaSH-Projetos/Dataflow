@@ -32,6 +32,7 @@ const GerenciarCriterios = ({ navigation }) => {
   const [capId, setCapId] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editedCriterio, setEditedCriterio] = useState(null); // Alteração aqui
+  const [mensagemAviso, setMensagemAviso] = useState("");
 
   const fetchCriterios = async () => {
     try {
@@ -64,6 +65,10 @@ const GerenciarCriterios = ({ navigation }) => {
   }, []);
   
   const handleAddCriterios = async () => {
+    if (!descricao || !tipo || !capId){ 
+      setMensagemAviso("Por favor, preencha todos os campos.");
+      return;
+    } 
     try {
       const response = await axios.post("http://localhost:8080/criterio", {
         descricao: descricao,
@@ -199,6 +204,12 @@ const GerenciarCriterios = ({ navigation }) => {
                 <MenuItem value="Crítico">Crítico</MenuItem>
                 <MenuItem value="Desejável">Desejável</MenuItem>
               </Select>
+
+              {mensagemAviso && (
+                <Typography color="error" style={styles.mensagemAviso}>
+                  {mensagemAviso}
+                </Typography>
+              )}
 
               <Button
                 variant="contained"
@@ -356,6 +367,9 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
   },
+  mensagemAviso: {
+    marginBottom: 10
+  }
 });
 
 export default GerenciarCriterios;

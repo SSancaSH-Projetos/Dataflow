@@ -31,11 +31,12 @@ public class Aluno {
     @Column(name = "numero_chamada")
     private Integer numeroChamada;
 
-    @JsonIgnore
+    @JsonIgnore // Adicione esta anotação para evitar o looping infinito
     @ManyToOne
     @JoinColumn(name = "turma_id_turma")
     private Turma turma;
 
+    @JsonIgnore // Adicione esta anotação para evitar o looping infinito
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
 

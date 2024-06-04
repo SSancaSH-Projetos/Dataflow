@@ -1,6 +1,7 @@
 package com.devloopers.masternote.repository;
 
 
+import com.devloopers.masternote.entity.Criterio;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.devloopers.masternote.entity.Aluno;
@@ -9,18 +10,44 @@ import com.devloopers.masternote.entity.Avaliacao;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
 
-		Iterable<Avaliacao> findByAluno(Aluno aluno);
 
-	@Query("SELECT COUNT(a) FROM Avaliacao a JOIN a.criterio c JOIN a.aluno al WHERE a.resultado = 's' AND c.tipo = 'Critico' AND al.id = :alunoId")
-	long countByResultadoSAndCriterioTipoCAndAlunoId(@Param("alunoId") Long alunoId);
+	@Query("SELECT c FROM Avaliacao a " +
+			"JOIN a.criterio c " +
+			"WHERE a.uc.id = :ucId " +
+			"AND a.aluno.id = :alunoId " +
+			"AND a.resultado = 'atende' " +
+			"AND c.tipo = 'critico'")
+	List<Criterio> findCriticoCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 
 
-	@Query("SELECT COUNT(a) FROM Avaliacao a JOIN a.criterio c WHERE a.resultado = 's' AND c.tipo = 'Desejável'")
-	long countByResultadoSAndCriterioTipoD();
+	@Query("SELECT c FROM Avaliacao a " +
+			"JOIN a.criterio c " +
+			"WHERE a.uc.id = :ucId " +
+			"AND a.aluno.id = :alunoId " +
+			"AND a.resultado = 'atende' " +
+			"AND c.tipo = 'desejavel'")
+	List<Criterio> findDesejavelCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 
 
+	@Query("SELECT c FROM Avaliacao a " +
+			"JOIN a.criterio c " +
+			"WHERE a.uc.id = :ucId " +
+			"AND a.aluno.id = :alunoId " +
+			"AND a.resultado = 'naoAtende' " +
+			"AND c.tipo = 'critico'")
+	List<Criterio> findNaoAtendidoCriticoCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 
+
+	@Query("SELECT c FROM Avaliacao a " +
+			"JOIN a.criterio c " +
+			"WHERE a.uc.id = :ucId " +
+			"AND a.aluno.id = :alunoId " +
+			"AND a.resultado = 'naoAtende' " +
+			"AND c.tipo = 'desejavel'")
+	List<Criterio> findNaoAtendidoDesejavelCriteriosByAlunoAndUc(@Param("alunoId") Long alunoId, @Param("ucId") Long ucId);
 }
