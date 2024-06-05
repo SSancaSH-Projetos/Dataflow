@@ -63,7 +63,7 @@ public class CriterioResource {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<CriterioDTOResponse> update(@PathVariable Long id, @RequestBody CriterioDTORequest criterioDTORequest) {
         Optional<Criterio> optionalCriterio = criterioRepository.findById(id);
         if (optionalCriterio.isPresent()) {
@@ -84,7 +84,6 @@ public class CriterioResource {
             return ResponseEntity.notFound().build();
         }
     }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (criterioRepository.existsById(id)) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.devloopers.masternote.entity.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -104,10 +105,16 @@ public class TurmaResource {
 		Optional<Turma> turmaOptional = turmaRepository.findById(id);
 		
 		if(turmaOptional.isPresent()) {
-			Turma turma = turmaOptional.get();
-			turma.setSigla(turmaDTO.getSigla());
-			turmaRepository.save(turma);
-			return ResponseEntity.ok(TurmaDTOResponse.fromTurma(turma));
+			Optional<Curso> curso = cursoRepository.findById(turmaDTO.getCurso());
+			if (curso.isPresent()){
+				Turma turma = turmaOptional.get();
+				turma.setSigla(turmaDTO.getSigla());
+				turma.setCurso(curso.get());
+				turmaRepository.save(turma);
+				return ResponseEntity.ok(TurmaDTOResponse.fromTurma(turma));
+			}
+			return ResponseEntity.notFound().build();
+
 		} else {
 			return ResponseEntity.notFound().build();
 		}
