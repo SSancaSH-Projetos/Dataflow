@@ -148,7 +148,7 @@ const GerenciarCapacidades = ({ navigation }) => {
                 displayEmpty
               >
                 <MenuItem value="" disabled>
-                  Selecionar UC
+                  Selecionar Unidade Curricular
                 </MenuItem>
                 {ucs.map((uc) => (
                   <MenuItem key={uc.id} value={uc.id}>
@@ -203,10 +203,10 @@ const GerenciarCapacidades = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Capacidade</TableCell>
-                      <TableCell>Tipo</TableCell>
-                      <TableCell>UC</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Capacidade</b></TableCell>
+                      <TableCell> <b>Tipo</b></TableCell>
+                      <TableCell> <b>Unidade Curricular</b></TableCell>
+                      <TableCell><b> Ação </b> </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

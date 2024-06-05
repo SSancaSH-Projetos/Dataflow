@@ -127,7 +127,7 @@ const GerenciarAlunos = ({ navigation }) => {
                 style={styles.input}
               />
               <TextField
-                label="Numero da Chamada"
+                label="Número da Chamada"
                 value={numeroChamada}
                 onChange={(e) => setNumeroChamada(e.target.value)}
                 variant="outlined"
@@ -153,9 +153,9 @@ const GerenciarAlunos = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Nome do Aluno</TableCell>
-                      <TableCell>N° Da Chamada</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Nome do Aluno</b></TableCell>
+                      <TableCell><b>Número da Chamada</b></TableCell>
+                      <TableCell><b>Ação</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

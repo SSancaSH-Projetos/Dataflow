@@ -154,7 +154,7 @@ const GerenciarSAs = ({ navigation }) => {
                 displayEmpty
               >
                 <MenuItem value="" disabled>
-                  Selecionar UC
+                  Selecionar Unidade Curricular
                 </MenuItem>
                 {ucs.map((uc) => (
                   <MenuItem key={uc.id} value={uc.id}>
@@ -183,13 +183,13 @@ const GerenciarSAs = ({ navigation }) => {
               <Select
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
-                variant="outlined"
+                variant="outlined"  
                 fullWidth
                 displayEmpty
                 style={styles.input}
                 renderValue={(selected) => {
                   if (selected === "") {
-                    return <span style={{ color: "gray" }}>Tipo de SA</span>;
+                    return <span style={{ color: "gray" }}>Tipo de Situação de Aprendizagem</span>;
                   } else {
                     return selected;
                   }
@@ -225,10 +225,10 @@ const GerenciarSAs = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Situação de Aprendizagem</TableCell>
-                      <TableCell>Tipo</TableCell>
-                      <TableCell>Unidade Curricular</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Situação de Aprendizagem</b></TableCell>
+                      <TableCell><b>Tipo</b></TableCell>
+                      <TableCell><b>Unidade Curricular</b></TableCell>
+                      <TableCell><b>Ação</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -295,7 +295,7 @@ const GerenciarSAs = ({ navigation }) => {
               displayEmpty
             >
               <MenuItem value="" disabled>
-                Selecionar UC
+                Selecionar Unidade Curricular
               </MenuItem>
               {ucs.map((uc) => (
                 <MenuItem key={uc.id} value={uc.id}>
@@ -317,7 +317,7 @@ const GerenciarSAs = ({ navigation }) => {
               displayEmpty
               renderValue={(selected) => {
                 if (selected === "") {
-                  return <span style={{ color: "gray" }}>Tipo de SA</span>;
+                  return <span style={{ color: "gray" }}>Tipo de Situação de Aprendizagem</span>;
                 } else {
                   return selected;
                 }

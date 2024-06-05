@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Typography, MenuItem, Select, Button, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import {
+  Typography,
+  MenuItem,
+  Select,
+  Button,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  Box,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import axios from "axios";
 import TemplateCrud from "../Components/TemplateCrud";
 import GenericModal from "../Components/Modal";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
@@ -29,11 +39,13 @@ const GerenciarRelatorios = ({ navigation }) => {
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [capacidadePorUC, setCapacidadePorUC] = useState([]);
-  const [criterioPorCapacidade, setCriterioPorCapacidade] = useState([]);
   const [totalCritico, setTotalCritico] = useState("");
   const [totalDesejavel, setTotalDesejavel] = useState("");
   const [atendidosCritico, setAtendidosCritico] = useState("");
   const [naoAtendidosCritico, setNaoAtendidosCritico] = useState("");
+  const [atendidosDesejavel, setAtendidosDesejavel] = useState("");
+  const [naoAtendidosDesejavel, setNaoAtendidosDesejavel] = useState("");
+  const [resultados, setResultados] = useState({});
 
   const [modalContent, setModalContent] = useState({
     title: "",
@@ -41,16 +53,20 @@ const GerenciarRelatorios = ({ navigation }) => {
     actions: null,
   });
 
-  const fetchCriterioPorCapacidade = async (capacidadeId) => {
+  const fetchResultado = async (ucId, capacidadeId, criterioId, alunoId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/capacidade/pesquisaCriteriosDaCapacidade/${capacidadeId}`
+        `http://localhost:8080/avaliacao/resultado/${ucId}/${capacidadeId}/${criterioId}/${alunoId}`
       );
-      setCriterioPorCapacidade(response.data);
+      setResultados((prevResultados) => ({
+        ...prevResultados,
+        [`${capacidadeId}-${criterioId}`]: response.data,
+      }));
     } catch (error) {
-      console.error("Erro ao obter criterio por Capacidade:", error);
+      console.error("Erro ao obter Resultado:", error);
     }
   };
+
 
   const fetchAtendidosCritico = async (alunoId, ucId) => {
     try {
@@ -59,10 +75,13 @@ const GerenciarRelatorios = ({ navigation }) => {
       );
       setAtendidosCritico(response.data);
     } catch (error) {
-      console.error("Erro ao obter total de critérios atendidos criticos:", error);
+      console.error(
+        "Erro ao obter total de critérios atendidos criticos:",
+        error
+      );
     }
   };
-  
+
   const fetchNaoAtendidosCritico = async (alunoId, ucId) => {
     try {
       const response = await axios.get(
@@ -70,9 +89,43 @@ const GerenciarRelatorios = ({ navigation }) => {
       );
       setNaoAtendidosCritico(response.data);
     } catch (error) {
-      console.error("Erro ao obter total de critérios não atendidos criticos:", error);
+      console.error(
+        "Erro ao obter total de critérios não atendidos criticos:",
+        error
+      );
     }
   };
+
+
+
+  const fetchAtendidosDesejavel = async (alunoId, ucId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/avaliacao/contarDesejaveisAtendidos/${alunoId}/${ucId}`
+      );
+      setAtendidosDesejavel(response.data);
+    } catch (error) {
+      console.error(
+        "Erro ao obter total de critérios atendidos desejaveis:",
+        error
+      );
+    }
+  };
+
+  const fetchNaoAtendidosDesejavel = async (alunoId, ucId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/avaliacao/contarDesejaveisNaoAtendidos/${alunoId}/${ucId}`
+      );
+      setNaoAtendidosDesejavel(response.data);
+    } catch (error) {
+      console.error(
+        "Erro ao obter total de critérios não atendidos desejaveis:",
+        error
+      );
+    }
+  };
+
 
   const fetchTotalCritico = async (ucId) => {
     try {
@@ -84,7 +137,7 @@ const GerenciarRelatorios = ({ navigation }) => {
       console.error("Erro ao obter total de critérios criticos:", error);
     }
   };
-  
+
   const fetchTotalDesejavel = async (ucId) => {
     try {
       const response = await axios.get(
@@ -95,7 +148,7 @@ const GerenciarRelatorios = ({ navigation }) => {
       console.error("Erro ao obter total de critérios desejáveis:", error);
     }
   };
-  
+
   const fetchCursos = async () => {
     try {
       const response = await axios.get("http://localhost:8080/curso");
@@ -189,16 +242,6 @@ const GerenciarRelatorios = ({ navigation }) => {
   }, [turmaId]);
 
   useEffect(() => {
-    if (alunoId) {
-      fetchAlunoNome(alunoId);
-      if (ucId) {
-        fetchAtendidosCritico(alunoId, ucId);
-        fetchNaoAtendidosCritico(alunoId, ucId);
-      }
-    }
-  }, [alunoId, ucId]);
-
-  useEffect(() => {
     if (ucId) {
       fetchTotalCritico(ucId);
       fetchTotalDesejavel(ucId);
@@ -206,6 +249,29 @@ const GerenciarRelatorios = ({ navigation }) => {
       fetchUcNome(ucId);
     }
   }, [ucId]);
+
+  useEffect(() => {
+    if (ucId && alunoId) {
+      capacidadePorUC.forEach((capacidade) => {
+        capacidade.criterios.forEach((criterio) => {
+          fetchResultado(ucId, capacidade.id, criterio.id, alunoId);
+        });
+      });
+    }
+  }, [ucId, alunoId, capacidadePorUC]);
+
+  const gerarRelatorio = () => {
+    if (alunoId) {
+      fetchAlunoNome(alunoId);
+      if (ucId) {
+        fetchAtendidosCritico(alunoId, ucId);
+        fetchNaoAtendidosCritico(alunoId, ucId);
+        fetchAtendidosDesejavel(alunoId, ucId);
+        fetchNaoAtendidosDesejavel(alunoId, ucId);
+      }
+    }
+    setTabelaVisivel(true);
+  };
 
   return (
     <ScrollView>
@@ -217,6 +283,7 @@ const GerenciarRelatorios = ({ navigation }) => {
           message={modalContent.message}
           actions={modalContent.actions}
         />
+
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.formContainer}>
@@ -300,7 +367,7 @@ const GerenciarRelatorios = ({ navigation }) => {
                 disabled={disabled}
               >
                 <MenuItem value="" disabled>
-                  Selecionar UC
+                  Selecionar Unidade Curricular
                 </MenuItem>
                 {uCsPorCurso.map((uc) => (
                   <MenuItem key={uc.id} value={uc.id}>
@@ -312,7 +379,7 @@ const GerenciarRelatorios = ({ navigation }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setTabelaVisivel(true)}
+                onClick={gerarRelatorio}
                 style={styles.button}
                 disabled={disabled}
               >
@@ -330,82 +397,119 @@ const GerenciarRelatorios = ({ navigation }) => {
                 </Button>
               )}
             </View>
-            <View style={styles.tableContainer}>
-              <Card style={{ marginBottom: 20 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    Informações Adicionais
-                  </Typography>
-                  {alunoNome && (
-                    <Typography variant="body2" color="textPrimary">
-                      <strong>Nome do Aluno:</strong> {alunoNome}
-                    </Typography>
-                  )}
 
-                  {sigla && (
-                    <Typography variant="body2" color="textPrimary">
-                      <strong>Nome da UC:</strong> {sigla}
-                    </Typography>
-                  )}
-                </CardContent>
-              </Card>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6">Critérios Críticos</Typography>
-                      <Typography> Total: {totalCritico}</Typography>
-                      <Typography> Atendidos: {atendidosCritico}</Typography>
-                      <Typography> Não atendidos: {naoAtendidosCritico}</Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6">Critérios Desejáveis</Typography>
-                      <Typography> Total: {totalDesejavel}</Typography> 
-                      <Typography> Atendidos: </Typography>
-                      <Typography> Não atendidos: </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-              {capacidadePorUC.map((capacidade) => (
-                <Card style={{ marginTop: 20, marginBottom: 20 }} key={capacidade.id}>
+            {tabelaVisivel && (
+              <View style={styles.tableContainer}>
+                <Card style={{ marginBottom: 20 }}>
                   <CardContent>
-                    <Typography variant="h6">Capacidade: {capacidade.descricao}</Typography>
-                    <CardContent>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Critério</TableCell>
-                              <TableCell>Tipo de critério</TableCell>
-                              <TableCell>Status</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {capacidade.criterios.map((criterio) => (
-                              <TableRow key={criterio.id}>
-                                <TableCell>{criterio.descricao}</TableCell>
-                                <TableCell>{criterio.tipo}</TableCell>
-                                <TableCell>Status aqui</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <Typography variant="body2">
-                        <p>Legenda</p>
-                        <CheckCircleIcon /> Critério atingido
-                        <CancelIcon /> Critério não atingido
+                    <Typography variant="h5" component="div">
+                      Informações Gerais
+                    </Typography>
+                    {alunoNome && (
+                      <Typography variant="body2" color="textPrimary"> 
+                        <strong>Nome do Aluno:</strong> {alunoNome}
                       </Typography>
-                    </CardContent>
+                    )}
+
+                    {sigla && (
+                      <Typography variant="body2" color="textPrimary">
+                        <strong>Nome da UC:</strong> {sigla}
+                      </Typography>
+                    )}
                   </CardContent>
                 </Card>
-              ))}
-            </View>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6">Critérios Críticos</Typography>
+                        <Typography> Total: {atendidosCritico+naoAtendidosCritico}</Typography>
+                        <Typography> Atendidos: {atendidosCritico}</Typography>
+                        <Typography> Não atendidos: {naoAtendidosCritico}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6">
+                          Critérios Desejáveis
+                        </Typography>
+                        <Typography> Total: {atendidosDesejavel+naoAtendidosDesejavel}</Typography>
+                        <Typography> Atendidos: {atendidosDesejavel}</Typography>
+                        <Typography> Não atendidos: {naoAtendidosDesejavel} </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+                {capacidadePorUC.map((capacidade) => (
+                  <Card
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    key={capacidade.id}
+                  >
+                    <CardContent>
+                      <Typography variant="h6">
+                        Capacidade: {capacidade.descricao}
+                      </Typography>
+                      <CardContent>
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Critério</TableCell>
+                                <TableCell>Tipo de critério</TableCell>
+                                <TableCell>Status</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {capacidade.criterios.map((criterio) => (
+                                <TableRow key={criterio.id}>
+                                  <TableCell>{criterio.descricao}</TableCell>
+                                  <TableCell>{criterio.tipo}</TableCell>
+                                  <TableCell>
+                                    {resultados[
+                                      `${capacidade.id}-${criterio.id}`
+                                    ] !== undefined ? (
+                                      resultados[
+                                        `${capacidade.id}-${criterio.id}`
+                                      ] === "atende" ? (
+                                        <CheckCircleIcon color="success" />
+                                      ) : (
+                                        <CancelIcon color="error" />
+                                      )
+                                    ) : (
+                                      <CropSquareIcon />
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                        <Typography variant="body2">
+                          <Box>
+                            <p>Legenda</p>
+                            <Box
+                              display="inline-flex"
+                              alignItems="center"
+                              pr={1}
+                            >
+                              <CheckCircleIcon color="success" />
+                              <span>Critério atingido</span>
+                            </Box>
+                            <Box display="inline-flex" alignItems="center">
+                              <CancelIcon color="error" />
+                              <span>Critério não atingido</span>
+                            </Box>
+                          </Box>
+                        </Typography>
+                      </CardContent>
+                    </CardContent>
+                  </Card>
+                ))}
+              </View>
+            )}
           </View>
         </View>
       </TemplateCrud>
@@ -439,6 +543,13 @@ const styles = StyleSheet.create({
   tableContainer: {
     flex: 2,
     padding: 20,
+  },
+  root: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  gerarRelatorioButton: {
+    marginTop: 20,
   },
 });
 

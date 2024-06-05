@@ -366,7 +366,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
-                  Selecionar UC
+                  Selecionar Unidade Curricular
                 </MenuItem>
                 {uCsPorCurso.map((uc) => (
                   <MenuItem key={uc.id} value={uc.id}>
@@ -386,7 +386,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                 disabled={disabled} // Adiciona esta linha
               >
                 <MenuItem value="" disabled>
-                  Selecionar SA
+                  Selecionar Situação de Aprendizagem
                 </MenuItem>
                 {saPorUC.map((sa) => (
                   <MenuItem key={sa.id} value={sa.id}>
@@ -462,7 +462,7 @@ const GerenciarAvaliacao = ({ navigation }) => {
                         aria-controls={`panel-${aluno.id}-content`}
                         id={`panel-${aluno.id}-header`}
                       >
-                        <Typography>{aluno.nome}</Typography>
+                        <Typography style={{fontSize: 20, }}>{aluno.nome}</Typography>
                       </AccordionSummary>
                       <AccordionDetails>
                         <div style={{ overflowX: "auto", width: "100%" }}>
@@ -470,14 +470,14 @@ const GerenciarAvaliacao = ({ navigation }) => {
                             variant="h6"
                             style={{ textAlign: "center" }}
                           >
-                            Critérios
+                            <b>Critérios</b>
                           </Typography>
                           <Table>
                             <TableHead>
                               <TableRow>
-                                <TableCell>Descrição</TableCell>
-                                <TableCell>Tipo</TableCell>
-                                <TableCell>Resultado</TableCell>
+                                <TableCell><b>Descrição</b></TableCell>
+                                <TableCell><b>Tipo</b></TableCell>
+                                <TableCell><b>Resultado</b></TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>

@@ -69,6 +69,15 @@ public class AvaliacaoResource {
     public ResponseEntity<?> createAvaliacao(@RequestBody List<AvaliacaoDTORequest> avaliacaoDTOs) {
         List<Avaliacao> avaliacoes = new ArrayList<>();
         for (AvaliacaoDTORequest avaliacaoDTO : avaliacaoDTOs) {
+            // Verificação se a avaliação já existe
+            Optional<Avaliacao> existingAvaliacao = avaliacaoRepository.findByAlunoIdAndCriterioId(
+                    avaliacaoDTO.getAluno(), avaliacaoDTO.getCriterio());
+
+            if (existingAvaliacao.isPresent()) {
+                String errorMessage = "Avaliação já existe para o aluno e critério fornecidos.";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+            }
+
             Avaliacao avaliacao = Avaliacao.of(avaliacaoDTO);
 
             Optional<Curso> curso = cursoRepository.findById(avaliacaoDTO.getCurso());
@@ -114,6 +123,17 @@ public class AvaliacaoResource {
         return avaliacaoRepository.countNaoAtendeCriticoCriteriosByAlunoAndUc(alunoId, ucId);
     }
     
+    
+    @GetMapping("/contarDesejaveisAtendidos/{alunoId}/{ucId}")
+    public Long contarDesejaveisAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        return avaliacaoRepository.countAtendeDesejaveisByAlunoAndUc(alunoId, ucId);
+    }
+    
+    @GetMapping("/contarDesejaveisNaoAtendidos/{alunoId}/{ucId}")
+    public Long contarDesejaveisNaoAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
+        return avaliacaoRepository.countNaoAtendeDesejaveisByAlunoAndUc(alunoId, ucId);
+    }
+    
     @GetMapping("/listarCriterioCriticoNaoAtendidoPorAlunoAndUc/{alunoId}/{ucId}")
     public ResponseEntity<List<Criterio>> getCriticoCriteriosNaoAtendidos(@PathVariable Long alunoId, @PathVariable Long ucId) {
         List<Criterio> criteriosCriticos = avaliacaoRepository.findNaoAtendidoCriticoCriteriosByAlunoAndUc(alunoId, ucId);
@@ -126,7 +146,14 @@ public class AvaliacaoResource {
         return ResponseEntity.ok(criteriosDesejaveis);
     }
 
-    
+    @GetMapping("/resultado/{ucId}/{capacidadeId}/{criterioId}/{alunoId}")
+    public ResponseEntity<String> getResultado(@PathVariable  Long ucId, 
+    											@PathVariable   Long capacidadeId, 
+    											@PathVariable Long criterioId, 
+    											@PathVariable Long alunoId) {
+        String resultado = avaliacaoRepository.findResultadoByUcCapacidadeCriterioAluno(ucId, capacidadeId, criterioId, alunoId);
+        return ResponseEntity.ok(resultado);
+    }
     
     
 

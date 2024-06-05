@@ -84,6 +84,7 @@ function CustomDrawer({ open, handleDrawerClose }) {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
+          boxShadow: "2px 12px 20px rgba(0, 0, 0, 0.1)",
         },
       }}
       variant="persistent"

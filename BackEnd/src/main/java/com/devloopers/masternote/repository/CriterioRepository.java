@@ -10,17 +10,10 @@ import java.util.List;
 
 @Repository
 public interface CriterioRepository extends JpaRepository<Criterio, Long>{
-		
-	@Query("SELECT COUNT(c) FROM Criterio c WHERE c.tipo LIKE '%D%'")
-    long countByTipoContainingD();
+	
+	
 
-	@Query("SELECT COUNT(c) FROM Criterio c WHERE c.tipo LIKE '%C%'")
-    long countByTipoContainingC();
 
-//	@Query("SELECT COUNT(c) FROM Criterio c " +
-//		       "WHERE c.tipo = 'critico' " +
-//		       "AND c.uc.id = :ucId")
-//		long countTotalDeCriteriosCriticosByUcId(@Param("ucId") Long ucId);
 
 	
 
@@ -31,6 +24,8 @@ public interface CriterioRepository extends JpaRepository<Criterio, Long>{
 
 
     List<Criterio> findByCapacidadeId(Long capacidadeId);
+    
+    
 
 
 

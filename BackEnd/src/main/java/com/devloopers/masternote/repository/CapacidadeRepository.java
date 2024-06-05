@@ -14,4 +14,5 @@ public interface CapacidadeRepository extends JpaRepository<Capacidade, Long>{
 	List<Capacidade> findByTipo(String tipo);
 
 	List<Capacidade> findByUc(UC ucId);
+	
 }

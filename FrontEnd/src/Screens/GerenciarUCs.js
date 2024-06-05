@@ -165,7 +165,7 @@ const GerenciarUCs = ({ navigation }) => {
               </Select>
 
               <TextField
-                label="Nome da Unidade Curricular"
+                label="Nome"
                 value={nomeUC}
                 onChange={(e) => setNomeUC(e.target.value)}
                 variant="outlined"
@@ -173,7 +173,7 @@ const GerenciarUCs = ({ navigation }) => {
                 style={styles.input}
               />
               <TextField
-                label="Sigla da Unidade Curricular"
+                label="Sigla"
                 value={sigla}
                 onChange={(e) => setSigla(e.target.value)}
                 variant="outlined"
@@ -181,7 +181,7 @@ const GerenciarUCs = ({ navigation }) => {
                 style={styles.input}
               />
               <TextField
-                label="Carga Horária da UC"
+                label="Carga Horária"
                 value={cargaHoraria}
                 onChange={(e) => setCargaHoraria(e.target.value)}
                 variant="outlined"
@@ -227,15 +227,15 @@ const GerenciarUCs = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Unidade Curricular</TableCell>
-                      <TableCell>Curso</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Unidade Curricular</b></TableCell>
+                      <TableCell><b>Curso</b></TableCell>
+                      <TableCell><b>Ação</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {ucs.map((uc) => (
                       <TableRow key={uc.id}>
-                        <TableCell>{uc.sigla}</TableCell>
+                        <TableCell>{uc.nomeUC}</TableCell>
                         <TableCell>{uc.curso.nome}</TableCell> {/* Render the course name */}
                         <TableCell>
                           <EditIcon

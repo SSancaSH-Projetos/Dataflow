@@ -143,7 +143,7 @@ const GerenciarCursos = ({ navigation }) => {
                 style={styles.input}
               />
               <TextField
-                label="Nivel"
+                label="Nível"
                 value={nivel}
                 onChange={(e) => setNivel(e.target.value)}
                 variant="outlined"
@@ -151,7 +151,7 @@ const GerenciarCursos = ({ navigation }) => {
                 style={styles.input}
               />
               <TextField
-                label="Carga Horaria"
+                label="Carga Horária"
                 value={cargaHoraria}
                 onChange={(e) => setCargaHoraria(e.target.value)}
                 variant="outlined"
@@ -179,10 +179,10 @@ const GerenciarCursos = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Curso</TableCell>
-                      <TableCell>Nível</TableCell>
-                      <TableCell>Carga Horária</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Curso</b></TableCell>
+                      <TableCell><b>Nível</b></TableCell>
+                      <TableCell><b>Carga Horária</b></TableCell>
+                      <TableCell><b>Ação</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

@@ -80,7 +80,7 @@ const GerenciarCriterios = ({ navigation }) => {
       limparCampos();
       await fetchCriterios();
     } catch (error) {
-      console.error("Erro ao adicionar criterios:", error);
+      console.error("Erro ao adicionar critérios:", error);
     }
   };
 
@@ -89,7 +89,7 @@ const GerenciarCriterios = ({ navigation }) => {
       await axios.delete(`http://localhost:8080/criterio/delete/${id}`);
       await fetchCriterios();
     } catch (error) {
-      console.error("Erro ao excluir criterio:", error);
+      console.error("Erro ao excluir critério:", error);
     }
   };
 
@@ -152,7 +152,7 @@ const GerenciarCriterios = ({ navigation }) => {
                 component="div"
                 style={styles.title}
               >
-                Adicionar Criterio
+                Adicionar Critério
               </Typography>
 
               <Select
@@ -191,7 +191,7 @@ const GerenciarCriterios = ({ navigation }) => {
                 renderValue={(selected) => {
                   if (selected === "") {
                     return (
-                      <span style={{ color: "gray" }}>Tipo de Criterio</span>
+                      <span style={{ color: "gray" }}>Tipo de Critério</span>
                     );
                   } else {
                     return selected;
@@ -225,10 +225,10 @@ const GerenciarCriterios = ({ navigation }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Critério</TableCell>
-                      <TableCell>Tipo</TableCell>
-                      <TableCell>Capacidade</TableCell>
-                      <TableCell>Ação</TableCell>
+                      <TableCell><b>Critério</b></TableCell>
+                      <TableCell><b>Tipo</b></TableCell>
+                      <TableCell><b>Capacidade</b></TableCell>
+                      <TableCell><b>Ação</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
