@@ -5,10 +5,12 @@ import com.devloopers.masternote.entity.Aluno;
 import com.devloopers.masternote.entity.Turma;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlunoDTOResponse {

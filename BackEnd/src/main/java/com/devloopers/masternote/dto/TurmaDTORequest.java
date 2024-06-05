@@ -8,7 +8,11 @@ import com.devloopers.masternote.entity.Turma;
 
 import java.util.List;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TurmaDTORequest {

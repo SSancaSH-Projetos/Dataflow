@@ -6,7 +6,11 @@ import lombok.NoArgsConstructor;
 
 import com.devloopers.masternote.entity.SA;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SADTOResponse {
