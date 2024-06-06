@@ -150,6 +150,10 @@ const GerenciarTurmas = ({ navigation }) => {
     try {
       await axios.delete(`http://localhost:8080/aluno/delete/${id}`);
       fetchTurmas(); // Atualize a lista de turmas após deletar um aluno
+  
+      // Atualize a lista de alunos na turma selecionada
+      const updatedAlunosTurma = alunosTurma.filter(aluno => aluno.id !== id);
+      setAlunosTurma(updatedAlunosTurma);
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
     }
@@ -192,9 +196,7 @@ const GerenciarTurmas = ({ navigation }) => {
 
   const handleAddAluno = async () => {
     if (!nome || !numeroChamada || !turmaSelecionadaId) {
-      setMensagemAviso(
-        "Por favor, preencha todos os campos e selecione uma turma."
-      );
+      setMensagemAviso("Por favor, preencha todos os campos e selecione uma turma.");
       return;
     }
     try {
@@ -206,12 +208,21 @@ const GerenciarTurmas = ({ navigation }) => {
       console.log(response.data);
       limparCampos();
       fetchTurmas(); // Atualize a lista de turmas após adicionar um aluno
+  
+      // Atualize a lista de alunos na turma selecionada
+      const updatedAlunosTurma = [...alunosTurma, response.data];
+      setAlunosTurma(updatedAlunosTurma);
+  
+      // Atualize a lista de alunos sem turma
+      fetchAlunosSemTurma();
+      
       setMensagemAviso("");
       handleModalAddAlunoClose();
     } catch (error) {
       console.error("Erro ao adicionar aluno:", error);
     }
   };
+  
 
   const handleExibirAlunosTurma = (turmaId) => {
     const turma = turmas.find((turma) => turma.id === turmaId);
