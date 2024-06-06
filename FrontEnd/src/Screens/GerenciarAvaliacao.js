@@ -531,15 +531,6 @@ const GerenciarAvaliacao = ({ navigation }) => {
                     </Accordion>
                   ))}
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmitAllEvaluations}
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    startIcon={<SaveIcon />}
-                  >
-                    Salvar tudo
-                  </Button>
                 </View>
               )}
             </View>

@@ -49,6 +49,19 @@ public class AlunoResource {
 		return alunosDTO;
 	}
 	
+	@GetMapping("/sem-turma")
+    public Iterable<AlunoDTOResponse> findAllSemTurma() {
+        Iterable<Aluno> alunosSemTurma = alunoRepository.findAllSemTurma();
+        List<AlunoDTOResponse> alunosSemTurmaDTO = new ArrayList<>();
+        for (Aluno aluno : alunosSemTurma) {
+            AlunoDTOResponse alunoDTO = AlunoDTOResponse.fromAluno(aluno);
+            alunosSemTurmaDTO.add(alunoDTO);
+        }
+        return alunosSemTurmaDTO;
+    }
+	
+	
+	
 	@GetMapping("/pesquisaNome/{nome}")
 	public List<Aluno> findByNome(@PathVariable String nome){
 		return alunoRepository.findByNome(nome);

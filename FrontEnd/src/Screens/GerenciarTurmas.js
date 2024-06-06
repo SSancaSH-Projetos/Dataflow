@@ -27,7 +27,6 @@ import ListaDeTransferencia from "../Components/ListaDeTransferencia";
 
 const GerenciarTurmas = ({ navigation }) => {
   const [nome, setNome] = useState("");
-
   const [cursoId, setCursoId] = useState("");
   const [sigla, setSigla] = useState("");
   const [cursos, setCursos] = useState([]);
@@ -42,10 +41,11 @@ const GerenciarTurmas = ({ navigation }) => {
     sigla: "",
     alunosNaTurma: [],
   });
-  const [cursoNome, setCursoNome] = useState(""); // Estado para armazenar o nome do curso no modal
+  const [cursoNome, setCursoNome] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [mensagemAviso, setMensagemAviso] = useState("");
-  const [alunosTurma, setAlunosTurma] = useState([]); // Estado para armazenar alunos da turma
+  const [alunosTurma, setAlunosTurma] = useState([]);
+  const [alunosSemTurma, setAlunosSemTurma] = useState([]);
   const [alunosModalOpen, setAlunosModalOpen] = useState(false);
   const [modalAddAlunoOpen, setModalAddAlunoOpen] = useState(false);
   const [turmaSelecionadaId, setTurmaSelecionadaId] = useState("");
@@ -56,6 +56,15 @@ const GerenciarTurmas = ({ navigation }) => {
       setCursos(response.data);
     } catch (error) {
       console.error("Erro ao obter cursos:", error);
+    }
+  };
+
+  const fetchAlunosSemTurma = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/aluno/sem-turma");
+      setAlunosSemTurma(response.data);
+    } catch (error) {
+      console.error("Erro ao obter alunos sem turma:", error);
     }
   };
 
@@ -80,16 +89,6 @@ const GerenciarTurmas = ({ navigation }) => {
     try {
       const response = await axios.get("http://localhost:8080/aluno");
       setAlunos(response.data);
-      setAlunosTurma(response.data);
-    } catch (error) {
-      console.error("Erro ao obter alunos:", error);
-    }
-  };
-
-  const fetchAlunosDaTurma = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/aluno");
-      handleExibirAlunosTurma(response.data);
     } catch (error) {
       console.error("Erro ao obter alunos:", error);
     }
@@ -105,6 +104,7 @@ const GerenciarTurmas = ({ navigation }) => {
   };
 
   useEffect(() => {
+    fetchAlunosSemTurma();
     fetchAlunos();
     const fetchData = async () => {
       setIsLoading(true);
@@ -149,8 +149,7 @@ const GerenciarTurmas = ({ navigation }) => {
   const handleDeletarAluno = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/aluno/delete/${id}`);
-      fetchAlunosDaTurma();
-      fetchAlunos();
+      fetchTurmas(); // Atualize a lista de turmas após deletar um aluno
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
     }
@@ -160,11 +159,11 @@ const GerenciarTurmas = ({ navigation }) => {
     const curso = cursos.find((curso) => curso.id === turma.curso.id);
     setEditedTurma({
       id: turma.id,
-      curso: turma.curso.id, // Certifica-se de que o ID do curso seja armazenado
+      curso: turma.curso.id,
       sigla: turma.sigla,
       alunosNaTurma: turma.alunosNaTurma || [],
     });
-    setCursoNome(curso ? curso.nome : ""); // Define o nome do curso
+    setCursoNome(curso ? curso.nome : "");
     setModalOpen(true);
   };
 
@@ -177,7 +176,7 @@ const GerenciarTurmas = ({ navigation }) => {
       const response = await axios.put(
         `http://localhost:8080/turma/update/${editedTurma.id}`,
         {
-          curso: editedTurma.curso, // Certifica-se de que o ID do curso está sendo enviado
+          curso: editedTurma.curso,
           sigla: editedTurma.sigla,
           alunosNaTurma: editedTurma.alunosNaTurma.map((aluno) => aluno.id),
         }
@@ -202,22 +201,23 @@ const GerenciarTurmas = ({ navigation }) => {
       const response = await axios.post("http://localhost:8080/aluno", {
         nome: nome,
         numeroChamada: numeroChamada,
-        turma: turmaSelecionadaId, // Incluindo o ID da turma
+        turma: turmaSelecionadaId,
       });
       console.log(response.data);
       limparCampos();
-      fetchAlunos(); // Chamada para atualizar a listagem de alunos
+      fetchTurmas(); // Atualize a lista de turmas após adicionar um aluno
       setMensagemAviso("");
       handleModalAddAlunoClose();
-  
     } catch (error) {
       console.error("Erro ao adicionar aluno:", error);
     }
   };
-  
 
-  const handleExibirAlunosTurma = (alunos, turmaId) => {
-    setAlunosTurma(alunos);
+  const handleExibirAlunosTurma = (turmaId) => {
+    const turma = turmas.find((turma) => turma.id === turmaId);
+    if (turma) {
+      setAlunosTurma(turma.alunosNaTurma);
+    }
     setTurmaSelecionadaId(turmaId);
     setAlunosModalOpen(true);
   };
@@ -225,7 +225,6 @@ const GerenciarTurmas = ({ navigation }) => {
   const handleCloseAlunosModal = () => {
     setAlunosModalOpen(false);
   };
-  
 
   if (isLoading) {
     return (
@@ -279,7 +278,7 @@ const GerenciarTurmas = ({ navigation }) => {
                 style={styles.input}
               />
               <ListaDeTransferencia
-                alunos={alunos}
+                alunos={alunosSemTurma}
                 onSelectionChange={handleAlunosSelecionadosChange}
               />
               {mensagemAviso && (
@@ -328,12 +327,7 @@ const GerenciarTurmas = ({ navigation }) => {
                           />
                           <VisibilityIcon
                             color="primary"
-                            onClick={() => {
-                              handleExibirAlunosTurma(
-                                turma.alunosNaTurma,
-                                turma.id
-                              );
-                            }}
+                            onClick={() => handleExibirAlunosTurma(turma.id)}
                           />
                         </TableCell>
                       </TableRow>
@@ -386,103 +380,68 @@ const GerenciarTurmas = ({ navigation }) => {
           </DialogActions>
         </Dialog>
         <Dialog open={alunosModalOpen} onClose={handleCloseAlunosModal}>
-          <Paper
-            style={{
-              width: "80vw",
-              maxWidth: "none",
-              margin: "auto",
-              alignItems: "center",
-            }}
-          >
-            {" "}
-            {/* Modificando o estilo do Paper */}
-            <DialogTitle
-              style={{
-                backgroundColor: "red",
-                color: "#fff",
-                padding: "20px",
-                textAlign: "center",
-              }}
-            >
-              Alunos da Turma
-            </DialogTitle>
-            <DialogContent style={{ padding: "20px" }}>
-              <Typography variant="body1"></Typography>
+          <DialogTitle>Alunos na Turma</DialogTitle>
+          <DialogContent>
+            <TableContainer component={Paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome do Aluno</TableCell>
-                    <TableCell>N° Da Chamada</TableCell>
-                    <TableCell>Ação</TableCell>
+                    <TableCell align="center">Nome</TableCell>
+                    <TableCell align="center">Número de Chamada</TableCell>
+                    <TableCell align="center">Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {alunosTurma.map((aluno) => (
                     <TableRow key={aluno.id}>
-                      <TableCell>{aluno.nome}</TableCell>
-                      <TableCell>{aluno.numeroChamada}</TableCell>
-                      <TableCell>
-                        <DeleteIcon
-                          color="primary"
+                      <TableCell align="center">{aluno.nome}</TableCell>
+                      <TableCell align="center">{aluno.numeroChamada}</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          style={styles.deleteButton}
                           onClick={() => handleDeletarAluno(aluno.id)}
+                          startIcon={<DeleteIcon />}
                         />
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+            </TableContainer>
+          </DialogContent>
+          <Dialog open={modalAddAlunoOpen} onClose={handleModalAddAlunoClose}>
+            <DialogTitle>Adicionar Aluno</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
+              <TextField
+                label="Número da Chamada"
+                value={numeroChamada}
+                onChange={(e) => setNumeroChamada(e.target.value)}
+                variant="outlined"
+                fullWidth
+                style={styles.input}
+              />
             </DialogContent>
-            <DialogActions
-              style={{
-                justifyContent: "center",
-                padding: "20px",
-                borderTop: "1px solid #ccc",
-              }}
-            >
-              
-              <DialogActions style={{ justifyContent: "center" }}>
-              <Button variant="contained" onClick={handleCloseAlunosModal} style={{ marginRight: '10px', backgroundColor: "primary", color: "#fff" }}>
-                Fechar
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleModalAddAlunoOpen} style={styles.button}>
-                Adicionar Aluno
+            <DialogActions>
+              <Button onClick={handleModalAddAlunoClose}>Cancelar</Button>
+              <Button onClick={handleAddAluno} color="primary">
+                Adicionar
               </Button>
             </DialogActions>
-
-             
-
-              <Dialog
-                open={modalAddAlunoOpen}
-                onClose={handleModalAddAlunoClose}
-              >
-                <DialogTitle>Adicionar Aluno</DialogTitle>
-                <DialogContent>
-                  <TextField
-                    label="Nome"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
-                    variant="outlined"
-                    fullWidth
-                    style={styles.input}
-                  />
-                  <TextField
-                    label="Numero da Chamada"
-                    value={numeroChamada}
-                    onChange={(e) => setNumeroChamada(e.target.value)}
-                    variant="outlined"
-                    fullWidth
-                    style={styles.input}
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleModalAddAlunoClose}>Cancelar</Button>
-                  <Button onClick={handleAddAluno} color="primary">
-                    Adicionar
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </DialogActions>
-          </Paper>
+          </Dialog>
+          <DialogActions>
+            <Button onClick={handleModalAddAlunoOpen} color="primary">
+              Adicionar Aluno
+            </Button>
+            <Button onClick={handleCloseAlunosModal}>Fechar</Button>
+          </DialogActions>
         </Dialog>
       </TemplateCrud>
     </ScrollView>

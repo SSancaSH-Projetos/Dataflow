@@ -16,6 +16,9 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	List<Aluno> findByNumeroChamada(Integer numeroChamada);
 	  @Query("SELECT a FROM Aluno a WHERE a.turma.id = :turmaId")
 	    List<Aluno> findAlunosByTurmaId(@Param("turmaId") Long turmaId);
+	  
+	  @Query("SELECT a FROM Aluno a WHERE a.turma IS NULL")
+	    Iterable<Aluno> findAllSemTurma();
 }
 
 
